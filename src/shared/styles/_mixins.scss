@@ -1,0 +1,12 @@
+@use './variables' as *;
+
+@mixin text($font-family, $font-weight: 400, $font-size: 20px, $color: $color-text) {
+	font-family: $font;
+	font-weight: $font-weight;
+	font-size: $font-size;
+	color: $color;
+}
+
+@mixin deco-lines {
+	border: 1px solid rgba($color-text, 1.1);
+}

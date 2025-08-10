@@ -1,0 +1,48 @@
+{
+	"name": "only-digital",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"prepare": "husky install",
+		"dev": "next dev",
+		"build": "next build",
+		"start": "next start",
+		"lint": "next lint",
+		"lint-staged": "lint-staged",
+		"format:all": "prettier --write . && next lint --fix"
+	},
+	"dependencies": {
+		"clsx": "^2.1.1",
+		"next": "15.3.5",
+		"react": "^19.1.0",
+		"react-dom": "^19.1.0"
+	},
+	"devDependencies": {
+		"@commitlint/cli": "^19.8.1",
+		"@commitlint/config-conventional": "^19.8.1",
+		"@eslint/eslintrc": "^3.3.1",
+		"@types/eslint-plugin-jsx-a11y": "^6.10.0",
+		"@types/eslint-plugin-security": "^3.0.0",
+		"@types/node": "^22.16.3",
+		"@types/react": "^19.1.9",
+		"@types/react-dom": "^19.1.7",
+		"@typescript-eslint/parser": "^8.38.0",
+		"eslint": "^9.31.0",
+		"eslint-config-next": "15.4.1",
+		"eslint-config-prettier": "^10.1.5",
+		"eslint-plugin-import": "^2.32.0",
+		"eslint-plugin-jsx-a11y": "^6.10.2",
+		"eslint-plugin-prettier": "^5.5.1",
+		"eslint-plugin-react-hooks": "^5.2.0",
+		"eslint-plugin-security": "^3.0.1",
+		"eslint-plugin-simple-import-sort": "^12.1.1",
+		"eslint-plugin-sonarjs": "^3.0.4",
+		"eslint-plugin-unicorn": "^59.0.1",
+		"husky": "^9.1.7",
+		"lint-staged": "^16.1.2",
+		"postcss-pxtorem": "^6.1.0",
+		"prettier": "^3.6.2",
+		"sass": "^1.89.2",
+		"typescript": "^5.8.3"
+	}
+}

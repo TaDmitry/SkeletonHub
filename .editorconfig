@@ -1,0 +1,11 @@
+#* Устанавливаем корневой уровень дальше искать конфиги не нужно
+root = true
+
+#* Общие правила для всех файлов
+[*]
+indent_style = tab
+indent_size = 2
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+end_of_line = crlf
