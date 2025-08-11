@@ -7,7 +7,6 @@ import { FlatCompat } from '@eslint/eslintrc';
 import pluginReactHooks from 'eslint-plugin-react-hooks';
 import pluginSimpleImportSort from 'eslint-plugin-simple-import-sort';
 import pluginA11y from 'eslint-plugin-jsx-a11y';
-import pluginSonarjs from 'eslint-plugin-sonarjs';
 import pluginPrettier from 'eslint-plugin-prettier';
 import pluginUnicorn from 'eslint-plugin-unicorn';
 
@@ -41,7 +40,6 @@ const eslintConfig = [
 			'simple-import-sort': pluginSimpleImportSort,
 			'react-hooks': pluginReactHooks,
 			'jsx-a11y': pluginA11y,
-			'sonarjs': pluginSonarjs,
 			'prettier': pluginPrettier,
 			'unicorn': pluginUnicorn,
 		},
@@ -56,7 +54,7 @@ const eslintConfig = [
 			},
 		},
 		rules: {
-			//* Сортировка импортов: external, alias, relative, стили
+			//* Сортировка импортов
 			'simple-import-sort/imports': [
 				'error',
 				{
@@ -69,13 +67,10 @@ const eslintConfig = [
 				},
 			],
 			'simple-import-sort/exports': 'error',
-			//* Отключаем import/order чтобы избежать конфликтов
 			'import/order': 'off',
-
-			//* Пустая строка после всех импортов — только после последнего
 			'import/newline-after-import': ['error', { count: 1 }],
 
-			//* Отступы между другими блоками
+			//* Отступы
 			'padding-line-between-statements': [
 				'error',
 				{ blankLine: 'always', prev: '*', next: 'return' },
@@ -95,20 +90,15 @@ const eslintConfig = [
 			'no-console': ['warn', { allow: ['warn', 'error'] }],
 			'react/react-in-jsx-scope': 'off',
 			'react/prop-types': 'off',
-			'react/jsx-sort-props': ['warn', { callbacksLast: true, shorthandFirst: true }],
+			'react/jsx-sort-props': 'off',
 			'jsx-a11y/anchor-is-valid': 'warn',
 			'jsx-a11y/alt-text': 'warn',
 			'jsx-a11y/click-events-have-key-events': 'warn',
 			'jsx-a11y/no-static-element-interactions': 'warn',
-			'sonarjs/cognitive-complexity': ['warn', 15],
-			'sonarjs/no-duplicate-string': 'warn',
-			'sonarjs/no-identical-functions': 'warn',
-			'sonarjs/no-nested-switch': 'warn',
-			'sonarjs/no-useless-catch': 'warn',
 			'unicorn/prefer-includes': 'error',
 			'unicorn/prefer-string-starts-ends-with': 'error',
 			'unicorn/prefer-optional-catch-binding': 'error',
-			'unicorn/no-null': 'warn',
+			'unicorn/no-null': 'off',
 			'unicorn/prefer-logical-operator-over-ternary': 'warn',
 			'unicorn/no-useless-undefined': 'error',
 			'unicorn/filename-case': 'off',
@@ -123,9 +113,6 @@ const eslintConfig = [
 		},
 		settings: { react: { version: 'detect' } },
 	},
-
-	//* Отключение правила sonarjs в папке локалей
-	{ files: ['**/locales/**'], rules: { 'sonarjs/no-duplicate-string': 'off' } },
 ];
 
 export default eslintConfig;

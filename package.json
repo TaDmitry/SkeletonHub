@@ -9,6 +9,7 @@
 		"start": "next start",
 		"lint": "next lint",
 		"lint-staged": "lint-staged",
+		"lint:strict": "eslint --fix --max-warnings=0 .",
 		"format:all": "prettier --write . && next lint --fix"
 	},
 	"dependencies": {
@@ -34,9 +35,7 @@
 		"eslint-plugin-jsx-a11y": "^6.10.2",
 		"eslint-plugin-prettier": "^5.5.1",
 		"eslint-plugin-react-hooks": "^5.2.0",
-		"eslint-plugin-security": "^3.0.1",
 		"eslint-plugin-simple-import-sort": "^12.1.1",
-		"eslint-plugin-sonarjs": "^3.0.4",
 		"eslint-plugin-unicorn": "^59.0.1",
 		"husky": "^9.1.7",
 		"lint-staged": "^16.1.2",

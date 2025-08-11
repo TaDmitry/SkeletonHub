@@ -1,50 +1,49 @@
 import { FC, SVGProps } from 'react';
 
-export const CircleDecoration: FC<SVGProps<SVGSVGElement>> = (svgProps) => (
+export const CircleDecoration: FC<SVGProps<SVGSVGElement>> = (props) => (
 	<svg
-		fill='none'
-		height='530'
 		viewBox='0 0 536 530'
-		width='536'
+		preserveAspectRatio='xMidYMid meet'
+		fill='none'
 		xmlns='http://www.w3.org/2000/svg'
-		{...svgProps}
+		{...props}
 	>
 		<circle
+			opacity='0.2'
 			cx='268'
 			cy='265'
-			opacity='0.2'
 			r='264.5'
 			stroke='#42567A'
 		/>
 		<circle
 			cx='533'
 			cy='265'
-			fill='#42567A'
 			r='3'
+			fill='#42567A'
 		/>
 		<circle
 			cx='138'
 			cy='34'
-			fill='#42567A'
 			r='3'
+			fill='#42567A'
 		/>
 		<circle
 			cx='402'
 			cy='492'
-			fill='#42567A'
 			r='3'
+			fill='#42567A'
 		/>
 		<circle
 			cx='126'
 			cy='489'
-			fill='#42567A'
 			r='3'
+			fill='#42567A'
 		/>
 		<circle
 			cx='3'
 			cy='265'
-			fill='#42567A'
 			r='3'
+			fill='#42567A'
 		/>
 	</svg>
 );

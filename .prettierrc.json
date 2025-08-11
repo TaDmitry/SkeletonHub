@@ -18,14 +18,7 @@
 		{
 			"files": ["*.md", "*.mdx"],
 			"options": {
-				"proseWrap": "always",
-				"tabWidth": 2
-			}
-		},
-		{
-			"files": ["*.json", "*.yml", "*.yaml"],
-			"options": {
-				"useTabs": true
+				"proseWrap": "always"
 			}
 		},
 		{
