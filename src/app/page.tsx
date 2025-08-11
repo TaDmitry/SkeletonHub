@@ -1,5 +1,5 @@
-import { HomePage } from '@/pages/home';
+import { HistoricalDates } from '@/widgets/historical-dates';
 
 export default function Home() {
-	return <HomePage />;
+	return <HistoricalDates />;
 }
