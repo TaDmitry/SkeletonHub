@@ -15,8 +15,8 @@ export interface IconProps extends React.SVGProps<SVGSVGElement> {
 	color?: string;
 }
 
-const DEFAULT_ICON_SIZE = '100%';
-const DEFAULT_ICON_VIEWBOX = '100%';
+const DEFAULT_ICON_SIZE = 24;
+const DEFAULT_ICON_VIEWBOX = 24;
 
 const IconInner = (
 	{
