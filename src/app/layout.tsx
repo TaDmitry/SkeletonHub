@@ -6,8 +6,8 @@ import '@styles/globals.scss';
 import styles from './RootLayout.module.scss';
 
 export const metadata: Metadata = {
-	title: 'Historical Dates',
-	description: 'Слайдер с историческими датами',
+	title: 'MyUI',
+	description: 'MyUI',
 	icons: {
 		icon: '/icons/favicon.ico',
 	},

@@ -19,18 +19,11 @@ type TitleTagOptions =
 export interface TitleProps {
 	text: string;
 	tag?: TitleTagOptions;
-	color?: 'main' | 'second';
 	align?: 'left' | 'center' | 'right';
 	className?: string;
 }
 
-export const Title = ({
-	tag = 'H1',
-	color = 'main',
-	align = 'center',
-	text,
-	className,
-}: TitleProps) => {
+export const Title = ({ tag = 'H1', align = 'center', text, className }: TitleProps) => {
 	const alignClass = styles[`align_${align}`];
 
 	const tagStyle = {
@@ -85,9 +78,5 @@ export const Title = ({
 	};
 	const Tag = tagStyle[tag].tag as keyof JSX.IntrinsicElements;
 
-	return (
-		<Tag className={clsx(styles[tagStyle[tag].className], styles[color], alignClass, className)}>
-			{text}
-		</Tag>
-	);
+	return <Tag className={clsx(styles[tagStyle[tag].className], alignClass, className)}>{text}</Tag>;
 };
