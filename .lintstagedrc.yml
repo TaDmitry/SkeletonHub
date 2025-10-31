@@ -1,7 +1,10 @@
-#* Prettier
-'*.{js,jsx,ts,tsx,css,scss,sass,module.scss,module.sass,md,json}':
+'*.{js,jsx,ts,tsx}':
+  - 'eslint --fix --cache --quiet'
   - 'prettier --write'
 
-#* ESLint для JS/TS
-'*.{js,jsx,ts,tsx}':
-  - 'eslint --fix --max-warnings=0'
+'*.{css,scss,sass,module.scss,module.sass}':
+  - 'stylelint --fix --allow-empty-input'
+  - 'prettier --write'
+
+'*.{md,json,mdx}':
+  - 'prettier --write'

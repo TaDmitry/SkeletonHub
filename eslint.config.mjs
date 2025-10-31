@@ -15,14 +15,15 @@ const __dirname = dirname(__filename);
 const compat = new FlatCompat({ baseDirectory: __dirname });
 
 const eslintConfig = [
-	//* Расширения базовых конфигураций
+	{
+		ignores: ['node_modules/**', '.next/**', 'out/**', 'build/**', 'next-env.d.ts'],
+	}, //* Расширения базовых конфигураций
 	...compat.extends(
 		'next/core-web-vitals',
 		'next/typescript',
 		'plugin:@typescript-eslint/recommended',
 		'eslint-config-prettier'
-	),
-	//* Основная конфигурация для проекта
+	), //* Основная конфигурация для проекта
 	{
 		ignores: [
 			'node_modules',

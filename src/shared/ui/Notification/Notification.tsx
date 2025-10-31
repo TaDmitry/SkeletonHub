@@ -3,7 +3,7 @@ import clsx from 'clsx';
 
 import styles from './Notification.module.scss';
 
-const AUTO_CLOSE_DELAY_MS = 2500;
+const AUTO_CLOSE_DELAY_MS = 1000;
 const CLOSE_ANIMATION_DURATION_MS = 300;
 
 interface NotificationProps {

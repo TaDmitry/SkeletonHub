@@ -1,7 +1,5 @@
 import type { Metadata } from 'next';
 
-import { Icon } from '@ui/Icon/Icon';
-
 import '@styles/globals.scss';
 import styles from './RootLayout.module.scss';
 
@@ -17,15 +15,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 	return (
 		<html lang='ru'>
 			<body>
-				<main className={styles.mainLayout}>
-					<div className={styles.iconWrapper}>
-						<Icon
-							icon='CircleDecoration'
-							className='icon'
-						/>
-					</div>
-					<section className={styles.section}>{children}</section>
-				</main>
+				<main className={styles.mainLayout}>{children}</main>
 			</body>
 		</html>
 	);

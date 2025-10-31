@@ -2,41 +2,23 @@ import type { NextConfig } from 'next';
 import fs from 'fs';
 import path from 'path';
 
-interface TsConfig {
-	compilerOptions: {
-		baseUrl: string;
-		paths?: Record<string, string[]>;
-	};
+function readTsConfig() {
+	try {
+		const raw = fs.readFileSync(path.resolve(process.cwd(), 'tsconfig.json'), 'utf8');
+
+		return JSON.parse(raw);
+	} catch (e) {
+		console.warn('Не удалось прочитать tsconfig.json:', e);
+
+		return {};
+	}
 }
-
-const tsconfig: TsConfig = JSON.parse(fs.readFileSync('./tsconfig.json', 'utf8'));
-const paths = tsconfig.compilerOptions.paths || {};
-
-const sassAlias: Record<string, string> = {};
-
-for (const [key, value] of Object.entries(paths)) {
-	const aliasKey = key.replace('/*', '');
-	const aliasPath = (value as string[])[0].replace('/*', '');
-	sassAlias[aliasKey] = path.join(__dirname, tsconfig.compilerOptions.baseUrl, aliasPath);
-}
+const tsconfig = readTsConfig();
+const baseUrl = tsconfig?.compilerOptions?.baseUrl ?? '.';
 
 const nextConfig: NextConfig = {
 	sassOptions: {
-		includePaths: [path.join(__dirname, tsconfig.compilerOptions.baseUrl)],
-		alias: sassAlias,
-	},
-	webpack: (config) => {
-		for (const [key, value] of Object.entries(paths)) {
-			const aliasKey = key.replace('/*', '');
-			const aliasPath = (value as string[])[0].replace('/*', '');
-			config.resolve.alias![aliasKey] = path.join(
-				__dirname,
-				tsconfig.compilerOptions.baseUrl,
-				aliasPath
-			);
-		}
-
-		return config;
+		includePaths: [path.resolve(process.cwd(), baseUrl)],
 	},
 };
 
