@@ -3,12 +3,11 @@
 	margin: 0;
 	border: 0;
 	box-sizing: border-box;
-	-webkit-backface-visibility: hidden;
 	backface-visibility: hidden;
 	color: inherit;
 
-	&:before,
-	&:after {
+	&::before,
+	&::after {
 		box-sizing: border-box;
 	}
 }
@@ -44,10 +43,7 @@ body {
 	height: 100%;
 	width: 100%;
 	font-size: 16px;
-	-ms-text-size-adjust: 100%;
-	-moz-text-size-adjust: 100%;
-	-webkit-text-size-adjust: 100%;
-	overflow: hidden;
+	text-size-adjust: 100%;
 }
 
 input,
@@ -65,11 +61,10 @@ input::-ms-clear {
 input[type='number'] {
 	&::-webkit-outer-spin-button,
 	&::-webkit-inner-spin-button {
-		-webkit-appearance: none;
+		appearance: none;
 		margin: 0;
 	}
 
-	-moz-appearance: textfield;
 	appearance: textfield;
 }
 
