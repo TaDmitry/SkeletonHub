@@ -3,7 +3,7 @@
 import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import clsx from 'clsx';
 
-import { useModalAccessibility } from './useModalAccessibility';
+import { useModalAccessibility } from './hooks/useModalAccessibility';
 
 import styles from './Modal.module.scss';
 

@@ -1,5 +1,5 @@
 '*.{js,jsx,ts,tsx}':
-  - 'eslint --fix --cache --quiet'
+  - 'eslint --fix --cache'
   - 'prettier --write'
 
 '*.{css,scss,sass,module.scss,module.sass}':

@@ -25,7 +25,9 @@
 			"@styles/*": ["shared/styles/*"],
 			"@ui/*": ["shared/ui/*"],
 			"@features/*": ["features/*"],
-			"@widgets/*": ["widgets/*"]
+			"@widgets/*": ["widgets/*"],
+			"@entities/*": ["entities/*"],
+			"@routes/*": ["app/routes/*"]
 		}
 	},
 	"include": [
