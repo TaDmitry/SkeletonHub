@@ -1,14 +1,7 @@
-:global(:root) {
-	--bg: #f7fafc;
-	--surface: #fff;
-	--muted: #6b7280;
-	--radius: 14px;
-}
-
 .playground {
 	min-height: 100vh;
 	padding: 24px;
-	background: var(--bg);
+	background: #f7fafc;
 	font-family:
 		Inter,
 		ui-sans-serif,
@@ -33,7 +26,7 @@
 
 .lead {
 	margin: 0;
-	color: var(--muted);
+	color: #6b7280;
 	font-size: 13px;
 }
 
@@ -44,8 +37,8 @@
 }
 
 .section {
-	background: var(--surface);
-	border-radius: var(--radius);
+	background: #fff;
+	border-radius: 14px;
 	padding: 16px;
 	box-shadow: 0 6px 18px rgb(15 23 42 / 6%);
 }
@@ -94,7 +87,7 @@ section .exampleControls {
 }
 
 .description {
-	color: var(--muted);
+	color: #6b7280;
 	font-size: 13px;
 	margin-top: 12px;
 }
@@ -111,7 +104,7 @@ section .exampleControls {
 	gap: 10px;
 }
 
-@media (width <= 900px) {
+@media (width <=900px) {
 	.main {
 		grid-template-columns: 1fr;
 	}
