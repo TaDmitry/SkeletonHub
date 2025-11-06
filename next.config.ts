@@ -13,6 +13,7 @@ function readTsConfig() {
 		return {};
 	}
 }
+
 const tsconfig = readTsConfig();
 const baseUrl = tsconfig?.compilerOptions?.baseUrl ?? '.';
 
@@ -20,6 +21,8 @@ const nextConfig: NextConfig = {
 	sassOptions: {
 		includePaths: [path.resolve(process.cwd(), baseUrl)],
 	},
+
+	allowedDevOrigins: ['http://localhost:3000', 'http://192.168.1.22:3000'],
 };
 
 export default nextConfig;

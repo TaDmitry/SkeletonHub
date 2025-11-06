@@ -8,7 +8,7 @@
 		"noEmit": true,
 		"esModuleInterop": true,
 		"module": "esnext",
-		"moduleResolution": "bundler",
+		"moduleResolution": "node",
 		"resolveJsonModule": true,
 		"isolatedModules": true,
 		"jsx": "preserve",
@@ -24,19 +24,14 @@
 			"@shared/*": ["shared/*"],
 			"@styles/*": ["shared/styles/*"],
 			"@ui/*": ["shared/ui/*"],
+			"@components/*": ["shared/components/*"],
+			"@components": ["shared/components"],
 			"@features/*": ["features/*"],
 			"@widgets/*": ["widgets/*"],
 			"@entities/*": ["entities/*"],
 			"@routes/*": ["app/routes/*"]
 		}
 	},
-	"include": [
-		"next-env.d.ts",
-		"src/**/*.ts",
-		"src/**/*.tsx",
-		".next/types/**/*.ts",
-		"*.config.ts",
-		"src/**/*"
-	],
-	"exclude": ["node_modules"]
+	"include": ["next-env.d.ts", "src", ".next/types/**/*.ts", "next.config.ts"],
+	"exclude": ["node_modules", ".next"]
 }
