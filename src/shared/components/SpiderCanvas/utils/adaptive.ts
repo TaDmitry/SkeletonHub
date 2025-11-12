@@ -1,14 +1,5 @@
 /* eslint-disable no-magic-numbers */
-// src/shared/components/SpiderCanvas/utils/adaptive.ts
-
 import {
-	ADAPTIVE_BASE_AREA,
-	ADAPTIVE_MAX_DOTS,
-	ADAPTIVE_MAX_DRIFT,
-	ADAPTIVE_MAX_SIZE,
-	ADAPTIVE_MIN_DOTS,
-	ADAPTIVE_MIN_DRIFT,
-	ADAPTIVE_MIN_SIZE,
 	DEFAULT_CONNECT_DISTANCE,
 	DEFAULT_CONNECT_RADIUS,
 	DEFAULT_DOT_COUNT,
@@ -18,93 +9,92 @@ import {
 	DEFAULT_MIN_DOT_SIZE,
 } from '../constants';
 
-/**
- * Пороговые значения экранов:
- * - small: width <= 768
- * - large: width >= 1920
- */
-const SMALL_WIDTH = 768;
-const LARGE_WIDTH = 1920;
+export type AdaptiveProps = {
+	dotCount: number;
+	minSize: number;
+	maxSize: number;
+	driftSpeed: number;
+	lineWidth: number;
+	connectDistance: number;
+	connectRadius: number;
+	pointerRadius: number;
+	scale: number;
+};
 
-/**
- * Мультипликаторы для small/large экранов
- * - size: 0.5x на small, 2x на large
- * - count: 0.75x на small, 1.5x на large
- * - drift: 0.7x на small, 1.4x на large
- * - lineWidth: 1.0x на small, 2.0x на large
- * - connectDistance: 0.9x на small, 1.6x на large
- * - connectRadius (для лучей к курсору): 0.9x на small, 1.6x на large
- */
-const SIZE_MULT_SMALL = 0.5;
-const SIZE_MULT_LARGE = 2.0;
-const COUNT_MULT_SMALL = 0.75;
-const COUNT_MULT_LARGE = 1.5;
-const DRIFT_MULT_SMALL = 0.7;
-const DRIFT_MULT_LARGE = 1.4;
-const LINEWIDTH_MULT_SMALL = 1.0;
-const LINEWIDTH_MULT_LARGE = 2.0;
-const CONNECT_DIST_MULT_SMALL = 0.9;
-const CONNECT_DIST_MULT_LARGE = 1.6;
-const CONNECT_RADIUS_MULT_SMALL = 0.9;
-const CONNECT_RADIUS_MULT_LARGE = 1.6;
+const MIN_WIDTH = 320; // минимальная ширина для расчёта scale
+const POINTER_RADIUS_SCALE = 0.85; // масштаб для pointerRadius относительно connectRadius
+const DOT_COUNT_EXP = 1; // экспонента роста количества точек по ширине (немного >1)
+const SIZE_GROWTH_FACTOR = 0.2; // как сильно растут размеры точек при увеличении width
+const DRIFT_GROWTH_FACTOR = 0.12; // рост скорости дрейфа
+const LINEWIDTH_GROWTH_FACTOR = 0.3; // рост толщины линий
+const CONNECT_GROWTH_FACTOR = 0.5; // рост расстояния/радиуса соединений
 
-/**
- * Базовая масштабируемая формула: растёт с площадью и DPR,
- * затем применяются агрессивные мультипликаторы порогов.
- */
-export function computeAdaptiveProps(width: number, height: number, dpr = 1) {
-	const area = Math.max(1, width * height * dpr);
-	const scale = Math.sqrt(area / ADAPTIVE_BASE_AREA);
+const ADAPTIVE_MIN_DOTS_LOCAL = 8;
+const ADAPTIVE_MAX_DOTS_LOCAL = 800;
+const ADAPTIVE_MIN_SIZE_LOCAL = 3;
+const ADAPTIVE_MAX_SIZE_LOCAL = 24;
+const ADAPTIVE_MIN_DRIFT_LOCAL = 1;
+const ADAPTIVE_MAX_DRIFT_LOCAL = 60;
 
-	// Базовое количество точек
-	let computedDots = Math.round(DEFAULT_DOT_COUNT * scale);
+export function computeAdaptiveProps(width: number, _height: number, dpr = 1): AdaptiveProps {
+	const rawScale = Math.max(1, width / MIN_WIDTH);
+	const deviceScale = Math.sqrt(Math.max(1, dpr));
+	const scale = rawScale * deviceScale;
 
-	// Базовые размеры точек
-	const baseSizeScale = 1 + (scale - 1) * 0.25;
-	let computedMinSize = Math.round(DEFAULT_MIN_DOT_SIZE * baseSizeScale);
-	let computedMaxSize = Math.round(DEFAULT_MAX_DOT_SIZE * baseSizeScale);
+	let computedDots = Math.round(DEFAULT_DOT_COUNT * Math.pow(scale, DOT_COUNT_EXP));
 
-	// Базовая скорость дрейфа
-	let computedDrift = Math.round(DEFAULT_DRIFT_SPEED * (1 + (scale - 1) * 0.3));
+	const minSizeBase = DEFAULT_MIN_DOT_SIZE;
+	const maxSizeBase = DEFAULT_MAX_DOT_SIZE;
+	let computedMinSize = Math.max(
+		1,
+		Math.round(minSizeBase * (1 + (scale - 1) * SIZE_GROWTH_FACTOR))
+	);
+	let computedMaxSize = Math.max(
+		computedMinSize,
+		Math.round(maxSizeBase * (1 + (scale - 1) * (SIZE_GROWTH_FACTOR + 0.05)))
+	);
+	let computedDrift = Math.round(
+		DEFAULT_DRIFT_SPEED * Math.max(1, 1 + (scale - 1) * DRIFT_GROWTH_FACTOR)
+	);
+	const computedLineWidth = Math.max(
+		1,
+		Math.round(DEFAULT_LINE_WIDTH * Math.max(1, 1 + (scale - 1) * LINEWIDTH_GROWTH_FACTOR))
+	);
 
-	// Базовые соединительные параметры (масштабируем относительно scale)
-	let lineWidth = Math.max(1, Math.round(DEFAULT_LINE_WIDTH * (1 + (scale - 1) * 0.5)));
-	let connectDistance = Math.round(DEFAULT_CONNECT_DISTANCE * (1 + (scale - 1) * 0.6));
-	let connectRadius = Math.round(DEFAULT_CONNECT_RADIUS * (1 + (scale - 1) * 0.6));
+	const computedConnectDistance = Math.max(
+		24,
+		Math.round(DEFAULT_CONNECT_DISTANCE * Math.max(1, 1 + (scale - 1) * CONNECT_GROWTH_FACTOR))
+	);
+	const computedConnectRadius = Math.max(
+		24,
+		Math.round(DEFAULT_CONNECT_RADIUS * Math.max(1, 1 + (scale - 1) * CONNECT_GROWTH_FACTOR))
+	);
 
-	// Применяем агрессивные мультипликаторы по ширине
-	if (width <= SMALL_WIDTH) {
-		computedDots = Math.round(computedDots * COUNT_MULT_SMALL);
-		computedMinSize = Math.max(1, Math.round(computedMinSize * SIZE_MULT_SMALL));
-		computedMaxSize = Math.max(computedMinSize, Math.round(computedMaxSize * SIZE_MULT_SMALL));
-		computedDrift = Math.max(1, Math.round(computedDrift * DRIFT_MULT_SMALL));
-		lineWidth = Math.max(1, Math.round(lineWidth * LINEWIDTH_MULT_SMALL));
-		connectDistance = Math.max(24, Math.round(connectDistance * CONNECT_DIST_MULT_SMALL));
-		connectRadius = Math.max(48, Math.round(connectRadius * CONNECT_RADIUS_MULT_SMALL));
-	} else if (width >= LARGE_WIDTH) {
-		computedDots = Math.round(computedDots * COUNT_MULT_LARGE);
-		computedMinSize = Math.round(computedMinSize * SIZE_MULT_LARGE);
-		computedMaxSize = Math.max(computedMinSize, Math.round(computedMaxSize * SIZE_MULT_LARGE));
-		computedDrift = Math.round(computedDrift * DRIFT_MULT_LARGE);
-		lineWidth = Math.max(1, Math.round(lineWidth * LINEWIDTH_MULT_LARGE));
-		connectDistance = Math.round(connectDistance * CONNECT_DIST_MULT_LARGE);
-		connectRadius = Math.round(connectRadius * CONNECT_RADIUS_MULT_LARGE);
-	}
+	const computedPointerRadius = Math.max(
+		24,
+		Math.round(computedConnectRadius * POINTER_RADIUS_SCALE)
+	);
 
-	// Клапаны нижних/верхних границ
-	const dotCountClamped = Math.max(ADAPTIVE_MIN_DOTS, Math.min(ADAPTIVE_MAX_DOTS, computedDots));
-	const minSizeClamped = Math.max(ADAPTIVE_MIN_SIZE, Math.min(ADAPTIVE_MAX_SIZE, computedMinSize));
-	const maxSizeClamped = Math.max(minSizeClamped, Math.min(ADAPTIVE_MAX_SIZE, computedMaxSize));
-	const driftClamped = Math.max(ADAPTIVE_MIN_DRIFT, Math.min(ADAPTIVE_MAX_DRIFT, computedDrift));
+	computedDots = Math.max(ADAPTIVE_MIN_DOTS_LOCAL, Math.min(ADAPTIVE_MAX_DOTS_LOCAL, computedDots));
+	computedMinSize = Math.max(
+		ADAPTIVE_MIN_SIZE_LOCAL,
+		Math.min(ADAPTIVE_MAX_SIZE_LOCAL, computedMinSize)
+	);
+	computedMaxSize = Math.max(computedMinSize, Math.min(ADAPTIVE_MAX_SIZE_LOCAL, computedMaxSize));
+	computedDrift = Math.max(
+		ADAPTIVE_MIN_DRIFT_LOCAL,
+		Math.min(ADAPTIVE_MAX_DRIFT_LOCAL, computedDrift)
+	);
 
 	return {
-		dotCount: dotCountClamped,
-		minSize: minSizeClamped,
-		maxSize: maxSizeClamped,
-		driftSpeed: driftClamped,
-		lineWidth,
-		connectDistance,
-		connectRadius,
+		dotCount: computedDots,
+		minSize: computedMinSize,
+		maxSize: computedMaxSize,
+		driftSpeed: computedDrift,
+		lineWidth: computedLineWidth,
+		connectDistance: computedConnectDistance,
+		connectRadius: computedConnectRadius,
+		pointerRadius: computedPointerRadius,
 		scale,
 	};
 }

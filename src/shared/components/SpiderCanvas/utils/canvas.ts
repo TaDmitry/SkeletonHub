@@ -1,4 +1,3 @@
-// src/shared/components/SpiderCanvas/utils/canvas.ts
 import { COORD_ROUND_FACTOR, MIN_DPR } from '../constants';
 
 export function setCanvasSize(canvas: HTMLCanvasElement, width: number, height: number) {

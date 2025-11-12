@@ -1,5 +1,4 @@
 .container {
-	position: relative;
 	width: 100%;
 	height: 100%;
 	overflow: hidden;
@@ -13,12 +12,4 @@
 	height: 100%;
 	display: block;
 	pointer-events: none;
-}
-
-.canvasBg {
-	z-index: 1;
-}
-
-.canvasFg {
-	z-index: 2;
 }
