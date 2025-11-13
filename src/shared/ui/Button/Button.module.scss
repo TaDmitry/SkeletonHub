@@ -1,41 +1,15 @@
-@use '@styles/variables' as *;
-
-$color-main: #0147ff;
-$color-main-disabled: #0147ff66;
-
 .button {
 	display: inline-flex;
-	gap: 10px;
 	align-items: center;
 	justify-content: center;
-	width: 100%;
-	padding: 12px 14px;
-	font-size: 16px;
-	font-weight: 600;
-	color: $white;
 	text-align: center;
 	text-decoration: none;
 	cursor: pointer;
-	background-color: $color-main;
-	border: none;
-	border-radius: 8px;
 	transition:
 		background-color 350ms ease,
 		opacity 350ms ease,
 		transform 350ms ease;
 	-webkit-tap-highlight-color: transparent;
-
-	&:hover {
-		background-color: $color-main-disabled;
-	}
-
-	&:active {
-		background-color: $color-main-disabled;
-	}
-
-	&:focus {
-		outline: none;
-	}
 }
 
 .disabled,
@@ -46,22 +20,28 @@ $color-main-disabled: #0147ff66;
 	transform: none;
 }
 
-.icon {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	line-height: 0;
-}
-
 .label {
 	display: inline-block;
 	white-space: nowrap;
 }
 
-@media (width <=420px) {
-	.button {
-		gap: 8px;
-		padding: 12px;
-		font-size: 15px;
-	}
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	line-height: 0;
+	margin-right: 0.6rem;
+	margin-left: 0;
+	font-size: 1.05em;
+}
+
+.hasIcon {
+	display: inline-flex;
+	align-items: center;
+	gap: 0;
+}
+
+.iconRight .icon {
+	margin-right: 0;
+	margin-left: 0.6rem;
 }

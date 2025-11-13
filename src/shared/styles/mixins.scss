@@ -1,0 +1,28 @@
+@mixin glass-card {
+	align-items: center;
+	transition:
+		background-color 240ms ease,
+		box-shadow 240ms ease,
+		transform 240ms ease;
+	will-change: transform, box-shadow, backdrop-filter;
+	background: #ffffff0a;
+	border: 1px solid #ffffff1a;
+	box-shadow:
+		0 10px 30px #0306178c,
+		0 2px 6px #00000040,
+		inset 0 1px 0 #ffffff08;
+	backdrop-filter: blur(8px) saturate(140%) contrast(1.03);
+	overflow: hidden;
+
+	&::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		border-radius: inherit;
+		pointer-events: none;
+		background: linear-gradient(180deg, #ffffff0f, #ffffff03 40%, #fff0);
+		mix-blend-mode: overlay;
+		transform: translateZ(0);
+		transition: opacity 220ms ease;
+	}
+}

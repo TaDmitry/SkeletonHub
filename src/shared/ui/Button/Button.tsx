@@ -8,11 +8,36 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 	text: string;
 	href?: string;
 	icon?: ReactNode;
+	iconPosition?: 'left' | 'right';
 	className?: string;
 }
 
-export const Button = ({ text, href, icon, className, disabled, ...restProps }: ButtonProps) => {
-	const classes = clsx(styles.button, className, disabled && styles.disabled);
+export const Button = ({
+	text,
+	href,
+	icon,
+	iconPosition = 'left',
+	className,
+	disabled,
+	...restProps
+}: ButtonProps) => {
+	const classes = clsx(
+		styles.button,
+		className,
+		disabled && styles.disabled,
+		icon && styles.hasIcon,
+		iconPosition === 'right' && styles.iconRight
+	);
+
+	const IconNode = icon ? (
+		<span
+			className={styles.icon}
+			aria-hidden='true'
+		>
+			{icon}
+		</span>
+	) : null;
+	const LabelNode = <span className={styles.label}>{text}</span>;
 
 	if (href && !disabled) {
 		return (
@@ -21,8 +46,17 @@ export const Button = ({ text, href, icon, className, disabled, ...restProps }: 
 				className={classes}
 				aria-disabled={false}
 			>
-				{icon && <span className={styles.icon}>{icon}</span>}
-				<span className={styles.label}>{text}</span>
+				{iconPosition === 'left' ? (
+					<>
+						{IconNode}
+						{LabelNode}
+					</>
+				) : (
+					<>
+						{LabelNode}
+						{IconNode}
+					</>
+				)}
 			</Link>
 		);
 	}
@@ -34,8 +68,17 @@ export const Button = ({ text, href, icon, className, disabled, ...restProps }: 
 			className={classes}
 			disabled={disabled}
 		>
-			{icon && <span className={styles.icon}>{icon}</span>}
-			<span className={styles.label}>{text}</span>
+			{iconPosition === 'left' ? (
+				<>
+					{IconNode}
+					{LabelNode}
+				</>
+			) : (
+				<>
+					{LabelNode}
+					{IconNode}
+				</>
+			)}
 		</button>
 	);
 };

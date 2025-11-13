@@ -16,22 +16,17 @@
 	}
 }
 
-:focus,
-:active {
-	outline: none;
-}
-
 a {
-	&:focus,
-	&:active {
-		outline: none;
-	}
-
 	text-decoration: none;
 
 	&:visited,
 	&:hover {
 		text-decoration: none;
+	}
+
+	&:focus,
+	&:active {
+		outline: none;
 	}
 }
 
@@ -42,12 +37,18 @@ aside {
 	display: block;
 }
 
+:focus,
+:active {
+	outline: none;
+}
+
 html,
 body,
 main {
 	height: 100%;
 	width: 100%;
 	font-size: 16px;
+	-webkit-text-size-adjust: 100%;
 	text-size-adjust: 100%;
 }
 
@@ -64,6 +65,7 @@ input::-ms-clear {
 }
 
 input[type='number'] {
+
 	&::-webkit-outer-spin-button,
 	&::-webkit-inner-spin-button {
 		appearance: none;
@@ -85,6 +87,30 @@ label {
 	}
 }
 
-ul li {
+ul {
 	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: Geist, Arial, sans-serif;
+}
+
+p,
+span,
+samp,
+li,
+ol,
+a {
+	color: $text;
+	font-size: 1.25rem;
+	font-family: Rubik, Arial, sans-serif;
+	font-weight: 600;
+	line-height: 1.5;
 }

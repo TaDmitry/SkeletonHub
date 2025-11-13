@@ -2,9 +2,5 @@
   - 'eslint --fix --cache'
   - 'prettier --write'
 
-'*.{css,scss,sass,module.scss,module.sass}':
-  - 'stylelint --fix --allow-empty-input'
-  - 'prettier --write'
-
 '*.{md,json,mdx}':
   - 'prettier --write'

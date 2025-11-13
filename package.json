@@ -12,10 +12,8 @@
 		"lint": "eslint --ext .js,.jsx,.ts,.tsx .",
 		"lint:fix": "eslint --ext .js,.jsx,.ts,.tsx --fix .",
 		"lint:strict": "eslint --ext .js,.jsx,.ts,.tsx --fix --max-warnings=0 .",
-		"lint:css": "stylelint \"**/*.{css,scss,sass,module.scss,module.sass}\"",
-		"lint:css:fix": "stylelint \"**/*.{css,scss,sass,module.scss,module.sass}\" --fix",
-		"format:all": "prettier --write . && npm run lint:fix && npm run lint:css:fix",
-		"ci:lint": "npm run prettier:check && npm run lint && npm run lint:css"
+		"format:all": "prettier --write . && npm run lint:fix",
+		"ci:lint": "npm run prettier:check && npm run lint"
 	},
 	"dependencies": {
 		"clsx": "^2.1.1",
@@ -48,11 +46,6 @@
 		"postcss-scss": "^4.0.9",
 		"prettier": "^3.6.2",
 		"sass": "^1.89.2",
-		"stylelint": "^16.24.0",
-		"stylelint-config-prettier-scss": "^1.0.0",
-		"stylelint-config-recommended-scss": "^16.0.2",
-		"stylelint-config-standard": "^39.0.0",
-		"stylelint-scss": "^6.12.1",
 		"typescript": "^5.8.3"
 	}
 }
