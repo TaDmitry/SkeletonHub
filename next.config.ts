@@ -28,34 +28,38 @@ const nextConfig: NextConfig & { turbopack?: any } = {
 		'http://192.168.64.123:3000',
 	],
 
-	//* Webpack rule — чтобы импорты .svg как React-компонент работали в Webpack-сборках
 	webpack(config) {
-		config.module.rules.push({
-			test: /\.svg$/i,
-			issuer: /\.[jt]sx?$/,
-			use: [
-				{
-					loader: require.resolve('@svgr/webpack'),
-					options: {
-						svgo: true,
-						svgoConfig: {
-							plugins: [
-								{
-									name: 'preset-default',
-									params: { overrides: { removeViewBox: false } },
-								},
-							],
-						},
-						icon: true,
-						replaceAttrValues: {
-							'#000': 'currentColor',
-							'#000000': 'currentColor',
-							'black': 'currentColor',
+		const hasSvgRule = config.module.rules.some(
+			(r: any) => r.test && r.test.toString().includes('\\.svg')
+		);
+		if (!hasSvgRule) {
+			config.module.rules.push({
+				test: /\.svg$/i,
+				issuer: /\.[jt]sx?$/,
+				use: [
+					{
+						loader: require.resolve('@svgr/webpack'),
+						options: {
+							svgo: true,
+							svgoConfig: {
+								plugins: [
+									{
+										name: 'preset-default',
+										params: { overrides: { removeViewBox: false } },
+									},
+								],
+							},
+							icon: true,
+							replaceAttrValues: {
+								'#000': 'currentColor',
+								'#000000': 'currentColor',
+								'black': 'currentColor',
+							},
 						},
 					},
-				},
-			],
-		});
+				],
+			});
+		}
 
 		return config;
 	},
@@ -68,6 +72,7 @@ const nextConfig: NextConfig & { turbopack?: any } = {
 			},
 		},
 	},
+	reactStrictMode: true,
 };
 
 export default nextConfig;
