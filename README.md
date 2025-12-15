@@ -59,3 +59,9 @@ from the creators of Next.js.
 Check out our
 [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying)
 for more details.
+
+Выполнить в конлоси для того что бы Git выполнил все husky хуки если ты не создавал их в ручьную
+
+```bash
+chmod +x .husky/commit-msg .husky/pre-commit .husky/pre-push
+```

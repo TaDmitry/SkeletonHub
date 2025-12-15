@@ -1,1 +1,11 @@
-npx --no-install commitlint --edit "$1"
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+set -e
+
+printf "🔒 Проверка формата коммита (commitlint)...\n"
+
+# --no-install чтобы избежать скачивания в CI/у коллег
+npx --no-install --silent commitlint --edit "$1"
+
+printf "✅ commit-msg: OK\n"

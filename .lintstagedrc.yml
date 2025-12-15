@@ -1,6 +1,8 @@
 '*.{js,jsx,ts,tsx}':
-  - 'eslint --fix --cache'
+  - 'eslint --fix --cache --cache-location .cache/eslint'
   - 'prettier --write'
+  - 'git add'
 
 '*.{md,json,mdx}':
   - 'prettier --write'
+  - 'git add'

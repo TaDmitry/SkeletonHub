@@ -1,1 +1,2 @@
-export { CircleDecoration } from './svgs/CircleDecoration';
+export { Language } from './svgs/Language';
+export { LogoGithub } from './svgs/LogoGithub';

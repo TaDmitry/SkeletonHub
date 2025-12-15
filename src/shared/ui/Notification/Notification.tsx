@@ -19,19 +19,12 @@ export const Notification = ({
 	onClose,
 	duration = AUTO_CLOSE_DELAY_MS,
 }: NotificationProps) => {
-	const [isOpen, setIsOpen] = useState(false);
 	const [isClosing, setIsClosing] = useState(false);
 
 	useEffect(() => {
-		setIsOpen(true);
+		const closeAnimTimer = setTimeout(() => setIsClosing(true), duration);
 
-		const closeAnimTimer = setTimeout(() => {
-			setIsClosing(true);
-		}, duration);
-
-		const closeTimer = setTimeout(() => {
-			onClose();
-		}, duration + CLOSE_ANIMATION_DURATION_MS);
+		const closeTimer = setTimeout(() => onClose(), duration + CLOSE_ANIMATION_DURATION_MS);
 
 		return () => {
 			clearTimeout(closeAnimTimer);
@@ -40,7 +33,7 @@ export const Notification = ({
 	}, [duration, onClose]);
 
 	return (
-		<div className={clsx(styles.notification, isOpen && styles.open, isClosing && styles.closing)}>
+		<div className={clsx(styles.notification, styles.open, isClosing && styles.closing)}>
 			<p>{text}</p>
 		</div>
 	);

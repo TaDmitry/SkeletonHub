@@ -4,15 +4,19 @@ import React from 'react';
 import { SpiderCanvas } from '@components';
 import { Button, Text, Title } from '@ui';
 
+import { NavBarWidget } from '@widgets/layout/NavBar';
+
 import styles from './RootLayout.module.scss';
 
 export default function Home() {
 	return (
-		<section className={styles.container}>
-			<div className={styles.content}>
+		<div className={styles.container}>
+			<NavBarWidget />
+
+			<section className={styles.content}>
 				<div className={styles.heroWrapper}>
 					<div className={styles.hero}>
-						<Title className={styles.heading}>VanillaUI: библиотека</Title>
+						<Title className={styles.heading}>SkeletonUI: библиотека</Title>
 					</div>
 
 					<div className={styles.heroInner}>
@@ -21,15 +25,13 @@ export default function Home() {
 								className={styles.description}
 								align='center'
 							>
-								Основанная на принципах простоты и чистоты, <span>VanillaUI:</span> даёт
-								разработчикам инструменты для создания интерфейсов, где красота и функциональность
-								идут рука об руку.
+								Начните с чистого скелета, <span>SkeletonUI</span> создаёт основу для вашего дизайна
 							</Text>
 						</div>
 
 						<div className={styles.buttons}>
 							<Button
-								text='Ознакомится с VanillaUI'
+								text='Ознакомится с SkeletonUI'
 								className={styles.learn}
 							/>
 							<Button
@@ -39,13 +41,13 @@ export default function Home() {
 						</div>
 					</div>
 				</div>
-			</div>
+			</section>
 
 			<SpiderCanvas
 				connectDots={true}
 				adaptive={true}
 				className={styles.spiderCanvas}
 			/>
-		</section>
+		</div>
 	);
 }

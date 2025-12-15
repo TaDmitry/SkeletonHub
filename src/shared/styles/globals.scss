@@ -93,6 +93,8 @@ ul {
 	margin: 0;
 }
 
+//* TYPOGRAPHY
+
 h1,
 h2,
 h3,
@@ -113,4 +115,27 @@ a {
 	font-family: Rubik, Arial, sans-serif;
 	font-weight: 600;
 	line-height: 1.5;
+}
+
+@media (width <=768px) {
+
+	p,
+	span,
+	samp,
+	li,
+	ol,
+	a {
+		font-size: 1rem;
+		line-height: 1.2;
+	}
+}
+
+//* SELECTION
+
+body::selection {
+	background: rgba(255, 255, 255, 0.12);
+	color: #0c0e14;
+	text-shadow:
+		0 1px 1px rgba(255, 255, 255, 0.3),
+		0 0 2px rgba(255, 255, 255, 0.15);
 }

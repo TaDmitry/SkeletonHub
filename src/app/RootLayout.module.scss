@@ -3,25 +3,25 @@
 
 .container {
 	position: relative;
-	width: 100vw;
-	height: 100vh;
-	overflow: hidden;
+	min-height: 100vh;
+	overflow-y: auto;
+	-webkit-overflow-scrolling: touch;
 	background-color: #0a0a0a;
 	background-image: radial-gradient(ellipse at center, #262626, #262626 0, transparent 70%);
 }
 
 .content {
 	width: 100%;
-	height: 100%;
+	min-height: 100vh;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	padding-inline: calc($space-x4 * 4);
+	padding-inline: 64px;
 }
 
 .heroWrapper {
-	max-width: $container-x3;
-	z-index: 10;
+	max-width: 768px;
+	z-index: 20;
 }
 
 .spiderCanvas {
@@ -37,17 +37,16 @@
 		position: absolute;
 		inset: 0;
 		z-index: 10;
-		box-shadow: inset 0 0 50px 30px $black;
-		pointer-events: auto;
+		box-shadow: inset 0 0 50px 20px $black;
+		pointer-events: none;
 	}
 }
 
 .hero {
 	@include glass-card();
 
-	z-index: 20;
-	padding: 1.25rem 1.5rem;
-	border-radius: 12px;
+	padding: 20px 24px;
+	border-radius: $border-radius-sm;
 	margin-bottom: 20px;
 }
 
@@ -68,11 +67,9 @@
 }
 
 .descriptionWrapper {
-	@include glass-card();
-
-	padding: 1.25rem 1.5rem;
-	border-radius: 12px;
-	margin: 0 $space-x4 $space-x6;
+	border-radius: $border-radius-sm;
+	padding: 0 24px 16px;
+	text-shadow: 0px 0px 20px rgb(0 0 0);
 }
 
 .description span {
@@ -81,14 +78,14 @@
 
 .buttons {
 	display: flex;
-	margin-top: $space-x4;
-	gap: $space-x4;
+	margin-top: 16px;
+	gap: 16px;
 }
 
 .learn {
-	padding: $space-x4 $space-x8;
+	padding: 16px 32px;
 	background-color: $white;
-	border-radius: 12px;
+	border-radius: $border-radius-sm;
 	display: inline-block;
 	transition: transform 0.25s ease;
 
@@ -100,13 +97,19 @@
 	&:hover {
 		transform: scale(1.05);
 	}
+
+	&:focus-visible {
+		transform: scale(1.05);
+		outline: 2px solid $accent-1;
+		outline-offset: 3px;
+	}
 }
 
 .features {
-	padding: $space-x4 $space-x8;
+	padding: 16px 32px;
 	background-color: #121212;
 	border: 2px solid #ffffff1a;
-	border-radius: 12px;
+	border-radius: $border-radius-sm;
 	display: inline-block;
 	transition: transform 0.30s ease, border 0.30s ease;
 
@@ -119,39 +122,45 @@
 		transform: scale(1.05);
 		border-color: $accent-1;
 	}
-}
 
-@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
-	.hero {
-		background: linear-gradient(180deg, rgb(255 255 255 / 6%), rgb(255 255 255 / 3%));
-		border: 1px solid rgb(255 255 255 / 8%);
-	}
-
-	.heroInner::after {
-		display: none;
+	&:focus-visible {
+		transform: scale(1.05);
+		outline: 2px solid $accent-1;
+		outline-offset: 3px;
 	}
 }
 
 @media (width <=768px) {
+	.content {
+		align-items: flex-start;
+		padding-inline: 32px;
+		padding-top: 40px;
+		padding-bottom: 40px;
+	}
+
+	.hero {
+		padding: 16px 20px;
+	}
+
 	.spiderCanvas::before {
 		box-shadow: inset 0 0 20px 10px #000;
 	}
 
-	.content {
+	.heroInner {
+		font-size: 16px;
+	}
+}
+
+@media (max-width: 640px) {
+	.buttons {
+		flex-direction: column;
 		width: 100%;
-		height: 100%;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		padding-inline: calc($space-x4 * 2);
 	}
 
-	.heroInner {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		font-size: 1rem;
-		color: $white;
+	.features,
+	.learn {
+		padding: 14px 24px;
+		width: 100%;
+		box-sizing: border-box;
 	}
 }

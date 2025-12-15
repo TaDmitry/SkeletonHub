@@ -1,2 +1,13 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+set -e
+
+printf "🚀 pre-push: Запускаю строгий линт...\n"
 npm run lint:strict
+
+printf "🏗  pre-push: Запускаю сборку проекта (npm run build)...\n"
 npm run build
+
+printf "✅ pre-push: Всё успешно! Пуш продолжается.\n"
+

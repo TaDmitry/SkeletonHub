@@ -67,7 +67,7 @@ export function useSpiderCanvas(props: Props) {
 	const pageHiddenRef = useRef(false);
 
 	// хук для управления точками (логика в useDots)
-	const { dotsRef, generateDots, drawStaticDots, startBgLoop, stopBgLoop } = useDots();
+	const { dotsRef, generateDots, drawStaticDots, startBgLoop, stopBgLoop } = useDots(() => {});
 
 	// вычислить адаптивные параметры для указанного размера (учитывая devicePixelRatio)
 	const computeForCurrent = useCallback((w: number, h: number) => {
