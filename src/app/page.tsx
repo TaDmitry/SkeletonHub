@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { SpiderCanvas } from '@components';
-import { Button, Text, Title } from '@ui';
+import { Button, Icon, Text, Title } from '@ui';
 
 import { NavBarWidget } from '@widgets/layout/NavBar';
 
@@ -26,6 +26,10 @@ export default function Home() {
 								align='center'
 							>
 								Начните с чистого скелета, <span>SkeletonUI</span> создаёт основу для вашего дизайна
+								<Icon
+									icon='Language'
+									size={20}
+								/>
 							</Text>
 						</div>
 
