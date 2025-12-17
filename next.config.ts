@@ -1,4 +1,5 @@
 import type { NextConfig } from 'next';
+import createNextIntlPlugin from 'next-intl/plugin';
 import fs from 'fs';
 import path from 'path';
 
@@ -13,6 +14,8 @@ function readTsConfig() {
 		return {};
 	}
 }
+
+const withNextIntl = createNextIntlPlugin('./src/shared/config/i18n/request.ts');
 
 const tsconfig = readTsConfig();
 const baseUrl = tsconfig?.compilerOptions?.baseUrl ?? '.';
@@ -75,4 +78,4 @@ const nextConfig: NextConfig & { turbopack?: any } = {
 	reactStrictMode: true,
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);

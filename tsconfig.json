@@ -22,13 +22,15 @@
 		"paths": {
 			"@/*": ["*"],
 			"@shared/*": ["shared/*"],
+			"@components": ["shared/components/"],
+			"@config/*": ["shared/config/*"],
+			"@messages*": ["shared/messages*"],
 			"@styles/*": ["shared/styles/*"],
-			"@ui": ["shared/ui"],
-			"@components": ["shared/components"],
-			"@features/*": ["features/*"],
+			"@ui": ["shared/ui/"],
+			"@features/*": ["features/"],
 			"@widgets/*": ["widgets/*"],
-			"@entities/*": ["entities/*"],
-			"@routes/*": ["app/routes/*"]
+			"@entities/*": ["entities/"],
+			"@routes/*": ["app/routes/"]
 		}
 	},
 	"include": [

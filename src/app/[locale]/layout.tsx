@@ -1,11 +1,16 @@
 import type { Metadata } from 'next';
+import { NextIntlClientProvider } from 'next-intl';
 
 import '@styles/globals.scss';
-import styles from './RootLayout.module.scss';
+
+type Props = {
+	children: React.ReactNode;
+	params: { locale: string };
+};
 
 export const metadata: Metadata = {
-	title: 'MyUI',
-	description: 'MyUI',
+	title: 'SkeletonHub',
+	description: 'SkeletonHub',
 	icons: {
 		icon: [
 			{ url: '/favicon/favicon.ico' },
@@ -17,11 +22,13 @@ export const metadata: Metadata = {
 	},
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: Props) {
 	return (
-		<html lang='ru'>
+		<html>
 			<body>
-				<main className={styles.mainLayout}>{children}</main>
+				<NextIntlClientProvider>
+					<main>{children}</main>
+				</NextIntlClientProvider>
 			</body>
 		</html>
 	);
