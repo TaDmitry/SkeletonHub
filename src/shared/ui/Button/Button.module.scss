@@ -29,10 +29,7 @@
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	line-height: 0;
-	margin-right: 0.6rem;
-	margin-left: 0;
-	font-size: 1.05em;
+	margin-right: 10px;
 }
 
 .hasIcon {
@@ -42,6 +39,5 @@
 }
 
 .iconRight .icon {
-	margin-right: 0;
-	margin-left: 0.6rem;
+	margin-left: 10px;
 }

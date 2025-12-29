@@ -1,18 +1,19 @@
 @mixin glass-card {
-	align-items: center;
+	isolation: isolate;
 	transition:
 		background-color 240ms ease,
 		box-shadow 240ms ease,
 		transform 240ms ease;
 	will-change: transform, box-shadow, backdrop-filter;
-	background: #ffffff0a;
-	border: 1px solid #ffffff1a;
+	background: rgba(255, 255, 255, 0.06);
+	border: 1px solid rgba(255, 255, 255, 0.12);
 	box-shadow:
-		0 10px 30px #0306178c,
-		0 2px 6px #00000040,
-		inset 0 1px 0 #ffffff08;
+		0 10px 30px rgba(3, 6, 23, 0.55),
+		0 2px 6px rgba(0, 0, 0, 0.25),
+		inset 0 1px 0 rgba(255, 255, 255, 0.05);
+
+	-webkit-backdrop-filter: blur(8px) saturate(140%) contrast(1.03);
 	backdrop-filter: blur(8px) saturate(140%) contrast(1.03);
-	overflow: hidden;
 
 	&::before {
 		content: '';
@@ -20,9 +21,10 @@
 		inset: 0;
 		border-radius: inherit;
 		pointer-events: none;
-		background: linear-gradient(180deg, #ffffff0f, #ffffff03 40%, #fff0);
+		background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02) 40%, transparent);
 		mix-blend-mode: overlay;
 		transform: translateZ(0);
 		transition: opacity 220ms ease;
+		opacity: 1;
 	}
 }

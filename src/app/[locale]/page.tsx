@@ -1,16 +1,12 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
-import { SpiderCanvas } from '@components';
-import { Button, Icon, Text, Title } from '@ui';
-
+import { SpiderCanvas } from '@components/index';
+import { Button, Text, Title } from '@ui/index';
 import { NavBarWidget } from '@widgets/layout/NavBar';
 
 import styles from './RootLayout.module.scss';
 
 export default function HomePage() {
-	const t = useTranslations('HomePage');
-
 	return (
 		<div className={styles.container}>
 			<NavBarWidget />
@@ -29,12 +25,7 @@ export default function HomePage() {
 							>
 								Начните с чистого скелета, <span>SkeletonHub</span> создаёт основу для вашего
 								дизайна
-								<Icon
-									icon='Language'
-									size={20}
-								/>
 							</Text>
-							<p>{t('title')}</p>;
 						</div>
 
 						<div className={styles.buttons}>

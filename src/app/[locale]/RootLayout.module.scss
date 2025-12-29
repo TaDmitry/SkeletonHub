@@ -100,7 +100,7 @@
 
 	&:focus-visible {
 		transform: scale(1.05);
-		outline: 2px solid $accent-1;
+		outline: 2px solid $accent-classic;
 		outline-offset: 3px;
 	}
 }
@@ -120,12 +120,12 @@
 
 	&:hover {
 		transform: scale(1.05);
-		border-color: $accent-1;
+		border-color: $accent-classic;
 	}
 
 	&:focus-visible {
 		transform: scale(1.05);
-		outline: 2px solid $accent-1;
+		outline: 2px solid $accent-classic;
 		outline-offset: 3px;
 	}
 }
@@ -133,9 +133,7 @@
 @media (width <=768px) {
 	.content {
 		align-items: flex-start;
-		padding-inline: 32px;
-		padding-top: 40px;
-		padding-bottom: 40px;
+		padding: 128px 20px 20px;
 	}
 
 	.hero {
@@ -151,15 +149,19 @@
 	}
 }
 
-@media (max-width: 640px) {
+@media (width <=640px) {
 	.buttons {
 		flex-direction: column;
 		width: 100%;
+
+		button>span {
+			font-size: 16px;
+		}
 	}
 
 	.features,
 	.learn {
-		padding: 14px 24px;
+		padding: 14px 20px;
 		width: 100%;
 		box-sizing: border-box;
 	}

@@ -1,5 +1,9 @@
 import type { Metadata } from 'next';
-import { NextIntlClientProvider } from 'next-intl';
+import { notFound } from 'next/navigation';
+import { hasLocale, NextIntlClientProvider } from 'next-intl';
+import { getLocale, getMessages, setRequestLocale } from 'next-intl/server';
+
+import { routing } from '@/shared/config/i18n/routing';
 
 import '@styles/globals.scss';
 
@@ -22,11 +26,25 @@ export const metadata: Metadata = {
 	},
 };
 
-export default async function RootLayout({ children }: Props) {
+export default async function RootLayout({ children, params }: Props) {
+	const paramsResolved = await params;
+	const locale = paramsResolved?.locale as string;
+
+	if (!locale || !hasLocale(routing.locales, locale)) {
+		notFound();
+	}
+
+	setRequestLocale(locale);
+	const currentLocale = await getLocale();
+	const messages = await getMessages();
+
 	return (
-		<html>
+		<html lang={currentLocale}>
 			<body>
-				<NextIntlClientProvider>
+				<NextIntlClientProvider
+					locale={currentLocale}
+					messages={messages}
+				>
 					<main>{children}</main>
 				</NextIntlClientProvider>
 			</body>

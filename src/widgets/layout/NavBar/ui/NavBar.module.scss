@@ -1,93 +1,164 @@
-// @use '@styles/variables' as *;
+@use '@styles/mixins' as *;
+@use '@styles/variables' as *;
 
-// .navbarWrapper {
-// 	position: sticky;
-// 	top: 0;
-// 	z-index: 1000;
-// 	width: 100%;
-// 	background-color: $white;
-// 	border-bottom: 1px solid #00000024;
-// }
+.navbar {
+	@include glass-card();
 
-// .navbar {
-// 	display: flex;
-// 	justify-content: flex-end;
-// 	align-items: center;
-// 	padding: 18px 20px;
-// 	overflow-x: auto;
-// 	-webkit-overflow-scrolling: touch;
-// 	-ms-overflow-style: none;
-// 	scrollbar-width: none;
+	position: fixed;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	z-index: 999;
+	padding: 12px 80px;
+	border-left: 0;
+	border-right: 0;
+	border-top: 0;
+}
 
-// 	&::-webkit-scrollbar {
-// 		height: 0;
-// 		width: 0;
-// 	}
-// }
+.left {
+	display: flex;
+	align-items: center;
+}
 
-// .navList {
-// 	list-style: none;
-// 	padding: 0;
-// 	margin: 0;
-// 	display: flex;
-// 	gap: 20px;
-// 	align-items: center;
-// 	min-width: 0;
-// }
+.logo {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
 
-// .navItem {
-// 	&:last-child {
-// 		padding: 0 20px 0 0;
-// 	}
-// }
+.title {
+	color: $white;
+	font-size: 20px;
+	margin: 0 34px 0 10px;
+}
 
-// .navButton {
-// 	display: flex;
-// 	align-items: center;
-// 	gap: 8px;
-// 	font-size: 14px;
-// 	font-weight: 500;
-// 	color: #474747;
-// 	border-radius: 2px;
-// 	padding: 12px 16px;
-// 	background: #00000008;
-// 	backdrop-filter: blur(14.5px);
+.icon {
+	color: $white;
+	font-size: 24px;
+}
 
-// 	&:hover {
-// 		background: #0000001c;
-// 	}
-// }
+.title {
+	color: $white;
+	font-size: 20px;
+	margin: 0 34px 0 10px;
+}
 
-// .navButton_active {
-// 	color: $white;
-// 	background: $color-main;
+.navList {
+	display: flex;
+	align-items: center;
 
-// 	&:hover {
-// 		background: $color-main-disabled;
-// 	}
-// }
+	button {
+		margin: 0 16px;
 
-// .icon {
-// 	width: 18px;
-// 	height: 18px;
-// }
+		&:focus-visible>span {
+			transform: scale(1.05);
+			color: $accent-classic
+		}
+	}
 
-// @media (width <= 900px) {
-// 	.navbar {
-// 		padding: 14px 10px;
-// 	}
+	span {
+		font-size: 16px;
+		cursor: pointer;
+		transition: color 200ms ease;
 
-// 	.navList {
-// 		gap: 12px;
-// 	}
+		&:hover {
+			color: $accent-classic
+		}
+	}
+}
 
-// 	.navItem {
-// 		&:last-child {
-// 			padding: 0 10px 0 0;
-// 		}
-// 	}
+.right {
+	display: flex;
+	align-items: center;
+	border-left: 2px solid rgba($white, 0.2);
+	padding-left: 8px;
 
-// 	.navButton {
-// 		padding: 8px 12px;
-// 	}
-// }
+	button {
+		span {
+			margin: 0;
+			padding: 8px;
+		}
+
+		&:hover>span {
+			color: $white;
+			border-radius: $border-radius-sm;
+			background-color: rgba($white, 0.1);
+		}
+
+		&:focus-visible>span {
+			color: $white;
+			border-radius: $border-radius-sm;
+			background-color: rgba($white, 0.1);
+		}
+	}
+}
+
+.dropdown {
+	display: none;
+}
+
+@media (width <=768px) {
+	.navbar {
+		padding: 12px 24px;
+	}
+
+	.title {
+		margin: 0 8px 0 4px;
+	}
+
+	.dropdown {
+		display: block;
+	}
+}
+
+.sidePanel {
+	@include glass-card();
+
+	position: fixed;
+	top: 90px;
+	right: 0;
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+	padding: 16px;
+	gap: 16px;
+	z-index: 999;
+	border-radius: $border-radius-sm 0 0 0;
+
+	&::before {
+		background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02) 40%, transparent);
+	}
+}
+
+.panelButton span {
+	margin: 0;
+}
+
+.dropdown span {
+	transition: transform 0.25s ease;
+}
+
+.dropdownOpen span {
+	transform: rotate(180deg);
+}
+
+.sidePanel {
+	width: 280px;
+
+	transform: translateX(100%);
+	opacity: 0;
+
+	transition:
+		transform 0.3s ease,
+		opacity 0.2s ease;
+
+	pointer-events: none;
+	will-change: transform;
+}
+
+.sidePanelOpen {
+	transform: translateX(0);
+	opacity: 1;
+	pointer-events: auto;
+}

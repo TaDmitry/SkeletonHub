@@ -29,6 +29,7 @@ const nextConfig: NextConfig & { turbopack?: any } = {
 		'http://localhost:3000',
 		'http://192.168.1.22:3000',
 		'http://192.168.64.123:3000',
+		'http://192.168.25.155:3000',
 	],
 
 	webpack(config) {
