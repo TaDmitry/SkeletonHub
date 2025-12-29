@@ -1,49 +1,83 @@
+'use client';
+
 import React, { useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 
+import {
+	MOBILE_BREAKPOINT,
+	SMALL_MOBILE_BREAKPOINT,
+	SSR_FALLBACK_WIDTH,
+} from '@/shared/constants/breakpoints';
+import { useNavBarStore } from '@features/ui/model/useNavBarStore';
 import { Button, Icon } from '@ui/index';
 
 import styles from './NavBar.module.scss';
 
-const MOBILE_BREAKPOINT = 768;
+const TRANSITION_MS = 350;
 
 interface MobilePanelProps {
-	isOpen: boolean;
-	onClose: () => void;
 	triggerRef?: React.RefObject<HTMLButtonElement | null>;
 	id?: string;
 }
 
-export const MobilePanel: React.FC<MobilePanelProps> = ({
-	isOpen,
-	onClose,
-	triggerRef,
-	id = 'mobile-panel',
-}) => {
+export const MobilePanel: React.FC<MobilePanelProps> = ({ triggerRef, id = 'mobile-panel' }) => {
 	const panelRef = useRef<HTMLElement | null>(null);
-	const [windowWidth, setWindowWidth] = useState<number | null>(null);
+	const isOpen = useNavBarStore((s) => s.isPanelOpen);
+	const close = useNavBarStore((s) => s.close);
+
+	const [windowWidth, setWindowWidth] = useState<number>(SSR_FALLBACK_WIDTH);
+
+	const [shouldRender, setShouldRender] = useState<boolean>(isOpen);
+	const [isAnimatingOpen, setIsAnimatingOpen] = useState<boolean>(false);
+	const timeoutRef = useRef<number | null>(null);
 
 	useEffect(() => {
-		const updateWidth = () => setWindowWidth(window.innerWidth);
+		const onResize = () => {
+			const width = window.innerWidth;
+			setWindowWidth(width);
 
-		updateWidth();
-		window.addEventListener('resize', updateWidth);
+			if (width > MOBILE_BREAKPOINT) {
+				close();
+			}
+		};
+
+		onResize();
+		window.addEventListener('resize', onResize);
+
+		return () => window.removeEventListener('resize', onResize);
+	}, [close]);
+
+	useEffect(() => {
+		if (timeoutRef.current) {
+			clearTimeout(timeoutRef.current);
+			timeoutRef.current = null;
+		}
+
+		if (isOpen) {
+			setShouldRender(true);
+			requestAnimationFrame(() => {
+				requestAnimationFrame(() => {
+					setIsAnimatingOpen(true);
+				});
+			});
+		} else {
+			setIsAnimatingOpen(false);
+			timeoutRef.current = window.setTimeout(() => {
+				setShouldRender(false);
+				timeoutRef.current = null;
+			}, TRANSITION_MS);
+		}
 
 		return () => {
-			window.removeEventListener('resize', updateWidth);
+			if (timeoutRef.current) {
+				clearTimeout(timeoutRef.current);
+				timeoutRef.current = null;
+			}
 		};
-	}, []);
+	}, [isOpen]);
 
 	useEffect(() => {
-		if (!isOpen || windowWidth === null) return;
-
-		if (windowWidth > MOBILE_BREAKPOINT) {
-			onClose();
-		}
-	}, [windowWidth, isOpen, onClose]);
-
-	useEffect(() => {
-		if (!isOpen || !panelRef.current) {
+		if (!shouldRender || !panelRef.current) {
 			return () => {};
 		}
 
@@ -63,7 +97,7 @@ export const MobilePanel: React.FC<MobilePanelProps> = ({
 		const handleKeyDown = (e: KeyboardEvent) => {
 			if (e.key === 'Escape') {
 				e.preventDefault();
-				onClose();
+				close();
 
 				return;
 			}
@@ -90,7 +124,7 @@ export const MobilePanel: React.FC<MobilePanelProps> = ({
 			if (panelEl.contains(target)) return;
 			if (triggerEl?.contains(target)) return;
 
-			onClose();
+			close();
 		};
 
 		document.addEventListener('keydown', handleKeyDown);
@@ -100,21 +134,19 @@ export const MobilePanel: React.FC<MobilePanelProps> = ({
 			document.removeEventListener('keydown', handleKeyDown);
 			document.removeEventListener('mousedown', handleClickOutside);
 
-			if (triggerEl?.focus) {
-				triggerEl.focus();
-			} else {
-				previouslyFocused?.focus?.();
-			}
+			triggerEl?.focus?.() ?? previouslyFocused?.focus?.();
 		};
-	}, [isOpen, onClose, triggerRef]);
+	}, [shouldRender, close, triggerRef]);
 
-	if (!isOpen) return null;
+	if (!shouldRender) return null;
+
+	const isSmallMobile = windowWidth <= SMALL_MOBILE_BREAKPOINT;
 
 	return (
 		<aside
 			id={id}
 			ref={panelRef}
-			className={clsx(styles.sidePanel, isOpen && styles.sidePanelOpen)}
+			className={clsx(styles.sidePanel, isAnimatingOpen && styles.sidePanelOpen)}
 			role='dialog'
 			aria-modal='true'
 			aria-hidden={!isOpen}
@@ -124,25 +156,27 @@ export const MobilePanel: React.FC<MobilePanelProps> = ({
 				aria-label='Mobile navigation'
 				className={styles.panelNav}
 			>
-				<div className={styles.panelTop}>
-					<Button
-						icon={<Icon icon='LogoGithub' />}
-						className={styles.panelButton}
-					/>
+				{isSmallMobile && (
+					<div className={clsx(styles.panelTop, styles.panelBottom)}>
+						<Button
+							icon={<Icon icon='Home' />}
+							className={styles.panelButton}
+						/>
+						<Button
+							icon={<Icon icon='Book' />}
+							className={styles.panelButton}
+						/>
+					</div>
+				)}
+
+				<div className={clsx(styles.panelTop, styles.panelMiddle)}>
 					<Button
 						icon={<Icon icon='Language' />}
 						className={styles.panelButton}
 					/>
-				</div>
-
-				<div className={styles.panelLinks}>
 					<Button
-						text='Главная'
-						className={clsx(styles.panelButton, styles.smallOnly)}
-					/>
-					<Button
-						text='Документация'
-						className={clsx(styles.panelButton, styles.smallOnly)}
+						icon={<Icon icon='LogoGithub' />}
+						className={clsx(styles.panelButton, styles.githubButton)}
 					/>
 				</div>
 			</nav>
