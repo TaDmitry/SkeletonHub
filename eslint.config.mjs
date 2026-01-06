@@ -96,7 +96,7 @@ export default [
 
 			// --- TypeScript ---
 			'@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
-			'@typescript-eslint/no-explicit-any': 'off',
+			'@typescript-eslint/no-explicit-any': 'error',
 
 			// --- Общие ---
 			'prettier/prettier': 'error',
@@ -104,7 +104,7 @@ export default [
 			'prefer-const': 'error',
 			'eqeqeq': ['error', 'always'],
 			'consistent-return': 'error',
-			'no-console': ['warn', { allow: ['warn', 'error'] }],
+			'no-console': ['error', { allow: ['warn', 'error'] }],
 
 			// React rules (нужен eslint-plugin-react)
 			'react/react-in-jsx-scope': 'off',

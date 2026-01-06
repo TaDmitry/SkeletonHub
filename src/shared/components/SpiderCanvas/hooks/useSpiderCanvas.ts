@@ -256,8 +256,8 @@ export function useSpiderCanvas(props: Props) {
 				container.addEventListener('pointermove', onPointerMove);
 				container.addEventListener('pointerout', onPointerOut);
 			} else {
-				container.addEventListener('mousemove', onPointerMove as any);
-				container.addEventListener('mouseout', onPointerOut as any);
+				container.addEventListener('mousemove', onPointerMove as never);
+				container.addEventListener('mouseout', onPointerOut as never);
 			}
 		}
 		// всегда слушаем touchstart чтобы определить тач и очистить FG (предотвращает эмулированную мышь)
@@ -387,10 +387,10 @@ export function useSpiderCanvas(props: Props) {
 				container.removeEventListener('pointermove', onPointerMove);
 				container.removeEventListener('pointerout', onPointerOut);
 			} else {
-				container.removeEventListener('mousemove', onPointerMove as any);
-				container.removeEventListener('mouseout', onPointerOut as any);
+				container.removeEventListener('mousemove', onPointerMove as never);
+				container.removeEventListener('mouseout', onPointerOut as never);
 			}
-			container.removeEventListener('touchstart', onTouchStart as any);
+			container.removeEventListener('touchstart', onTouchStart as never);
 			if (resizeObserverRef.current) {
 				resizeObserverRef.current.disconnect();
 				resizeObserverRef.current = null;

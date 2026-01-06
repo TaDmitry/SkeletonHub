@@ -24,7 +24,7 @@ export const Text = forwardRef<HTMLElement, TextProps>(
 
 		return (
 			<Tag
-				ref={ref as any}
+				ref={ref as never}
 				id={id}
 				className={clsx(
 					styles[`align_${align}`],

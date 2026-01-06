@@ -20,7 +20,7 @@ export const Title = forwardRef<HTMLElement, TitleProps>(
 
 		return (
 			<Tag
-				ref={ref as any}
+				ref={ref as never}
 				id={id}
 				className={clsx(
 					styles.root,

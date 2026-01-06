@@ -6,7 +6,7 @@ import { iconMap, type IconName } from '@shared/assets/iconMap';
 import styles from './Icon.module.scss';
 
 export interface IconProps extends React.SVGProps<SVGSVGElement> {
-	icon: IconName | React.FC<any>;
+	icon: IconName | React.FC<never>;
 	size?: string | number;
 	title?: string;
 	decorative?: boolean;
@@ -27,7 +27,7 @@ const IconInner = (
 	}: IconProps,
 	ref: React.ForwardedRef<SVGSVGElement>
 ) => {
-	const SvgComponent = typeof icon === 'string' ? iconMap[icon] : (icon as React.FC<any>);
+	const SvgComponent = typeof icon === 'string' ? iconMap[icon] : (icon as React.FC<unknown>);
 	if (!SvgComponent) return null;
 
 	const accessibility = decorative
@@ -48,7 +48,7 @@ const IconInner = (
 
 	return (
 		<SvgComponent
-			ref={ref as any}
+			ref={ref as never}
 			{...svgProps}
 			style={styleProp}
 		/>

@@ -3,13 +3,29 @@ import createNextIntlPlugin from 'next-intl/plugin';
 import fs from 'fs';
 import path from 'path';
 
-function readTsConfig() {
+interface WebpackRule {
+	test?: RegExp | string;
+	issuer?: RegExp;
+	use?: Array<{ loader: string; options?: Record<string, unknown> }>;
+}
+
+interface WebpackModule {
+	rules?: WebpackRule[];
+}
+
+interface WebpackConfig {
+	module?: WebpackModule;
+	[key: string]: unknown;
+}
+
+function readTsConfig(): Record<string, unknown> {
 	try {
 		const raw = fs.readFileSync(path.resolve(process.cwd(), 'tsconfig.json'), 'utf8');
+		const parsed = JSON.parse(raw);
 
-		return JSON.parse(raw);
-	} catch (e) {
-		console.warn('Не удалось прочитать tsconfig.json:', e);
+		return typeof parsed === 'object' && parsed !== null ? parsed : {};
+	} catch (err) {
+		console.warn('Не удалось прочитать tsconfig.json:', err);
 
 		return {};
 	}
@@ -18,9 +34,10 @@ function readTsConfig() {
 const withNextIntl = createNextIntlPlugin('./src/shared/config/i18n/request.ts');
 
 const tsconfig = readTsConfig();
-const baseUrl = tsconfig?.compilerOptions?.baseUrl ?? '.';
+const baseUrl =
+	((tsconfig?.compilerOptions as Record<string, unknown>)?.baseUrl as string | undefined) ?? '.';
 
-const nextConfig: NextConfig & { turbopack?: any } = {
+const nextConfig: NextConfig & { turbopack?: Record<string, unknown> } = {
 	sassOptions: {
 		includePaths: [path.resolve(process.cwd(), baseUrl)],
 	},
@@ -32,12 +49,12 @@ const nextConfig: NextConfig & { turbopack?: any } = {
 		'http://192.168.25.155:3000',
 	],
 
-	webpack(config) {
-		const hasSvgRule = config.module.rules.some(
-			(r: any) => r.test && r.test.toString().includes('\\.svg')
-		);
+	webpack(config: WebpackConfig) {
+		const rules = config.module?.rules ?? [];
+		const hasSvgRule = rules.some((r) => r.test instanceof RegExp && r.test.test('.svg'));
+
 		if (!hasSvgRule) {
-			config.module.rules.push({
+			const svgRule: WebpackRule = {
 				test: /\.svg$/i,
 				issuer: /\.[jt]sx?$/,
 				use: [
@@ -62,7 +79,11 @@ const nextConfig: NextConfig & { turbopack?: any } = {
 						},
 					},
 				],
-			});
+			};
+
+			if (!config.module) config.module = {};
+			if (!Array.isArray(config.module.rules)) config.module.rules = [];
+			config.module.rules.push(svgRule);
 		}
 
 		return config;
@@ -76,6 +97,7 @@ const nextConfig: NextConfig & { turbopack?: any } = {
 			},
 		},
 	},
+
 	reactStrictMode: true,
 };
 

@@ -69,7 +69,10 @@ export const NavBarWidget: React.FC = () => {
 					{(!isClient || windowWidth > MOBILE_BREAKPOINT) && (
 						<>
 							<Button icon={<Icon icon='Language' />} />
-							<Button icon={<Icon icon='LogoGithub' />} />
+							<Button
+								href='https://github.com/TaDmitry'
+								icon={<Icon icon='LogoGithub' />}
+							/>
 						</>
 					)}
 
