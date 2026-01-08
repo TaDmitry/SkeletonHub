@@ -1,5 +1,30 @@
 {
-	"HomePage": {
-		"title": "ымым!"
+	"NavBar": {
+		"brand": { "name": "SkeletonUI" },
+		"links": {
+			"home": "Главная",
+			"docs": "Документация"
+		},
+		"buttons": {
+			"openMenu": "Открыть меню",
+			"closeMenu": "Закрыть меню",
+			"github": "Перейти на GitHub",
+			"language": "Сменить язык"
+		},
+		"aria": {
+			"mainNavigation": "Основная навигация"
+		}
+	},
+	"MobilePanel": {
+		"buttons": {
+			"home": "Главная",
+			"docs": "Документация",
+			"language": "Сменить язык",
+			"github": "Перейти на GitHub"
+		},
+		"aria": {
+			"panel": "Мобильное меню",
+			"navigation": "Мобильная навигация"
+		}
 	}
 }

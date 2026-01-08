@@ -1,3 +1,30 @@
 {
-	"title": "Hello world!"
+	"NavBar": {
+		"brand": { "name": "SkeletonUI" },
+		"links": {
+			"home": "Home",
+			"docs": "Documentation"
+		},
+		"buttons": {
+			"openMenu": "Open menu",
+			"closeMenu": "Close menu",
+			"github": "Go to GitHub",
+			"language": "Change language"
+		},
+		"aria": {
+			"mainNavigation": "Main navigation"
+		}
+	},
+	"MobilePanel": {
+		"buttons": {
+			"home": "Home",
+			"docs": "Documentation",
+			"language": "Change language",
+			"github": "Go to GitHub"
+		},
+		"aria": {
+			"panel": "Mobile menu",
+			"navigation": "Mobile navigation"
+		}
+	}
 }

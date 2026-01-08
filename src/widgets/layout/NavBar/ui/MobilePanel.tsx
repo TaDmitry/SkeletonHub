@@ -1,6 +1,5 @@
-'use client';
-
 import React, { useEffect, useRef, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import clsx from 'clsx';
 
 import {
@@ -21,6 +20,8 @@ interface MobilePanelProps {
 }
 
 export const MobilePanel: React.FC<MobilePanelProps> = ({ triggerRef, id = 'mobile-panel' }) => {
+	const t = useTranslations('layout.navbar.MobilePanel');
+
 	const panelRef = useRef<HTMLElement | null>(null);
 	const isOpen = useNavBarStore((s) => s.isPanelOpen);
 	const close = useNavBarStore((s) => s.close);
@@ -150,10 +151,10 @@ export const MobilePanel: React.FC<MobilePanelProps> = ({ triggerRef, id = 'mobi
 			role='dialog'
 			aria-modal='true'
 			aria-hidden={!isOpen}
-			aria-label='Мобильное меню'
+			aria-label={t('aria.panel')}
 		>
 			<nav
-				aria-label='Mobile navigation'
+				aria-label={t('aria.navigation')}
 				className={styles.panelNav}
 			>
 				{isSmallMobile && (
@@ -161,10 +162,12 @@ export const MobilePanel: React.FC<MobilePanelProps> = ({ triggerRef, id = 'mobi
 						<Button
 							icon={<Icon icon='Home' />}
 							className={styles.panelButton}
+							aria-label={t('buttons.home')}
 						/>
 						<Button
 							icon={<Icon icon='Book' />}
 							className={styles.panelButton}
+							aria-label={t('buttons.docs')}
 						/>
 					</div>
 				)}
@@ -173,10 +176,12 @@ export const MobilePanel: React.FC<MobilePanelProps> = ({ triggerRef, id = 'mobi
 					<Button
 						icon={<Icon icon='Language' />}
 						className={styles.panelButton}
+						aria-label={t('buttons.language')}
 					/>
 					<Button
 						icon={<Icon icon='LogoGithub' />}
 						className={clsx(styles.panelButton, styles.githubButton)}
+						aria-label={t('buttons.github')}
 					/>
 				</div>
 			</nav>

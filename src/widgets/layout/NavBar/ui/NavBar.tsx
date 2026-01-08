@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import clsx from 'clsx';
 
 import { useNavBarStore } from '@/features/ui/model/useNavBarStore';
@@ -14,6 +15,8 @@ import { MobilePanel } from './MobilePanel';
 import styles from './NavBar.module.scss';
 
 export const NavBarWidget: React.FC = () => {
+	const t = useTranslations('layout.navbar.NavBar');
+
 	const isPanelOpen = useNavBarStore((s) => s.isPanelOpen);
 	const togglePanel = useNavBarStore((s) => s.toggle);
 	const closePanel = useNavBarStore((s) => s.close);
@@ -42,7 +45,7 @@ export const NavBarWidget: React.FC = () => {
 		<>
 			<nav
 				className={styles.navbar}
-				aria-label='Основная навигация'
+				aria-label={t('aria.mainNavigation')}
 			>
 				<div className={styles.left}>
 					<div className={styles.logo}>
@@ -50,16 +53,16 @@ export const NavBarWidget: React.FC = () => {
 							icon='Language'
 							className={styles.icon}
 						/>
-						<Title className={styles.title}>SkeletonUI</Title>
+						<Title className={styles.title}>{t('brand.name')}</Title>
 					</div>
 
 					{(!isClient || windowWidth > SMALL_MOBILE_BREAKPOINT) && (
 						<ul className={styles.navList}>
 							<li>
-								<Button text='Главная' />
+								<Button text={t('links.home')} />
 							</li>
 							<li>
-								<Button text='Документация' />
+								<Button text={t('links.docs')} />
 							</li>
 						</ul>
 					)}
@@ -68,9 +71,13 @@ export const NavBarWidget: React.FC = () => {
 				<div className={styles.right}>
 					{(!isClient || windowWidth > MOBILE_BREAKPOINT) && (
 						<>
-							<Button icon={<Icon icon='Language' />} />
+							<Button
+								aria-label={t('buttons.language')}
+								icon={<Icon icon='Language' />}
+							/>
 							<Button
 								href='https://github.com/TaDmitry'
+								aria-label={t('buttons.github')}
 								icon={<Icon icon='LogoGithub' />}
 							/>
 						</>
@@ -84,7 +91,7 @@ export const NavBarWidget: React.FC = () => {
 							ref={triggerRef}
 							aria-expanded={isPanelOpen}
 							aria-controls='mobile-panel'
-							aria-label={isPanelOpen ? 'Закрыть меню' : 'Открыть меню'}
+							aria-label={isPanelOpen ? t('buttons.closeMenu') : t('buttons.openMenu')}
 						/>
 					)}
 				</div>
