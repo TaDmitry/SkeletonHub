@@ -128,3 +128,13 @@ a {
 		line-height: 1.2;
 	}
 }
+
+::selection {
+	background-color: $white;
+	color: $black;
+}
+
+::-moz-selection {
+	background-color: $white;
+	color: $black;
+}

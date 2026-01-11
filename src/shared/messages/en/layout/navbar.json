@@ -1,9 +1,10 @@
 {
 	"NavBar": {
-		"brand": { "name": "SkeletonUI" },
+		"brand": { "name": "SkeletonHub" },
 		"links": {
 			"home": "Home",
-			"docs": "Documentation"
+			"docs": "Documentation",
+			"blog": "Blog"
 		},
 		"buttons": {
 			"openMenu": "Open menu",
@@ -18,7 +19,8 @@
 	"MobilePanel": {
 		"buttons": {
 			"home": "Home",
-			"docs": "Documentation",
+			"docs": "Docs",
+			"blog": "Blog",
 			"language": "Change language",
 			"github": "Go to GitHub"
 		},

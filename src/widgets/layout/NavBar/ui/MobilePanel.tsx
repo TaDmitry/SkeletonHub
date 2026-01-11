@@ -7,8 +7,9 @@ import {
 	SMALL_MOBILE_BREAKPOINT,
 	SSR_FALLBACK_WIDTH,
 } from '@/shared/constants/breakpoints';
-import { useNavBarStore } from '@features/ui/model/useNavBarStore';
 import { Button, Icon } from '@ui/index';
+
+import { useNavBarStore } from '../model/useNavBarStore';
 
 import styles from './NavBar.module.scss';
 
@@ -160,14 +161,14 @@ export const MobilePanel: React.FC<MobilePanelProps> = ({ triggerRef, id = 'mobi
 				{isSmallMobile && (
 					<div className={clsx(styles.panelTop, styles.panelBottom)}>
 						<Button
-							icon={<Icon icon='Home' />}
+							icon={<Icon icon='Library' />}
 							className={styles.panelButton}
-							aria-label={t('buttons.home')}
+							aria-label={t('buttons.docs')}
 						/>
 						<Button
 							icon={<Icon icon='Book' />}
 							className={styles.panelButton}
-							aria-label={t('buttons.docs')}
+							aria-label={t('buttons.blog')}
 						/>
 					</div>
 				)}

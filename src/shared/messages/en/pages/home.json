@@ -1,0 +1,12 @@
+{
+	"HomePage": {
+		"hero": {
+			"title": "SkeletonHub",
+			"description": "Start with a clean skeleton - <brand>SkeletonHub</brand> lays the foundation for your design"
+		},
+		"buttons": {
+			"learn": "Explore SkeletonHub",
+			"features": "Features"
+		}
+	}
+}

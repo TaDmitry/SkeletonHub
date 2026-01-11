@@ -1,9 +1,10 @@
 {
 	"NavBar": {
-		"brand": { "name": "SkeletonUI" },
+		"brand": { "name": "SkeletonHub" },
 		"links": {
 			"home": "Главная",
-			"docs": "Документация"
+			"docs": "Документация",
+			"blog": "Новости"
 		},
 		"buttons": {
 			"openMenu": "Открыть меню",
@@ -19,6 +20,7 @@
 		"buttons": {
 			"home": "Главная",
 			"docs": "Документация",
+			"blog": "Новости",
 			"language": "Сменить язык",
 			"github": "Перейти на GitHub"
 		},

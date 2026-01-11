@@ -2,14 +2,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import clsx from 'clsx';
 
-import { useNavBarStore } from '@/features/ui/model/useNavBarStore';
 import {
 	MOBILE_BREAKPOINT,
 	SMALL_MOBILE_BREAKPOINT,
 	SSR_FALLBACK_WIDTH,
 } from '@/shared/constants/breakpoints';
-import { Button, Icon, Title } from '@ui/index';
+import { Button, Icon } from '@ui/index';
 
+import { useNavBarStore } from '../model/useNavBarStore';
 import { MobilePanel } from './MobilePanel';
 
 import styles from './NavBar.module.scss';
@@ -49,20 +49,27 @@ export const NavBarWidget: React.FC = () => {
 			>
 				<div className={styles.left}>
 					<div className={styles.logo}>
-						<Icon
-							icon='Language'
-							className={styles.icon}
+						<Button
+							text={t('brand.name')}
+							href='/'
+							icon={
+								<Icon
+									icon='Language'
+									className={styles.icon}
+								/>
+							}
+							className={styles.title}
+							title={t('links.home')}
 						/>
-						<Title className={styles.title}>{t('brand.name')}</Title>
 					</div>
 
 					{(!isClient || windowWidth > SMALL_MOBILE_BREAKPOINT) && (
 						<ul className={styles.navList}>
 							<li>
-								<Button text={t('links.home')} />
+								<Button text={t('links.docs')} />
 							</li>
 							<li>
-								<Button text={t('links.docs')} />
+								<Button text={t('links.blog')} />
 							</li>
 						</ul>
 					)}

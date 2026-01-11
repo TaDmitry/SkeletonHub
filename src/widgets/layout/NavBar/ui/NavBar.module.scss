@@ -33,9 +33,12 @@
 }
 
 .title {
-	color: $white;
-	font-size: 20px;
-	margin: 0 34px 0 10px;
+	margin-right: 34px;
+
+	span {
+		color: $white;
+		font-size: 20px;
+	}
 }
 
 .navList {
@@ -181,7 +184,7 @@
 	padding-top: 4px;
 }
 
-@media (width <=500px) {
+@media (width <=550px) {
 	.panelMiddle {
 		padding-top: 4px;
 		height: calc(100% - 80px);

@@ -1,0 +1,30 @@
+@use '@styles/mixins' as *;
+@use '@styles/variables' as *;
+
+.card {
+	display: flex;
+	text-decoration: none;
+	z-index: 10;
+}
+
+.inner {
+	@include glass-card();
+
+	padding: 20px;
+	border-radius: $border-radius-sm;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.title {
+	margin: 0 0 8px 0;
+	font-size: 18px;
+	font-weight: 700;
+}
+
+.short {
+	margin: 0;
+	font-size: 0.95rem;
+	opacity: 0.85;
+}

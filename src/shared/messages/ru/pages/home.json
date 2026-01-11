@@ -1,0 +1,12 @@
+{
+	"HomePage": {
+		"hero": {
+			"title": "SkeletonHub",
+			"description": "Начните с чистого скелета, <brand>SkeletonHub</brand> создаёт основу для вашего дизайна"
+		},
+		"buttons": {
+			"learn": "Ознакомиться с SkeletonHub",
+			"features": "Особенности"
+		}
+	}
+}
