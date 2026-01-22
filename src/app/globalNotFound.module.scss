@@ -1,0 +1,37 @@
+@use '@styles/mixins' as *;
+@use '@styles/variables' as *;
+
+.html {
+	position: relative;
+	min-height: 100vh;
+	overflow-y: auto;
+	-webkit-overflow-scrolling: touch;
+	background-color: $black;
+}
+
+.container {
+	width: 100%;
+	min-height: 100vh;
+	max-height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	padding-inline: 64px;
+	position: relative;
+	background-image: radial-gradient(ellipse at center, #262626, #262626 0, transparent 70%);
+
+	@include boundary-dimming();
+}
+
+.content {
+	@include glass-card();
+
+	padding: 20px 24px;
+	border-radius: $border-radius-sm;
+	margin-bottom: 20px;
+}
+
+.title {
+	color: $white;
+}

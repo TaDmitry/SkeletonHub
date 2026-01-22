@@ -24,7 +24,7 @@ export type Dot = {
 	vy: number;
 };
 
-export function useDots(_p0: () => void) {
+export function useDots() {
 	const dotsRef = useRef<Dot[]>([]);
 	const rafBgRef = useRef<number | null>(null);
 	const lastTsRef = useRef<number | null>(null);

@@ -63,7 +63,6 @@ export default [
 		settings: {
 			'react': { version: 'detect' },
 			'import/resolver': { node: { extensions: ['.js', '.jsx', '.ts', '.tsx'] } },
-			'react-hooks': { additionalEffectHooks: '' },
 		},
 
 		rules: {
@@ -92,7 +91,7 @@ export default [
 
 			// --- React Hooks ---
 			'react-hooks/rules-of-hooks': 'error',
-			'react-hooks/exhaustive-deps': ['warn', { additionalHooks: '^use[A-Z]\\w*' }],
+			'react-hooks/exhaustive-deps': 'warn',
 
 			// --- TypeScript ---
 			'@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
@@ -126,7 +125,8 @@ export default [
 			'unicorn/filename-case': 'off',
 
 			// Прочее
-			'no-shadow': 'error',
+			'no-shadow': 'off',
+			'@typescript-eslint/no-shadow': 'error',
 			'no-magic-numbers': [
 				'warn',
 				{ ignore: [0, 1], ignoreArrayIndexes: true, enforceConst: true },

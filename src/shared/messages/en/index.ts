@@ -1,4 +1,5 @@
 import navbar from './layout/navbar.json';
+import globalNotFound from './pages/globalNotFound.json';
 import home from './pages/home.json';
 
 export default {
@@ -7,5 +8,6 @@ export default {
 	},
 	pages: {
 		home,
+		globalNotFound,
 	},
 };

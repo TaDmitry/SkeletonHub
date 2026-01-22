@@ -2,12 +2,11 @@
 
 import { useTranslations } from 'next-intl';
 
-import { BlogFeatures } from '@/entities/blog';
-import { SpiderCanvas } from '@components/index';
-import { Button, Text, Title } from '@ui/index';
+// import { BlogFeatures } from '@/entities/blog';
+import { Button, SpiderCanvas, Text, Title } from '@ui/index';
 import { NavBarWidget } from '@widgets/layout/NavBar';
 
-import styles from './RootLayout.module.scss';
+import styles from './rootLayout.module.scss';
 
 export default function HomePage() {
 	const t = useTranslations('pages.home.HomePage');
@@ -47,9 +46,9 @@ export default function HomePage() {
 				</div>
 			</section>
 			{/* // TODO: Временно отключил блог. Нужно будет потом переделать дизайн блокаи его логику */}
-			<section className={styles.blog}>
+			{/* <section className={styles.blog}>
 				<BlogFeatures />
-			</section>
+			</section> */}
 			<SpiderCanvas
 				connectDots
 				adaptive

@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import clsx from 'clsx';
 
@@ -7,6 +9,7 @@ import { useSpiderCanvas } from './hooks/useSpiderCanvas';
 import styles from './SpiderCanvas.module.scss';
 
 export interface SpiderCanvasProps extends React.HTMLAttributes<HTMLDivElement> {
+	enabled?: boolean;
 	dotCount?: number;
 	dotColor?: string;
 	minDotSize?: number;
@@ -22,8 +25,10 @@ export interface SpiderCanvasProps extends React.HTMLAttributes<HTMLDivElement> 
 	pointerLineColor?: string;
 }
 
-export default function SpiderCanvas({
+export const SpiderCanvas: React.FC<SpiderCanvasProps> = ({
 	className,
+	enabled = true,
+
 	dotCount,
 	dotColor = DEFAULT_DOT_COLOR,
 	minDotSize,
@@ -38,8 +43,10 @@ export default function SpiderCanvas({
 	adaptive = true,
 	pointerLineColor,
 	...rest
-}: SpiderCanvasProps) {
+}) => {
 	const { containerRef, bgCanvasRef, fgCanvasRef } = useSpiderCanvas({
+		enabled,
+
 		dotCount,
 		dotColor,
 		minDotSize,
@@ -73,4 +80,4 @@ export default function SpiderCanvas({
 			/>
 		</div>
 	);
-}
+};
