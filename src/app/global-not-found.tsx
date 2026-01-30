@@ -37,7 +37,7 @@ export default async function GlobalNotFound() {
 			<body className={styles.container}>
 				<div className={styles.content}>
 					<Title className={styles.title}>{t('title')}</Title>
-					<Text align='center'>{t('description')}</Text>
+					<Text align='Center'>{t('description')}</Text>
 				</div>
 			</body>
 		</html>

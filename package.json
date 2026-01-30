@@ -13,7 +13,9 @@
 		"lint:fix": "eslint --ext .js,.jsx,.ts,.tsx --fix .",
 		"lint:strict": "eslint --ext .js,.jsx,.ts,.tsx --fix --max-warnings=0 .",
 		"format:all": "prettier --write . && npm run lint:fix",
-		"ci:lint": "npm run prettier:check && npm run lint"
+		"stylelint": "stylelint \"src/**/*.{scss,css}\"",
+		"stylelint:fix": "stylelint \"src/**/*.{scss,css}\" --fix",
+		"ci:lint": "npm run prettier:check && npm run lint && npm run stylelint"
 	},
 	"dependencies": {
 		"clsx": "^2.1.1",
@@ -52,6 +54,11 @@
 		"postcss-scss": "^4.0.9",
 		"prettier": "^3.7.4",
 		"sass": "^1.96.0",
+		"stylelint": "^17.1.0",
+		"stylelint-config-clean-order": "^8.0.0",
+		"stylelint-config-css-modules": "^4.6.0",
+		"stylelint-config-standard-scss": "^17.0.0",
+		"stylelint-order": "^7.0.1",
 		"svgo": "^4.0.0",
 		"typescript": "^5.9.3"
 	}

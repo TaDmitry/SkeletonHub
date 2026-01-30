@@ -2,56 +2,50 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import clsx from 'clsx';
 
-import {
-	MOBILE_BREAKPOINT,
-	SMALL_MOBILE_BREAKPOINT,
-	SSR_FALLBACK_WIDTH,
-} from '@/shared/constants/breakpoints';
-import { Button, Icon } from '@ui/index';
+import { usePathname, useRouter } from '@/shared/config/i18n/navigation';
+import { Button } from '@ui/index';
 
 import { useLanguagePanelStore, useNavBarStore } from '../model';
-import { LanguagePanel } from './LanguagePanel';
 
 import styles from './NavBar.module.scss';
 
 const TRANSITION_MS = 350;
 
-interface MobilePanelProps {
+interface LanguagePanelProps {
 	triggerRef?: React.RefObject<HTMLButtonElement | null>;
 	id?: string;
 }
 
-export const MobilePanel: React.FC<MobilePanelProps> = ({ triggerRef, id = 'mobile-panel' }) => {
-	const t = useTranslations('layout.navbar.MobilePanel');
+const LANGUAGES = [
+	{ code: 'en', label: 'English' },
+	{ code: 'ru', label: 'Русский' },
+] as const;
 
-	const panelRef = useRef<HTMLElement | null>(null);
-	const languageTriggerRef = useRef<HTMLButtonElement | null>(null);
+export const LanguagePanel: React.FC<LanguagePanelProps> = ({
+	triggerRef,
+	id = 'language-panel',
+}) => {
+	const t = useTranslations('layout.navbar.LanguagePanel');
+	const router = useRouter();
+	const pathname = usePathname();
 
-	const isOpen = useNavBarStore((s) => s.isPanelOpen);
-	const close = useNavBarStore((s) => s.close);
-
-	const toggleLanguagePanel = useLanguagePanelStore((s) => s.toggle);
-
-	const [windowWidth, setWindowWidth] = useState<number>(SSR_FALLBACK_WIDTH);
+	const panelRef = useRef<HTMLDivElement | null>(null);
+	const isOpen = useLanguagePanelStore((s) => s.isOpen);
+	const close = useLanguagePanelStore((s) => s.close);
+	const closeMobilePanel = useNavBarStore((s) => s.close);
 
 	const [shouldRender, setShouldRender] = useState<boolean>(isOpen);
 	const [isAnimatingOpen, setIsAnimatingOpen] = useState<boolean>(false);
 	const timeoutRef = useRef<number | null>(null);
 
 	useEffect(() => {
-		const onResize = () => {
-			const width = window.innerWidth;
-			setWindowWidth(width);
-
-			if (width > MOBILE_BREAKPOINT) {
-				close();
-			}
+		const handleResize = () => {
+			close();
 		};
 
-		onResize();
-		window.addEventListener('resize', onResize);
+		window.addEventListener('resize', handleResize);
 
-		return () => window.removeEventListener('resize', onResize);
+		return () => window.removeEventListener('resize', handleResize);
 	}, [close]);
 
 	useEffect(() => {
@@ -145,61 +139,33 @@ export const MobilePanel: React.FC<MobilePanelProps> = ({ triggerRef, id = 'mobi
 		};
 	}, [shouldRender, close, triggerRef]);
 
+	const handleLanguageChange = (languageCode: string) => {
+		router.push({ pathname }, { locale: languageCode });
+		close();
+		closeMobilePanel();
+	};
+
 	if (!shouldRender) return null;
 
-	const isSmallMobile = windowWidth <= SMALL_MOBILE_BREAKPOINT;
-
 	return (
-		<aside
+		<div
 			id={id}
 			ref={panelRef}
-			className={clsx(styles.sidePanel, isAnimatingOpen && styles.sidePanelOpen)}
+			className={clsx(styles.languagePanel, isAnimatingOpen && styles.languagePanelOpen)}
 			role='dialog'
 			aria-modal='true'
 			aria-hidden={!isOpen}
 			aria-label={t('aria.panel')}
 		>
-			<nav
-				aria-label={t('aria.navigation')}
-				className={styles.panelNav}
-			>
-				{isSmallMobile && (
-					<div className={clsx(styles.panelTop, styles.panelBottom)}>
-						<Button
-							icon={<Icon icon='Library' />}
-							className={styles.panelButton}
-							aria-label={t('buttons.docs')}
-						/>
-						<Button
-							icon={<Icon icon='Book' />}
-							className={styles.panelButton}
-							aria-label={t('buttons.blog')}
-						/>
-					</div>
-				)}
-
-				<div className={clsx(styles.panelTop, styles.panelMiddle)}>
-					<Button
-						icon={<Icon icon='Language' />}
-						className={styles.panelButton}
-						onClick={toggleLanguagePanel}
-						ref={languageTriggerRef}
-						aria-label={t('buttons.language')}
-					/>
-					<Button
-						icon={<Icon icon='LogoGithub' />}
-						className={clsx(styles.panelButton, styles.githubButton)}
-						aria-label={t('buttons.github')}
-					/>
-
-					{isOpen && (
-						<LanguagePanel
-							triggerRef={languageTriggerRef}
-							id='mobile-language-panel'
-						/>
-					)}
-				</div>
-			</nav>
-		</aside>
+			{LANGUAGES.map((lang) => (
+				<Button
+					key={lang.code}
+					text={lang.label}
+					onClick={() => handleLanguageChange(lang.code)}
+					className={styles.languageButton}
+					aria-label={lang.label}
+				/>
+			))}
+		</div>
 	);
 };

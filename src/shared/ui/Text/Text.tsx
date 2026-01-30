@@ -9,7 +9,7 @@ export interface TextProps {
 	children?: React.ReactNode;
 	as?: TextTag;
 	className?: string;
-	align?: 'left' | 'center' | 'right';
+	align?: 'Left' | 'Center' | 'Right';
 	noWrap?: boolean;
 	truncate?: boolean;
 	id?: string;
@@ -17,7 +17,7 @@ export interface TextProps {
 
 export const Text = forwardRef<HTMLElement, TextProps>(
 	(
-		{ as = 'p', children, className, align = 'left', noWrap = false, truncate = false, id },
+		{ as = 'p', children, className, align = 'Left', noWrap = false, truncate = false, id },
 		ref
 	) => {
 		const Tag: ElementType = as;
@@ -27,7 +27,7 @@ export const Text = forwardRef<HTMLElement, TextProps>(
 				ref={ref as never}
 				id={id}
 				className={clsx(
-					styles[`align_${align}`],
+					styles[`align${align}`],
 					className,
 					noWrap && styles.noWrap,
 					truncate && styles.truncate

@@ -1,30 +1,33 @@
 .root {
 	margin: 0;
+
 	-webkit-font-smoothing: antialiased;
 }
 
-
-.align_left {
+.alignLeft {
 	text-align: left;
 }
 
-.align_center {
+.alignCenter {
 	text-align: center;
 }
 
-.align_right {
+.alignRight {
 	text-align: right;
 }
 
-
 .visuallyHidden {
 	position: absolute !important;
+
+	overflow: hidden !important;
+
 	width: 1px !important;
 	height: 1px !important;
-	padding: 0 !important;
 	margin: -1px !important;
-	overflow: hidden !important;
-	clip: rect(0 0 0 0) !important;
-	white-space: nowrap !important;
+	padding: 0 !important;
 	border: 0 !important;
+
+	white-space: nowrap !important;
+
+	clip-path: inset(50%) !important;
 }

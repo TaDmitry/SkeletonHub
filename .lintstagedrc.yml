@@ -2,5 +2,9 @@
   - 'eslint --fix --cache --cache-location .cache/eslint'
   - 'prettier --write'
 
+'*.{scss,css}':
+  - 'stylelint --fix'
+  - 'prettier --write'
+
 '*.{md,json,mdx}':
   - 'prettier --write'

@@ -1,24 +1,23 @@
-.align_left {
+.alignLeft {
 	text-align: left;
 }
 
-.align_center {
+.alignCenter {
 	text-align: center;
 }
 
-.align_right {
+.alignRight {
 	text-align: right;
 }
 
-
 .noWrap {
-	white-space: nowrap;
 	overflow: hidden;
+	white-space: nowrap;
 }
 
 .truncate {
-	display: block;
 	overflow: hidden;
+	display: block;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }

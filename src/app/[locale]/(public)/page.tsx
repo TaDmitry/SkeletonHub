@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl';
 import { Button, SpiderCanvas, Text, Title } from '@ui/index';
 import { NavBarWidget } from '@widgets/layout/NavBar';
 
-import styles from './rootLayout.module.scss';
+import styles from './RootLayout.module.scss';
 
 export default function HomePage() {
 	const t = useTranslations('pages.home.HomePage');
@@ -24,7 +24,7 @@ export default function HomePage() {
 						<div className={styles.descriptionWrapper}>
 							<Text
 								className={styles.description}
-								align='center'
+								align='Center'
 							>
 								{t.rich('hero.description', {
 									brand: (chunks: React.ReactNode) => <span>{chunks}</span>,

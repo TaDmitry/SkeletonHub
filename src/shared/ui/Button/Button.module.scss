@@ -1,14 +1,18 @@
 .button {
+	cursor: pointer;
+
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
+
 	text-align: center;
 	text-decoration: none;
-	cursor: pointer;
+
 	transition:
 		background-color 350ms ease,
 		opacity 350ms ease,
 		transform 350ms ease;
+
 	-webkit-tap-highlight-color: transparent;
 }
 
@@ -16,8 +20,8 @@
 .button:disabled {
 	pointer-events: none;
 	cursor: not-allowed;
-	opacity: 0.4;
 	transform: none;
+	opacity: 0.4;
 }
 
 .label {
@@ -34,8 +38,8 @@
 
 .hasIcon {
 	display: inline-flex;
-	align-items: center;
 	gap: 0;
+	align-items: center;
 }
 
 .iconRight .icon {

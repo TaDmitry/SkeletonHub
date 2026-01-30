@@ -28,5 +28,10 @@
 			"panel": "Mobile menu",
 			"navigation": "Mobile navigation"
 		}
+	},
+	"LanguagePanel": {
+		"aria": {
+			"panel": "Language selection"
+		}
 	}
 }

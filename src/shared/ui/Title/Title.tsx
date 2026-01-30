@@ -8,14 +8,14 @@ export type HeadingTag = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
 export interface TitleProps {
 	children: React.ReactNode;
 	tag?: HeadingTag;
-	align?: 'left' | 'center' | 'right';
+	align?: 'Left' | 'Center' | 'Right';
 	className?: string;
 	id?: string;
 	visuallyHidden?: boolean;
 }
 
 export const Title = forwardRef<HTMLElement, TitleProps>(
-	({ tag = 'h1', align = 'center', children, className, id, visuallyHidden = false }, ref) => {
+	({ tag = 'h1', align = 'Center', children, className, id, visuallyHidden = false }, ref) => {
 		const Tag: ElementType = tag;
 
 		return (
@@ -24,7 +24,7 @@ export const Title = forwardRef<HTMLElement, TitleProps>(
 				id={id}
 				className={clsx(
 					styles.root,
-					styles[`align_${align}`],
+					styles[`align${align}`],
 					className,
 					visuallyHidden && styles.visuallyHidden
 				)}

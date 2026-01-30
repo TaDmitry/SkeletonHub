@@ -9,7 +9,8 @@ import {
 } from '@/shared/constants/breakpoints';
 import { Button, Icon } from '@ui/index';
 
-import { useNavBarStore } from '../model/useNavBarStore';
+import { useLanguagePanelStore, useNavBarStore } from '../model';
+import { LanguagePanel } from './LanguagePanel';
 import { MobilePanel } from './MobilePanel';
 
 import styles from './NavBar.module.scss';
@@ -21,9 +22,12 @@ export const NavBarWidget: React.FC = () => {
 	const togglePanel = useNavBarStore((s) => s.toggle);
 	const closePanel = useNavBarStore((s) => s.close);
 
+	const toggleLanguagePanel = useLanguagePanelStore((s) => s.toggle);
+
 	const [isClient, setIsClient] = useState(false);
 	const [windowWidth, setWindowWidth] = useState<number>(SSR_FALLBACK_WIDTH);
 	const triggerRef = useRef<HTMLButtonElement | null>(null);
+	const languageTriggerRef = useRef<HTMLButtonElement | null>(null);
 
 	useEffect(() => {
 		setIsClient(true);
@@ -81,6 +85,8 @@ export const NavBarWidget: React.FC = () => {
 							<Button
 								aria-label={t('buttons.language')}
 								icon={<Icon icon='Language' />}
+								onClick={toggleLanguagePanel}
+								ref={languageTriggerRef}
 							/>
 							<Button
 								href='https://github.com/TaDmitry'
@@ -105,10 +111,16 @@ export const NavBarWidget: React.FC = () => {
 			</nav>
 
 			{isClient && (
-				<MobilePanel
-					triggerRef={triggerRef}
-					id='mobile-panel'
-				/>
+				<>
+					<LanguagePanel
+						triggerRef={languageTriggerRef}
+						id='language-panel'
+					/>
+					<MobilePanel
+						triggerRef={triggerRef}
+						id='mobile-panel'
+					/>
+				</>
 			)}
 		</>
 	);
