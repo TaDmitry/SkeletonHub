@@ -1,1 +1,11 @@
-npx --no-install lint-staged
+set -e
+
+printf "🚀 pre-commit: запускаю lint-staged...\n"
+
+# Используем npx --no-install чтобы использовать локальную версию без установки, и --silent для чистого лога
+npx --no-install --silent lint-staged || {
+  printf "\n❌ pre-commit: lint-staged не прошёл. Исправьте ошибки и повторите попытку.\n"
+  exit 1
+}
+
+printf "✅ pre-commit: lint-staged пройден\n"

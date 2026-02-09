@@ -1,0 +1,37 @@
+{
+	"NavBar": {
+		"brand": { "name": "SkeletonHub" },
+		"links": {
+			"home": "Главная",
+			"docs": "Документация",
+			"blog": "Новости"
+		},
+		"buttons": {
+			"openMenu": "Открыть меню",
+			"closeMenu": "Закрыть меню",
+			"github": "Перейти на GitHub",
+			"language": "Сменить язык"
+		},
+		"aria": {
+			"mainNavigation": "Основная навигация"
+		}
+	},
+	"MobilePanel": {
+		"buttons": {
+			"home": "Главная",
+			"docs": "Документация",
+			"blog": "Новости",
+			"language": "Сменить язык",
+			"github": "Перейти на GitHub"
+		},
+		"aria": {
+			"panel": "Мобильное меню",
+			"navigation": "Мобильная навигация"
+		}
+	},
+	"LanguagePanel": {
+		"aria": {
+			"panel": "Выбор языка"
+		}
+	}
+}

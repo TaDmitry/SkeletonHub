@@ -1,0 +1,23 @@
+.alignLeft {
+	text-align: left;
+}
+
+.alignCenter {
+	text-align: center;
+}
+
+.alignRight {
+	text-align: right;
+}
+
+.noWrap {
+	overflow: hidden;
+	white-space: nowrap;
+}
+
+.truncate {
+	overflow: hidden;
+	display: block;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}

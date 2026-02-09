@@ -1,0 +1,43 @@
+@use '@styles/mixins' as *;
+
+.html {
+	position: relative;
+
+	overflow-y: auto;
+
+	min-height: 100vh;
+
+	background-color: var(--color-black);
+
+	-webkit-overflow-scrolling: touch;
+}
+
+.container {
+	position: relative;
+
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+
+	width: 100%;
+	min-height: 100vh;
+	max-height: 100vh;
+	padding-inline: 64px;
+
+	background-image: radial-gradient(ellipse at center, #262626, #262626 0, transparent 70%);
+
+	@include boundary-dimming;
+}
+
+.content {
+	@include glass-card;
+
+	margin-bottom: 20px;
+	padding: 20px 24px;
+	border-radius: var(--radius-sm);
+}
+
+.title {
+	color: var(--color-white);
+}

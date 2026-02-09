@@ -1,9 +1,9 @@
 '*.{js,jsx,ts,tsx}':
-  - 'eslint --fix --cache'
+  - 'eslint --fix --cache --cache-location .cache/eslint'
   - 'prettier --write'
 
-'*.{css,scss,sass,module.scss,module.sass}':
-  - 'stylelint --fix --allow-empty-input'
+'*.{scss,css}':
+  - 'stylelint --fix'
   - 'prettier --write'
 
 '*.{md,json,mdx}':

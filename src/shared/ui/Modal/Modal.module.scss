@@ -1,32 +1,36 @@
-@use '@styles/variables' as *;
-
 .wrapper {
 	position: fixed;
+	z-index: 100;
 	inset: 0;
+
 	display: flex;
-	justify-content: center;
 	align-items: center;
+	justify-content: center;
+
 	width: 100vw;
 	height: 100vh;
-	z-index: 100;
 	padding: calc(16px * 2) 16px;
 }
 
 .contentWrapper {
-	width: fit-content;
-	height: fit-content;
 	position: relative;
+	transform: scale(0.9);
+
+	overscroll-behavior: contain;
 	display: flex;
+	flex-shrink: 0;
 	align-items: center;
 	justify-content: center;
-	flex-shrink: 0;
-	overscroll-behavior: contain;
-	background-color: $white;
-	border-radius: 12px;
+
+	width: fit-content;
+	height: fit-content;
 	border: 1px solid #0000001f;
-	box-shadow: 0 4px 16px rgb(0 0 0 / 25%);
+	border-radius: 12px;
+
 	opacity: 0;
-	transform: scale(0.9);
+	background-color: var(--color-white);
+	box-shadow: 0 4px 16px rgb(0 0 0 / 25%);
+
 	transition:
 		transform 0.3s ease,
 		opacity 0.3s ease;
@@ -43,10 +47,10 @@
 }
 
 .withBackground {
-	background-color: rgba($black, 0);
+	background-color: rgb(var(--color-black), 0);
 	transition: background-color 0.3s ease;
 
 	&.bgVisible {
-		background-color: rgba($black, 0.8);
+		background-color: rgb(var(--color-black), 0.8);
 	}
 }

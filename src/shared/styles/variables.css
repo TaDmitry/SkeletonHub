@@ -1,0 +1,12 @@
+:root {
+	/* COLORS */
+	--color-white: #fff;
+	--color-black: #000;
+	--color-text: #b3b3b3;
+
+	/* ACCENT COLORS */
+	--color-accent-classic: #8a4fdb;
+
+	/* BORDER RADII */
+	--radius-sm: 6px;
+}

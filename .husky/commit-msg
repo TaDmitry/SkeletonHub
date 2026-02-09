@@ -1,1 +1,8 @@
-npx --no-install commitlint --edit "$1"
+set -e
+
+printf "🔒 Проверка формата коммита (commitlint)...\n"
+
+# --no-install чтобы избежать скачивания в CI/у коллег
+npx --no-install --silent commitlint --edit "$1"
+
+printf "✅ commit-msg: OK\n"

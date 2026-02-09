@@ -29,8 +29,8 @@ export function useModalAccessibility({
 
 	useEffect(() => {
 		const onDocumentKeyDown = (e: KeyboardEvent) => {
-			if (e.key === 'Escape') {
-				if (alignElement !== 'start') closeWithAnimation();
+			if (e.key === 'Escape' && alignElement !== 'start') {
+				closeWithAnimation();
 			}
 		};
 
