@@ -1,0 +1,139 @@
+@use '@styles/mixins' as *;
+
+.navbar {
+	position: fixed;
+	z-index: 999;
+
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+
+	width: 100%;
+	padding: 12px 80px;
+
+	border-top: 0;
+	border-right: 0;
+	border-left: 0;
+
+	background: transparent;
+	isolation: isolate;
+
+	&::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+
+		pointer-events: none;
+		z-index: -1;
+
+		border: 1px solid rgb(255 255 255 / 12%);
+		border-top: 0;
+		border-right: 0;
+		border-left: 0;
+
+		background: rgb(255 255 255 / 6%);
+		backdrop-filter: blur(8px) saturate(140%) contrast(1.03);
+		box-shadow:
+			0 10px 30px rgb(3 6 23 / 55%),
+			0 2px 6px rgb(0 0 0 / 25%),
+			inset 0 1px 0 rgb(255 255 255 / 5%);
+	}
+}
+
+.left {
+	display: flex;
+	align-items: center;
+}
+
+.logo {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-right: 2px solid rgb(from var(--color-white) r g b / 20%);
+}
+
+.icon {
+	font-size: 24px;
+	color: var(--color-white);
+}
+
+.title {
+	margin-right: 16px;
+
+	span {
+		font-size: 20px;
+		color: var(--color-white);
+	}
+}
+
+.navList {
+	display: flex;
+	align-items: center;
+
+	button {
+		margin: 0 16px;
+
+		&:focus-visible > span {
+			transform: scale(1.05);
+			color: var(--color-accent-classic);
+		}
+	}
+
+	span {
+		cursor: pointer;
+		font-size: 16px;
+		transition: color 250ms ease;
+
+		&:hover {
+			color: var(--color-accent-classic);
+		}
+	}
+}
+
+.right {
+	display: flex;
+	align-items: center;
+	padding-left: 8px;
+	border-left: 2px solid rgb(from var(--color-white) r g b / 20%);
+}
+
+.languageButton,
+.githubButton,
+.dropdown {
+	position: relative;
+
+	span {
+		margin: 0;
+		padding: 8px;
+	}
+
+	&:hover span {
+		border-radius: var(--radius-sm);
+		color: var(--color-white);
+		background-color: rgb(from var(--color-white) r g b / 10%);
+	}
+
+	&:focus-visible span {
+		border-radius: var(--radius-sm);
+		color: var(--color-white);
+		background-color: rgb(from var(--color-white) r g b / 10%);
+	}
+}
+
+.dropdown svg {
+	transition: transform 250ms ease;
+}
+
+.dropdownOpen svg {
+	transform: rotate(180deg);
+}
+
+@media (width <=768px) {
+	.navbar {
+		padding: 12px 24px;
+	}
+
+	.title {
+		margin: 0 8px 0 4px;
+	}
+}

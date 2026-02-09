@@ -1,90 +1,37 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import clsx from 'clsx';
 
-import {
-	MOBILE_BREAKPOINT,
-	SMALL_MOBILE_BREAKPOINT,
-	SSR_FALLBACK_WIDTH,
-} from '@/shared/constants/breakpoints';
+import { SMALL_MOBILE_BREAKPOINT } from '@/shared/constants/breakpoints';
 import { Button, Icon } from '@ui/index';
 
-import { useLanguagePanelStore, useNavBarStore } from '../model';
-import { LanguagePanel } from './LanguagePanel';
+import { useLanguagePanelStore, useNavBarStore } from '../../model';
+import { LanguagePanel } from '../LanguagePanel/LanguagePanel';
 
-import styles from './NavBar.module.scss';
-
-const TRANSITION_MS = 350;
+import styles from './MobilePanel.module.scss';
 
 interface MobilePanelProps {
 	triggerRef?: React.RefObject<HTMLButtonElement | null>;
+	windowWidth: number;
 	id?: string;
 }
 
-export const MobilePanel: React.FC<MobilePanelProps> = ({ triggerRef, id = 'mobile-panel' }) => {
+export const MobilePanel: React.FC<MobilePanelProps> = ({
+	triggerRef,
+	windowWidth,
+	id = 'mobile-panel',
+}) => {
 	const t = useTranslations('layout.navbar.MobilePanel');
 
 	const panelRef = useRef<HTMLElement | null>(null);
-	const languageTriggerRef = useRef<HTMLButtonElement | null>(null);
 
 	const isOpen = useNavBarStore((s) => s.isPanelOpen);
 	const close = useNavBarStore((s) => s.close);
 
 	const toggleLanguagePanel = useLanguagePanelStore((s) => s.toggle);
 
-	const [windowWidth, setWindowWidth] = useState<number>(SSR_FALLBACK_WIDTH);
-
-	const [shouldRender, setShouldRender] = useState<boolean>(isOpen);
-	const [isAnimatingOpen, setIsAnimatingOpen] = useState<boolean>(false);
-	const timeoutRef = useRef<number | null>(null);
-
 	useEffect(() => {
-		const onResize = () => {
-			const width = window.innerWidth;
-			setWindowWidth(width);
-
-			if (width > MOBILE_BREAKPOINT) {
-				close();
-			}
-		};
-
-		onResize();
-		window.addEventListener('resize', onResize);
-
-		return () => window.removeEventListener('resize', onResize);
-	}, [close]);
-
-	useEffect(() => {
-		if (timeoutRef.current) {
-			clearTimeout(timeoutRef.current);
-			timeoutRef.current = null;
-		}
-
-		if (isOpen) {
-			setShouldRender(true);
-			requestAnimationFrame(() => {
-				requestAnimationFrame(() => {
-					setIsAnimatingOpen(true);
-				});
-			});
-		} else {
-			setIsAnimatingOpen(false);
-			timeoutRef.current = window.setTimeout(() => {
-				setShouldRender(false);
-				timeoutRef.current = null;
-			}, TRANSITION_MS);
-		}
-
-		return () => {
-			if (timeoutRef.current) {
-				clearTimeout(timeoutRef.current);
-				timeoutRef.current = null;
-			}
-		};
-	}, [isOpen]);
-
-	useEffect(() => {
-		if (!shouldRender || !panelRef.current) {
+		if (!isOpen || !panelRef.current) {
 			return () => {};
 		}
 
@@ -95,11 +42,13 @@ export const MobilePanel: React.FC<MobilePanelProps> = ({ triggerRef, id = 'mobi
 		const focusableSelector =
 			'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
-		const focusable = Array.from(panelEl.querySelectorAll<HTMLElement>(focusableSelector)).filter(
-			(el) => !el.hasAttribute('disabled')
-		);
+		const getFocusable = () =>
+			Array.from(panelEl.querySelectorAll<HTMLElement>(focusableSelector)).filter(
+				(el) => !el.hasAttribute('disabled')
+			);
 
-		focusable[0]?.focus();
+		//* Фокус на первый элемент
+		getFocusable()[0]?.focus();
 
 		const handleKeyDown = (e: KeyboardEvent) => {
 			if (e.key === 'Escape') {
@@ -109,7 +58,10 @@ export const MobilePanel: React.FC<MobilePanelProps> = ({ triggerRef, id = 'mobi
 				return;
 			}
 
-			if (e.key !== 'Tab' || focusable.length === 0) return;
+			if (e.key !== 'Tab') return;
+
+			const focusable = getFocusable();
+			if (focusable.length === 0) return;
 
 			const first = focusable[0];
 			const last = focusable[focusable.length - 1];
@@ -143,9 +95,9 @@ export const MobilePanel: React.FC<MobilePanelProps> = ({ triggerRef, id = 'mobi
 
 			triggerEl?.focus?.() ?? previouslyFocused?.focus?.();
 		};
-	}, [shouldRender, close, triggerRef]);
+	}, [isOpen, close, triggerRef]);
 
-	if (!shouldRender) return null;
+	if (!isOpen) return null;
 
 	const isSmallMobile = windowWidth <= SMALL_MOBILE_BREAKPOINT;
 
@@ -153,10 +105,9 @@ export const MobilePanel: React.FC<MobilePanelProps> = ({ triggerRef, id = 'mobi
 		<aside
 			id={id}
 			ref={panelRef}
-			className={clsx(styles.sidePanel, isAnimatingOpen && styles.sidePanelOpen)}
+			className={styles.sidePanel}
 			role='dialog'
 			aria-modal='true'
-			aria-hidden={!isOpen}
 			aria-label={t('aria.panel')}
 		>
 			<nav
@@ -179,25 +130,23 @@ export const MobilePanel: React.FC<MobilePanelProps> = ({ triggerRef, id = 'mobi
 				)}
 
 				<div className={clsx(styles.panelTop, styles.panelMiddle)}>
+					<div className={styles.mobileLanguageControl}>
+						<Button
+							icon={<Icon icon='Language' />}
+							className={clsx(styles.panelButton, styles.languageButton)}
+							onClick={() => toggleLanguagePanel('mobile')}
+							aria-label={t('buttons.language')}
+						/>
+
+						<LanguagePanel variant='mobile' />
+					</div>
+
 					<Button
-						icon={<Icon icon='Language' />}
-						className={styles.panelButton}
-						onClick={toggleLanguagePanel}
-						ref={languageTriggerRef}
-						aria-label={t('buttons.language')}
-					/>
-					<Button
+						href='https://github.com/TaDmitry'
 						icon={<Icon icon='LogoGithub' />}
 						className={clsx(styles.panelButton, styles.githubButton)}
 						aria-label={t('buttons.github')}
 					/>
-
-					{isOpen && (
-						<LanguagePanel
-							triggerRef={languageTriggerRef}
-							id='mobile-language-panel'
-						/>
-					)}
 				</div>
 			</nav>
 		</aside>

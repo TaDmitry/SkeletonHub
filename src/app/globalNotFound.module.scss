@@ -1,5 +1,4 @@
 @use '@styles/mixins' as *;
-@use '@styles/variables' as *;
 
 .html {
 	position: relative;
@@ -8,7 +7,7 @@
 
 	min-height: 100vh;
 
-	background-color: $black;
+	background-color: var(--color-black);
 
 	-webkit-overflow-scrolling: touch;
 }
@@ -36,9 +35,9 @@
 
 	margin-bottom: 20px;
 	padding: 20px 24px;
-	border-radius: $border-radius-sm;
+	border-radius: var(--radius-sm);
 }
 
 .title {
-	color: $white;
+	color: var(--color-white);
 }

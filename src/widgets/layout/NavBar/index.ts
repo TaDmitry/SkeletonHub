@@ -1,1 +1,1 @@
-export { NavBarWidget } from './ui/NavBar';
+export { NavBarWidget } from './ui/NavBar/NavBar';

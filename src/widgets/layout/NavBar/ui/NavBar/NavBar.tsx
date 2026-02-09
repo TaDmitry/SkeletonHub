@@ -9,29 +9,34 @@ import {
 } from '@/shared/constants/breakpoints';
 import { Button, Icon } from '@ui/index';
 
-import { useLanguagePanelStore, useNavBarStore } from '../model';
-import { LanguagePanel } from './LanguagePanel';
-import { MobilePanel } from './MobilePanel';
+import { useLanguagePanelStore, useNavBarStore } from '../../model';
+import { LanguagePanel } from '../LanguagePanel/LanguagePanel';
+import { MobilePanel } from '../MobilePanel/MobilePanel';
 
 import styles from './NavBar.module.scss';
 
 export const NavBarWidget: React.FC = () => {
 	const t = useTranslations('layout.navbar.NavBar');
 
+	//* mobile menu
 	const isPanelOpen = useNavBarStore((s) => s.isPanelOpen);
 	const togglePanel = useNavBarStore((s) => s.toggle);
 	const closePanel = useNavBarStore((s) => s.close);
 
+	//* language panel
 	const toggleLanguagePanel = useLanguagePanelStore((s) => s.toggle);
+	const closeLanguagePanel = useLanguagePanelStore((s) => s.close);
 
 	const [isClient, setIsClient] = useState(false);
 	const [windowWidth, setWindowWidth] = useState<number>(SSR_FALLBACK_WIDTH);
-	const triggerRef = useRef<HTMLButtonElement | null>(null);
-	const languageTriggerRef = useRef<HTMLButtonElement | null>(null);
+
+	const mobileMenuTriggerRef = useRef<HTMLButtonElement | null>(null);
 
 	useEffect(() => {
 		setIsClient(true);
+
 		const update = () => setWindowWidth(window.innerWidth);
+
 		update();
 		window.addEventListener('resize', update);
 
@@ -40,10 +45,18 @@ export const NavBarWidget: React.FC = () => {
 
 	useEffect(() => {
 		if (!isClient) return;
-		if (windowWidth > MOBILE_BREAKPOINT && isPanelOpen) {
+
+		const isDesktop = windowWidth > MOBILE_BREAKPOINT;
+
+		if (isDesktop && isPanelOpen) {
 			closePanel();
 		}
-	}, [isClient, windowWidth, isPanelOpen, closePanel]);
+
+		closeLanguagePanel();
+	}, [isClient, windowWidth, isPanelOpen, closePanel, closeLanguagePanel]);
+
+	const isDesktop = !isClient || windowWidth > MOBILE_BREAKPOINT;
+	const showNavLinks = !isClient || windowWidth > SMALL_MOBILE_BREAKPOINT;
 
 	return (
 		<>
@@ -67,7 +80,7 @@ export const NavBarWidget: React.FC = () => {
 						/>
 					</div>
 
-					{(!isClient || windowWidth > SMALL_MOBILE_BREAKPOINT) && (
+					{showNavLinks && (
 						<ul className={styles.navList}>
 							<li>
 								<Button text={t('links.docs')} />
@@ -80,28 +93,30 @@ export const NavBarWidget: React.FC = () => {
 				</div>
 
 				<div className={styles.right}>
-					{(!isClient || windowWidth > MOBILE_BREAKPOINT) && (
+					{isDesktop && (
 						<>
 							<Button
 								aria-label={t('buttons.language')}
 								icon={<Icon icon='Language' />}
-								onClick={toggleLanguagePanel}
-								ref={languageTriggerRef}
+								onClick={() => toggleLanguagePanel('desktop')}
+								className={styles.languageButton}
 							/>
+							<LanguagePanel variant='desktop' />
 							<Button
 								href='https://github.com/TaDmitry'
 								aria-label={t('buttons.github')}
 								icon={<Icon icon='LogoGithub' />}
+								className={styles.githubButton}
 							/>
 						</>
 					)}
 
-					{isClient && windowWidth <= MOBILE_BREAKPOINT && (
+					{isClient && !isDesktop && (
 						<Button
 							icon={<Icon icon='ChevronBackOutline' />}
 							className={clsx(styles.dropdown, isPanelOpen && styles.dropdownOpen)}
 							onClick={togglePanel}
-							ref={triggerRef}
+							ref={mobileMenuTriggerRef}
 							aria-expanded={isPanelOpen}
 							aria-controls='mobile-panel'
 							aria-label={isPanelOpen ? t('buttons.closeMenu') : t('buttons.openMenu')}
@@ -111,16 +126,11 @@ export const NavBarWidget: React.FC = () => {
 			</nav>
 
 			{isClient && (
-				<>
-					<LanguagePanel
-						triggerRef={languageTriggerRef}
-						id='language-panel'
-					/>
-					<MobilePanel
-						triggerRef={triggerRef}
-						id='mobile-panel'
-					/>
-				</>
+				<MobilePanel
+					triggerRef={mobileMenuTriggerRef}
+					windowWidth={windowWidth}
+					id='mobile-panel'
+				/>
 			)}
 		</>
 	);

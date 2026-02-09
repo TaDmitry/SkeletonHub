@@ -115,7 +115,7 @@ a {
 	font-size: 20px;
 	font-weight: 600;
 	line-height: 1.5;
-	color: $text;
+	color: var(--color-text);
 }
 
 @media (width <=768px) {
@@ -130,11 +130,11 @@ a {
 }
 
 ::selection {
-	color: $black;
-	background-color: $white;
+	color: var(--color-black);
+	background-color: var(--color-white);
 }
 
 ::selection {
-	color: $black;
-	background-color: $white;
+	color: var(--color-black);
+	background-color: var(--color-white);
 }

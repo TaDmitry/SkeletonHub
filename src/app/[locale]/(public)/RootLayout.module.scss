@@ -1,5 +1,4 @@
 @use '@styles/mixins' as *;
-@use '@styles/variables' as *;
 
 .container {
 	position: relative;
@@ -8,7 +7,7 @@
 
 	min-height: 100vh;
 
-	background-color: $black;
+	background-color: var(--color-black);
 
 	-webkit-overflow-scrolling: touch;
 }
@@ -52,12 +51,12 @@
 
 	margin-bottom: 20px;
 	padding: 20px 24px;
-	border-radius: $border-radius-sm;
+	border-radius: var(--radius-sm);
 }
 
 .heading {
 	font-size: clamp(2.25rem, 1.821rem + 2.14vw, 3.75rem);
-	color: $white;
+	color: var(--color-white);
 	text-shadow: 10px 10px 10px rgb(0 0 0 / 35%);
 
 	-webkit-font-smoothing: antialiased;
@@ -70,17 +69,17 @@
 	align-items: center;
 	justify-content: center;
 
-	color: $white;
+	color: var(--color-white);
 }
 
 .descriptionWrapper {
 	padding: 0 24px 16px;
-	border-radius: $border-radius-sm;
+	border-radius: var(--radius-sm);
 	text-shadow: 0 0 20px rgb(0 0 0);
 }
 
 .description span {
-	color: $white;
+	color: var(--color-white);
 }
 
 .buttons {
@@ -93,15 +92,15 @@
 	display: inline-block;
 
 	padding: 16px 32px;
-	border-radius: $border-radius-sm;
+	border-radius: var(--radius-sm);
 
-	background-color: $white;
+	background-color: var(--color-white);
 
 	transition: transform 0.25s ease;
 
 	span {
 		display: inline-block;
-		color: $black;
+		color: var(--color-black);
 	}
 
 	&:hover {
@@ -110,7 +109,7 @@
 
 	&:focus-visible {
 		transform: scale(1.05);
-		outline: 2px solid $accent-classic;
+		outline: 2px solid var(--color-accent-classic);
 		outline-offset: 3px;
 	}
 }
@@ -120,7 +119,7 @@
 
 	padding: 16px 32px;
 	border: 2px solid #ffffff1a;
-	border-radius: $border-radius-sm;
+	border-radius: var(--radius-sm);
 
 	background-color: #121212;
 
@@ -130,17 +129,17 @@
 
 	span {
 		display: inline-block;
-		color: $white;
+		color: var(--color-white);
 	}
 
 	&:hover {
 		transform: scale(1.05);
-		border-color: $accent-classic;
+		border-color: var(--color-accent-classic);
 	}
 
 	&:focus-visible {
 		transform: scale(1.05);
-		outline: 2px solid $accent-classic;
+		outline: 2px solid var(--color-accent-classic);
 		outline-offset: 3px;
 	}
 }
@@ -187,7 +186,7 @@
 // .blog {
 // 	position: relative;
 // 	padding: 32px;
-// 	background-color: $black;
+// 	background-color: var(--color-black);
 
 // 	@include boundary-dimming;
 // }
