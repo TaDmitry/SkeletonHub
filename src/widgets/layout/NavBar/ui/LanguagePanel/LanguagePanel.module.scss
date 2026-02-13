@@ -26,8 +26,8 @@
 	pointer-events: none;
 
 	transition:
-		opacity 350ms ease,
-		transform 350ms ease;
+		opacity var(--language-panel-transition-ms, 350ms) ease,
+		transform var(--language-panel-transition-ms, 350ms) ease;
 }
 
 .panelDesktop {
@@ -53,7 +53,7 @@
 		padding: 8px 12px;
 
 		font-size: 15px;
-		transition: color 350ms ease;
+		transition: color var(--language-panel-transition-ms, 350ms) ease;
 
 		&:hover {
 			color: var(--color-accent-classic);

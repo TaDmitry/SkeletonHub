@@ -29,6 +29,10 @@ export const MobilePanel: React.FC<MobilePanelProps> = ({
 	const closePanel = useNavBarStore((s) => s.close);
 
 	const toggleLanguagePanel = useLanguagePanelStore((s) => s.toggle);
+	const isLanguagePanelOpen = useLanguagePanelStore((s) => s.isOpen);
+	const languagePanelContext = useLanguagePanelStore((s) => s.context);
+
+	const isMobileLanguagePanelOpen = isLanguagePanelOpen && languagePanelContext === 'mobile';
 
 	useEffect(() => {
 		if (!isOpen || !panelRef.current) {
@@ -144,8 +148,13 @@ export const MobilePanel: React.FC<MobilePanelProps> = ({
 						className={styles.iconButton}
 						onClick={() => toggleLanguagePanel('mobile')}
 						aria-label={t('buttons.language')}
+						aria-expanded={isMobileLanguagePanelOpen}
+						aria-controls='mobile-language-panel'
 					/>
-					<LanguagePanel variant='mobile' />
+					<LanguagePanel
+						variant='mobile'
+						id='mobile-language-panel'
+					/>
 				</div>
 
 				<Button

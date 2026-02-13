@@ -14,6 +14,7 @@ interface CommonProps {
 	'disabled'?: boolean;
 	'title'?: string;
 	'id'?: string;
+	'role'?: React.AriaRole;
 	'aria-label'?: string;
 	'onClick'?: React.MouseEventHandler<HTMLElement>;
 }

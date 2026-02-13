@@ -73,7 +73,13 @@
 	gap: 24px;
 	margin-left: 16px;
 
-	button &:focus-visible > span {
+	a:hover span,
+	button:hover span {
+		color: var(--color-accent-classic);
+	}
+
+	a:focus-visible span,
+	button:focus-visible span {
 		transform: scale(1.05);
 		color: var(--color-accent-classic);
 	}
@@ -81,11 +87,9 @@
 	span {
 		cursor: pointer;
 		font-size: 16px;
-		transition: color 250ms ease;
-
-		&:hover {
-			color: var(--color-accent-classic);
-		}
+		transition:
+			color 250ms ease,
+			transform 250ms ease;
 	}
 }
 

@@ -1,8 +1,14 @@
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { defineConfig, globalIgnores } from 'eslint/config';
+
+import nextVitals from 'eslint-config-next/core-web-vitals';
+import nextTs from 'eslint-config-next/typescript';
+import prettierConfig from 'eslint-config-prettier';
+
 import tsParser from '@typescript-eslint/parser';
 
-//* плагины (импортируем как объекты — безопаснее для flat-конфига)
+// плагины
 import tsPlugin from '@typescript-eslint/eslint-plugin';
 import reactPlugin from 'eslint-plugin-react';
 import pluginReactHooks from 'eslint-plugin-react-hooks';
@@ -16,39 +22,47 @@ import pluginImport from 'eslint-plugin-import';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-export default [
-	//* игнорируем папки/файлы
-	{
-		ignores: [
-			'node_modules',
-			'.next',
-			'dist',
-			'out',
-			'public',
-			'.cache',
-			'eslint.config.mjs',
-			'next-env.d.ts',
-			'postcss.config.js',
-		],
-	},
+export default defineConfig([
+	//* Next.js preset (включает @next/eslint-plugin-next + react + react-hooks)
+	...nextVitals,
+	...nextTs,
 
-	//* главный блок все js/ts файлы
+	//* Отключает конфликтующие с Prettier правила из других конфигов
+	prettierConfig,
+
+	//* Игноры
+	globalIgnores([
+		'.next/**',
+		'out/**',
+		'build/**',
+		'next-env.d.ts',
+
+		'node_modules',
+		'dist',
+		'public',
+		'.cache',
+		'eslint.config.mjs',
+		'postcss.config.js',
+
+		'stylelint.config.mjs',
+		'prettier.config.*',
+		'commitlint.config.*',
+		'lint-staged.config.*',
+		'*.config.{js,cjs,mjs,ts}',
+		'scripts/**',
+	]),
+
+	//* Основной блок
 	{
 		files: ['**/*.{js,ts,jsx,tsx}'],
-
-		//* плагины подключаем как объекты
 		plugins: {
 			'@typescript-eslint': tsPlugin,
-			'react': reactPlugin,
-			'react-hooks': pluginReactHooks,
 			'simple-import-sort': pluginSimpleImportSort,
-			'jsx-a11y': pluginA11y,
+			sonarjs,
 			'prettier': pluginPrettier,
 			'unicorn': pluginUnicorn,
 			'import': pluginImport,
-			sonarjs,
 		},
-
 		languageOptions: {
 			parser: tsParser,
 			parserOptions: {
@@ -61,12 +75,10 @@ export default [
 			ecmaVersion: 2024,
 			sourceType: 'module',
 		},
-
 		settings: {
 			'react': { version: 'detect' },
 			'import/resolver': { node: { extensions: ['.js', '.jsx', '.ts', '.tsx'] } },
 		},
-
 		rules: {
 			//* Импорты
 			'simple-import-sort/imports': [
@@ -91,7 +103,7 @@ export default [
 				{ blankLine: 'always', prev: 'block-like', next: 'export' },
 			],
 
-			//*React Hooks
+			//* React Hooks
 			'react-hooks/rules-of-hooks': 'error',
 			'react-hooks/exhaustive-deps': 'warn',
 
@@ -125,12 +137,13 @@ export default [
 			'unicorn/prefer-logical-operator-over-ternary': 'warn',
 			'unicorn/no-useless-undefined': 'error',
 			'unicorn/filename-case': 'off',
+			'unicorn/prefer-single-call': 'warn',
+			'unicorn/no-unnecessary-slice-end': 'warn',
 
 			//* SonarJS
 			'sonarjs/no-identical-conditions': 'error',
 			'sonarjs/no-extra-arguments': 'error',
 			'sonarjs/non-existent-operator': 'error',
-
 			'sonarjs/no-identical-expressions': 'error',
 			'sonarjs/no-duplicated-branches': 'error',
 			'sonarjs/no-useless-catch': 'error',
@@ -158,4 +171,4 @@ export default [
 			'object-shorthand': ['error', 'always'],
 		},
 	},
-];
+]);
