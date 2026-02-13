@@ -26,7 +26,7 @@ export const MobilePanel: React.FC<MobilePanelProps> = ({
 	const panelRef = useRef<HTMLElement | null>(null);
 
 	const isOpen = useNavBarStore((s) => s.isPanelOpen);
-	const close = useNavBarStore((s) => s.close);
+	const closePanel = useNavBarStore((s) => s.close);
 
 	const toggleLanguagePanel = useLanguagePanelStore((s) => s.toggle);
 
@@ -47,13 +47,12 @@ export const MobilePanel: React.FC<MobilePanelProps> = ({
 				(el) => !el.hasAttribute('disabled')
 			);
 
-		//* Фокус на первый элемент
 		getFocusable()[0]?.focus();
 
 		const handleKeyDown = (e: KeyboardEvent) => {
 			if (e.key === 'Escape') {
 				e.preventDefault();
-				close();
+				closePanel();
 
 				return;
 			}
@@ -83,7 +82,7 @@ export const MobilePanel: React.FC<MobilePanelProps> = ({
 			if (panelEl.contains(target)) return;
 			if (triggerEl?.contains(target)) return;
 
-			close();
+			closePanel();
 		};
 
 		document.addEventListener('keydown', handleKeyDown);
@@ -93,62 +92,69 @@ export const MobilePanel: React.FC<MobilePanelProps> = ({
 			document.removeEventListener('keydown', handleKeyDown);
 			document.removeEventListener('mousedown', handleClickOutside);
 
-			triggerEl?.focus?.() ?? previouslyFocused?.focus?.();
+			if (triggerEl) {
+				triggerEl.focus();
+			} else {
+				previouslyFocused?.focus?.();
+			}
 		};
-	}, [isOpen, close, triggerRef]);
+	}, [isOpen, closePanel, triggerRef]);
 
 	if (!isOpen) return null;
 
 	const isSmallMobile = windowWidth <= SMALL_MOBILE_BREAKPOINT;
 
 	return (
-		<aside
+		<section
 			id={id}
 			ref={panelRef}
-			className={styles.sidePanel}
+			className={styles.panel}
 			role='dialog'
 			aria-modal='true'
 			aria-label={t('aria.panel')}
+			data-open={isOpen ? 'true' : 'false'}
 		>
-			<nav
-				aria-label={t('aria.navigation')}
-				className={styles.panelNav}
-			>
-				{isSmallMobile && (
-					<div className={clsx(styles.panelTop, styles.panelBottom)}>
-						<Button
-							icon={<Icon icon='Library' />}
-							className={styles.panelButton}
-							aria-label={t('buttons.docs')}
-						/>
-						<Button
-							icon={<Icon icon='Book' />}
-							className={styles.panelButton}
-							aria-label={t('buttons.blog')}
-						/>
-					</div>
-				)}
-
-				<div className={clsx(styles.panelTop, styles.panelMiddle)}>
-					<div className={styles.mobileLanguageControl}>
-						<Button
-							icon={<Icon icon='Language' />}
-							className={clsx(styles.panelButton, styles.languageButton)}
-							onClick={() => toggleLanguagePanel('mobile')}
-							aria-label={t('buttons.language')}
-						/>
-
-						<LanguagePanel variant='mobile' />
-					</div>
-
+			{isSmallMobile && (
+				<div className={clsx(styles.group, styles.groupTop)}>
 					<Button
-						href='https://github.com/TaDmitry'
-						icon={<Icon icon='LogoGithub' />}
-						className={clsx(styles.panelButton, styles.githubButton)}
-						aria-label={t('buttons.github')}
+						icon={<Icon icon='Library' />}
+						className={styles.iconButton}
+						aria-label={t('buttons.docs')}
+					/>
+					<Button
+						icon={<Icon icon='Book' />}
+						className={styles.iconButton}
+						aria-label={t('buttons.blog')}
+						href='/blog'
 					/>
 				</div>
-			</nav>
-		</aside>
+			)}
+
+			{isSmallMobile && (
+				<Icon
+					icon='CodeSlash'
+					className={styles.brandIcon}
+				/>
+			)}
+
+			<div className={clsx(styles.group, styles.groupBottom)}>
+				<div className={styles.languageControl}>
+					<Button
+						icon={<Icon icon='Language' />}
+						className={styles.iconButton}
+						onClick={() => toggleLanguagePanel('mobile')}
+						aria-label={t('buttons.language')}
+					/>
+					<LanguagePanel variant='mobile' />
+				</div>
+
+				<Button
+					href='https://github.com/TaDmitry'
+					icon={<Icon icon='LogoGithub' />}
+					className={styles.iconButton}
+					aria-label={t('buttons.github')}
+				/>
+			</div>
+		</section>
 	);
 };

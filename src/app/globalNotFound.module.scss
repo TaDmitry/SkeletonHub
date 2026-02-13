@@ -30,14 +30,7 @@
 	@include boundary-dimming;
 }
 
-.content {
-	@include glass-card;
-
-	margin-bottom: 20px;
-	padding: 20px 24px;
-	border-radius: var(--radius-sm);
-}
-
 .title {
 	color: var(--color-white);
+	margin-bottom: 20px;
 }

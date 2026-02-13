@@ -2,11 +2,15 @@
 	"HomePage": {
 		"hero": {
 			"title": "SkeletonHub",
-			"description": "Начните с чистого скелета, <brand>SkeletonHub</brand> создаёт основу для вашего дизайна"
+			"description": "Начните с чистого скелета. <brand>SkeletonHub</brand> создаёт прочную основу для вашего интерфейса и дизайна."
 		},
 		"buttons": {
 			"learn": "Ознакомиться с SkeletonHub",
 			"features": "Особенности"
+		},
+		"blog": {
+			"title": "Что такое SkeletonHub?",
+			"subtitle": "Все последние новости и обновления разработки"
 		}
 	}
 }

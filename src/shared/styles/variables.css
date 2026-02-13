@@ -1,12 +1,18 @@
 :root {
+	/* CONTAINER */
+	--container-width: 1200px;
+
 	/* COLORS */
 	--color-white: #fff;
 	--color-black: #000;
-	--color-text: #b3b3b3;
+	--color-text: #d1d1d1;
+	--color-text-blog: #e8e8e8;
 
 	/* ACCENT COLORS */
 	--color-accent-classic: #8a4fdb;
 
 	/* BORDER RADII */
 	--radius-sm: 6px;
+	--border-color: #575757;
+	--border-color-fon: #ffffff1f;
 }

@@ -1,4 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+'use client';
+
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import clsx from 'clsx';
 
@@ -18,12 +20,10 @@ import styles from './NavBar.module.scss';
 export const NavBarWidget: React.FC = () => {
 	const t = useTranslations('layout.navbar.NavBar');
 
-	//* mobile menu
 	const isPanelOpen = useNavBarStore((s) => s.isPanelOpen);
 	const togglePanel = useNavBarStore((s) => s.toggle);
 	const closePanel = useNavBarStore((s) => s.close);
 
-	//* language panel
 	const toggleLanguagePanel = useLanguagePanelStore((s) => s.toggle);
 	const closeLanguagePanel = useLanguagePanelStore((s) => s.close);
 
@@ -35,95 +35,111 @@ export const NavBarWidget: React.FC = () => {
 	useEffect(() => {
 		setIsClient(true);
 
-		const update = () => setWindowWidth(window.innerWidth);
+		const updateWindowWidth = () => setWindowWidth(window.innerWidth);
 
-		update();
-		window.addEventListener('resize', update);
+		updateWindowWidth();
+		window.addEventListener('resize', updateWindowWidth);
 
-		return () => window.removeEventListener('resize', update);
+		return () => window.removeEventListener('resize', updateWindowWidth);
 	}, []);
+
+	const { isDesktop, showNavLinks } = useMemo(() => {
+		if (!isClient) {
+			return {
+				isDesktop: false,
+				showNavLinks: false,
+			};
+		}
+
+		return {
+			isDesktop: windowWidth > MOBILE_BREAKPOINT,
+			showNavLinks: windowWidth > SMALL_MOBILE_BREAKPOINT,
+		};
+	}, [isClient, windowWidth]);
 
 	useEffect(() => {
 		if (!isClient) return;
 
-		const isDesktop = windowWidth > MOBILE_BREAKPOINT;
-
+		//* На десктопе мобильная панель не нужна.
 		if (isDesktop && isPanelOpen) {
 			closePanel();
 		}
 
+		//* При смене ширины/режима прячем языковую панель.
 		closeLanguagePanel();
-	}, [isClient, windowWidth, isPanelOpen, closePanel, closeLanguagePanel]);
-
-	const isDesktop = !isClient || windowWidth > MOBILE_BREAKPOINT;
-	const showNavLinks = !isClient || windowWidth > SMALL_MOBILE_BREAKPOINT;
+	}, [isClient, isDesktop, isPanelOpen, closePanel, closeLanguagePanel]);
 
 	return (
-		<>
-			<nav
-				className={styles.navbar}
-				aria-label={t('aria.mainNavigation')}
-			>
+		<nav
+			className={styles.navbar}
+			aria-label={t('aria.mainNavigation')}
+		>
+			<section className={styles.container}>
 				<div className={styles.left}>
-					<div className={styles.logo}>
+					<div className={styles.brand}>
 						<Button
 							text={t('brand.name')}
 							href='/'
 							icon={
-								<Icon
-									icon='Language'
-									className={styles.icon}
-								/>
+								showNavLinks ? (
+									<Icon
+										icon='CodeSlash'
+										className={styles.brandIcon}
+									/>
+								) : undefined
 							}
-							className={styles.title}
+							className={styles.brandLink}
 							title={t('links.home')}
 						/>
 					</div>
 
 					{showNavLinks && (
 						<ul className={styles.navList}>
-							<li>
+							<li className={styles.navItem}>
 								<Button text={t('links.docs')} />
 							</li>
-							<li>
-								<Button text={t('links.blog')} />
+							<li className={styles.navItem}>
+								<Button
+									text={t('links.blog')}
+									href='/blog'
+								/>
 							</li>
 						</ul>
 					)}
 				</div>
 
 				<div className={styles.right}>
-					{isDesktop && (
+					{isDesktop ? (
 						<>
 							<Button
 								aria-label={t('buttons.language')}
 								icon={<Icon icon='Language' />}
 								onClick={() => toggleLanguagePanel('desktop')}
-								className={styles.languageButton}
+								className={styles.iconButton}
 							/>
 							<LanguagePanel variant='desktop' />
 							<Button
 								href='https://github.com/TaDmitry'
 								aria-label={t('buttons.github')}
 								icon={<Icon icon='LogoGithub' />}
-								className={styles.githubButton}
+								className={styles.iconButton}
 							/>
 						</>
-					)}
-
-					{isClient && !isDesktop && (
-						<Button
-							icon={<Icon icon='ChevronBackOutline' />}
-							className={clsx(styles.dropdown, isPanelOpen && styles.dropdownOpen)}
-							onClick={togglePanel}
-							ref={mobileMenuTriggerRef}
-							aria-expanded={isPanelOpen}
-							aria-controls='mobile-panel'
-							aria-label={isPanelOpen ? t('buttons.closeMenu') : t('buttons.openMenu')}
-						/>
+					) : (
+						isClient && (
+							<Button
+								icon={<Icon icon='ChevronBackOutline' />}
+								className={clsx(styles.menuButton, isPanelOpen && styles.menuButtonOpen)}
+								onClick={togglePanel}
+								ref={mobileMenuTriggerRef}
+								aria-expanded={isPanelOpen}
+								aria-controls='mobile-panel'
+								aria-label={isPanelOpen ? t('buttons.closeMenu') : t('buttons.openMenu')}
+							/>
+						)
 					)}
 				</div>
-			</nav>
+			</section>
 
 			{isClient && (
 				<MobilePanel
@@ -132,6 +148,6 @@ export const NavBarWidget: React.FC = () => {
 					id='mobile-panel'
 				/>
 			)}
-		</>
+		</nav>
 	);
 };

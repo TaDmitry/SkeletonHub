@@ -1,37 +1,59 @@
-export type BlogItem = {
-	id: string;
-	title: string;
-	short: string;
-	href?: string;
-};
+import type { BlogPost } from './types';
 
-export const BLOG_DATA: BlogItem[] = [
+export const BLOG_POSTS: BlogPost[] = [
 	{
-		id: 'data-fetching',
-		title: 'Data Fetching',
-		short:
-			'Make your React component async and await your data. Next.js supports both server and client data fetching.',
-		href: '/blog/data-fetching',
+		slug: 'first-news',
+		title: 'Первая новость SkeletonHub',
+		excerpt: 'Короткое описание новости, которое будет видно на карточке.',
+		date: '2026-02-09',
+		content: ['Это полный текст новости (абзац 1).', 'Это полный текст новости (абзац 2).'],
 	},
+
 	{
-		id: 'css-support',
-		title: 'CSS Support',
-		short:
-			'Style your application with your favorite tools, including support for CSS Modules, Tailwind CSS, and popular community libraries.',
-		href: '/blog/css-support',
+		slug: 'data-fetching',
+		title: 'Первая новость SkeletonHub',
+		excerpt: 'Короткое описание новости, которое будет видно на карточке.',
+		date: '2026-02-08',
+		content: ['Это полный текст новости (абзац 1).', 'Это полный текст новости (абзац 2).'],
 	},
+
 	{
-		id: 'server-actions',
-		title: 'Server Actions',
-		short:
-			'Run server code by calling a function. Skip the API. Then, easily revalidate cached data and update your UI in one network roundtrip.',
-		href: '/blog/server-actions',
+		slug: 'server-actions',
+		title: 'Первая новость SkeletonHub',
+		excerpt: 'Короткое описание новости, которое будет видно на карточке.',
+		date: '2026-02-06',
+		content: ['Это полный текст новости (абзац 1).', 'Это полный текст новости (абзац 2).'],
 	},
+
 	{
-		id: 'route-handlers',
-		title: 'Route Handlers',
-		short:
-			'Build API endpoints to securely connect with third-party services for handling auth or listening for webhooks.',
-		href: '/blog/route-handlers',
+		slug: 'route-handlers',
+		title: 'Первая новость SkeletonHub',
+		excerpt: 'Короткое описание новости, которое будет видно на карточке.',
+		date: '2026-02-03',
+		content: ['Это полный текст новости (абзац 1).', 'Это полный текст новости (абзац 2).'],
+	},
+
+	{
+		slug: 'wweeeeeeeeeeee',
+		title: 'Первая новость SkeletonHub',
+		excerpt: 'Короткое описание новости, которое будет видно на карточке.',
+		date: '2026-01-09',
+		content: ['Это полный текст новости (абзац 1).', 'Это полный текст новости (абзац 2).'],
+	},
+
+	{
+		slug: 'ffffffxxxxgggggggggggg',
+		title: 'Первая новость SkeletonHub',
+		excerpt: 'Короткое описание новости, которое будет видно на карточке.',
+		date: '2025-02-09',
+		content: ['Это полный текст новости (абзац 1).', 'Это полный текст новости (абзац 2).'],
+	},
+
+	{
+		slug: 'datfetching',
+		title: 'Первая новость SkeletonHub',
+		excerpt: 'Короткое описание новости, которое будет видно на карточке.',
+		date: '2023-02-09',
+		content: ['Это полный текст новости (абзац 1).', 'Это полный текст новости (абзац 2).'],
 	},
 ];

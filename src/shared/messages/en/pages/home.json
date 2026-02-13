@@ -2,11 +2,15 @@
 	"HomePage": {
 		"hero": {
 			"title": "SkeletonHub",
-			"description": "Start with a clean skeleton - <brand>SkeletonHub</brand> lays the foundation for your design"
+			"description": "Start with a clean foundation. <brand>SkeletonHub</brand> provides a solid base for your interface and design."
 		},
 		"buttons": {
 			"learn": "Explore SkeletonHub",
 			"features": "Features"
+		},
+		"blog": {
+			"title": "What is SkeletonHub?",
+			"subtitle": "Latest development news and updates"
 		}
 	}
 }

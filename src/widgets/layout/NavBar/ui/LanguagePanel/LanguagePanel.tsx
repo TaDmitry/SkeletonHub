@@ -29,16 +29,16 @@ export const LanguagePanel: React.FC<LanguagePanelProps> = ({ variant, id = 'lan
 	const pathname = usePathname();
 
 	const panelRef = useRef<HTMLDivElement | null>(null);
+	const timeoutRef = useRef<number | null>(null);
 
 	const isOpen = useLanguagePanelStore((s) => s.isOpen);
 	const context = useLanguagePanelStore((s) => s.context);
-	const close = useLanguagePanelStore((s) => s.close);
+	const closePanel = useLanguagePanelStore((s) => s.close);
 
 	const isActive = useMemo(() => isOpen && context === variant, [isOpen, context, variant]);
 
 	const [shouldRender, setShouldRender] = useState<boolean>(isActive);
-	const [isAnimatingOpen, setIsAnimatingOpen] = useState<boolean>(false);
-	const timeoutRef = useRef<number | null>(null);
+	const [isVisible, setIsVisible] = useState<boolean>(false);
 
 	useEffect(() => {
 		if (timeoutRef.current) {
@@ -49,19 +49,19 @@ export const LanguagePanel: React.FC<LanguagePanelProps> = ({ variant, id = 'lan
 		if (isActive) {
 			setShouldRender(true);
 
-			requestAnimationFrame(() => {
-				requestAnimationFrame(() => {
-					setIsAnimatingOpen(true);
-				});
-			});
-		} else {
-			setIsAnimatingOpen(false);
+			//* Даем React смонтировать элемент, затем включаем анимацию
+			requestAnimationFrame(() => setIsVisible(true));
 
-			timeoutRef.current = window.setTimeout(() => {
-				setShouldRender(false);
-				timeoutRef.current = null;
-			}, TRANSITION_MS);
+			return () => {};
 		}
+
+		//* Закрытие: выключаем видимость и ждём окончания transition
+		setIsVisible(false);
+
+		timeoutRef.current = window.setTimeout(() => {
+			setShouldRender(false);
+			timeoutRef.current = null;
+		}, TRANSITION_MS);
 
 		return () => {
 			if (timeoutRef.current) {
@@ -72,11 +72,13 @@ export const LanguagePanel: React.FC<LanguagePanelProps> = ({ variant, id = 'lan
 	}, [isActive]);
 
 	useEffect(() => {
-		if (!shouldRender || !panelRef.current) return () => {};
+		if (!shouldRender || !panelRef.current) {
+			return () => {};
+		}
 
 		const panelEl = panelRef.current;
 
-		//* контейнер, относительно которого позиционируется панель
+		//* Родитель-контейнер: кнопка + панель (нужно, чтобы клики по кнопке не считались "outside")
 		const containerEl = panelEl.parentElement;
 
 		const previouslyFocused = document.activeElement as HTMLElement | null;
@@ -94,7 +96,7 @@ export const LanguagePanel: React.FC<LanguagePanelProps> = ({ variant, id = 'lan
 		const handleKeyDown = (e: KeyboardEvent) => {
 			if (e.key === 'Escape') {
 				e.preventDefault();
-				close();
+				closePanel();
 
 				return;
 			}
@@ -124,7 +126,7 @@ export const LanguagePanel: React.FC<LanguagePanelProps> = ({ variant, id = 'lan
 			if (panelEl.contains(target)) return;
 			if (containerEl?.contains(target)) return;
 
-			close();
+			closePanel();
 		};
 
 		document.addEventListener('keydown', handleKeyDown);
@@ -136,12 +138,11 @@ export const LanguagePanel: React.FC<LanguagePanelProps> = ({ variant, id = 'lan
 
 			previouslyFocused?.focus?.();
 		};
-	}, [shouldRender, close]);
+	}, [shouldRender, closePanel]);
 
-	const handleLanguageChange = (languageCode: string) => {
+	const handleLanguageChange = (languageCode: (typeof LANGUAGES)[number]['code']) => {
 		router.push({ pathname }, { locale: languageCode });
-
-		close();
+		closePanel();
 	};
 
 	if (!shouldRender) return null;
@@ -151,9 +152,9 @@ export const LanguagePanel: React.FC<LanguagePanelProps> = ({ variant, id = 'lan
 			id={id}
 			ref={panelRef}
 			className={clsx(
-				styles.languagePanel,
-				styles[`languagePanel_${variant}`],
-				isAnimatingOpen && styles.languagePanelOpen
+				styles.panel,
+				variant === 'desktop' ? styles.panelDesktop : styles.panelMobile,
+				isVisible && styles.panelOpen
 			)}
 			role='menu'
 			aria-hidden={!isActive}

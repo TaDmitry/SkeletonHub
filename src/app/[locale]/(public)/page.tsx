@@ -1,59 +1,71 @@
-'use client';
-
+import React from 'react';
 import { useTranslations } from 'next-intl';
 
-// import { BlogFeatures } from '@/entities/blog';
 import { Button, SpiderCanvas, Text, Title } from '@ui/index';
-import { NavBarWidget } from '@widgets/layout/NavBar';
+import { BlogPreviewGrid } from '@widgets/blog';
 
-import styles from './RootLayout.module.scss';
+import styles from './page.module.scss';
 
 export default function HomePage() {
 	const t = useTranslations('pages.home.HomePage');
 
+	const renderBrand = (chunks: React.ReactNode) => <span>{chunks}</span>;
+
 	return (
-		<div className={styles.container}>
-			<NavBarWidget />
-			<section className={styles.content}>
-				<div className={styles.heroWrapper}>
-					<div className={styles.hero}>
-						<Title className={styles.heading}>{t('hero.title')}</Title>
-					</div>
+		<>
+			<section>
+				<div className={styles.heroLayout}>
+					<section className={styles.heroContent}>
+						<div className={styles.heroBlock}>
+							<div className={styles.heroCard}>
+								<Title className={styles.heroTitle}>{t('hero.title')}</Title>
+							</div>
 
-					<div className={styles.heroInner}>
-						<div className={styles.descriptionWrapper}>
-							<Text
-								className={styles.description}
-								align='Center'
-							>
-								{t.rich('hero.description', {
-									brand: (chunks: React.ReactNode) => <span>{chunks}</span>,
-								})}
-							</Text>
-						</div>
+							<div className={styles.heroBody}>
+								<div className={styles.heroDescription}>
+									<Text
+										className={styles.descriptionText}
+										align='Center'
+									>
+										{t.rich('hero.description', { brand: renderBrand })}
+									</Text>
+								</div>
 
-						<div className={styles.buttons}>
-							<Button
-								text={t('buttons.learn')}
-								className={styles.learn}
-							/>
-							<Button
-								text={t('buttons.features')}
-								className={styles.features}
-							/>
+								<div className={styles.actions}>
+									<Button
+										text={t('buttons.learn')}
+										className={styles.primaryButton}
+									/>
+									<Button
+										text={t('buttons.features')}
+										className={styles.secondaryButton}
+									/>
+								</div>
+							</div>
 						</div>
-					</div>
+					</section>
+
+					<SpiderCanvas
+						connectDots
+						adaptive
+						className={styles.backgroundCanvas}
+					/>
 				</div>
 			</section>
-			{/* // TODO: Временно отключил блог. Нужно будет потом переделать дизайн блокаи его логику */}
-			{/* <section className={styles.blog}>
-				<BlogFeatures />
-			</section> */}
-			<SpiderCanvas
-				connectDots
-				adaptive
-				className={styles.spiderCanvas}
-			/>
-		</div>
+
+			<section className={styles.blogSection}>
+				<header className={styles.blogHeader}>
+					<Title
+						className={styles.blogTitle}
+						tag='h2'
+					>
+						{t('blog.title')}
+					</Title>
+					<Text align='Center'>{t('blog.subtitle')}</Text>
+				</header>
+
+				<BlogPreviewGrid limit={6} />
+			</section>
+		</>
 	);
 }
