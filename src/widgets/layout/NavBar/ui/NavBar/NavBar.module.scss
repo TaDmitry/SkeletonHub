@@ -1,19 +1,16 @@
 @use '@styles/mixins' as *;
 
 .navbar {
-	position: fixed;
+	position: sticky;
 	z-index: 999;
+	top: 0;
 
 	display: flex;
-	align-items: center;
-	justify-content: space-between;
+	align-items: stretch;
+	flex-direction: column;
 
 	width: 100%;
 	padding: 12px 80px;
-
-	border-top: 0;
-	border-right: 0;
-	border-left: 0;
 
 	background: transparent;
 	isolation: isolate;
@@ -23,13 +20,10 @@
 		position: absolute;
 		inset: 0;
 
-		pointer-events: none;
 		z-index: -1;
+		pointer-events: none;
 
-		border: 1px solid rgb(255 255 255 / 12%);
-		border-top: 0;
-		border-right: 0;
-		border-left: 0;
+		border-bottom: 1px solid var(--border-color-fon);
 
 		background: rgb(255 255 255 / 6%);
 		backdrop-filter: blur(8px) saturate(140%) contrast(1.03);
@@ -40,24 +34,31 @@
 	}
 }
 
+.container {
+	display: flex;
+	justify-content: space-between;
+	width: 100%;
+}
+
 .left {
 	display: flex;
 	align-items: center;
 }
 
-.logo {
+.brand {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	border-right: 2px solid rgb(from var(--color-white) r g b / 20%);
+
+	border-right: 2px solid var(--border-color-fon);
 }
 
-.icon {
+.brandIcon {
 	font-size: 24px;
 	color: var(--color-white);
 }
 
-.title {
+.brandLink {
 	margin-right: 16px;
 
 	span {
@@ -69,14 +70,12 @@
 .navList {
 	display: flex;
 	align-items: center;
+	gap: 24px;
+	margin-left: 16px;
 
-	button {
-		margin: 0 16px;
-
-		&:focus-visible > span {
-			transform: scale(1.05);
-			color: var(--color-accent-classic);
-		}
+	button &:focus-visible > span {
+		transform: scale(1.05);
+		color: var(--color-accent-classic);
 	}
 
 	span {
@@ -90,16 +89,20 @@
 	}
 }
 
+.navItem {
+	display: flex;
+}
+
 .right {
 	display: flex;
 	align-items: center;
-	padding-left: 8px;
-	border-left: 2px solid rgb(from var(--color-white) r g b / 20%);
+
+	padding-left: 4px;
+	border-left: 2px solid var(--border-color-fon);
 }
 
-.languageButton,
-.githubButton,
-.dropdown {
+.iconButton,
+.menuButton {
 	position: relative;
 
 	span {
@@ -107,12 +110,7 @@
 		padding: 8px;
 	}
 
-	&:hover span {
-		border-radius: var(--radius-sm);
-		color: var(--color-white);
-		background-color: rgb(from var(--color-white) r g b / 10%);
-	}
-
+	&:hover span,
 	&:focus-visible span {
 		border-radius: var(--radius-sm);
 		color: var(--color-white);
@@ -120,20 +118,41 @@
 	}
 }
 
-.dropdown svg {
+.menuButton svg {
 	transition: transform 250ms ease;
+	transform: rotate(-90deg);
 }
 
-.dropdownOpen svg {
-	transform: rotate(180deg);
+.menuButtonOpen svg {
+	transform: rotate(90deg);
+}
+
+@media (width <=1441px) {
+	.navbar {
+		padding: 12px 16px;
+	}
 }
 
 @media (width <=768px) {
-	.navbar {
-		padding: 12px 24px;
+	.brandLink {
+		margin: 0 8px 0 4px;
+	}
+}
+
+@media (width <=551px) {
+	.brand {
+		border-right: 0;
 	}
 
-	.title {
-		margin: 0 8px 0 4px;
+	.brandLink {
+		margin: 0;
+	}
+
+	.brandIcon {
+		display: none;
+	}
+
+	.right {
+		border-left: 0;
 	}
 }
