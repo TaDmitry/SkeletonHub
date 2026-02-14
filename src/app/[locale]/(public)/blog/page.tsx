@@ -19,7 +19,7 @@ export default function BlogPage() {
 				</Title>
 			</div>
 
-			<BlogPreviewGrid limit={6} />
+			<BlogPreviewGrid />
 		</div>
 	);
 }

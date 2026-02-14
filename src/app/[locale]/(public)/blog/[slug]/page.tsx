@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
 import { getBlogPostBySlug } from '@/entities/blog';
+import { formatDate } from '@/shared/lib/date';
 import { Button, Icon, Text, Title } from '@ui/index';
 
 import styles from './page.module.scss';
@@ -32,11 +33,7 @@ export default async function BlogPostPage({ params }: Props) {
 		);
 	}
 
-	const formatted = new Intl.DateTimeFormat('ru-RU', {
-		year: 'numeric',
-		month: 'long',
-		day: '2-digit',
-	}).format(new Date(post.date));
+	const formatted = formatDate(post.date, 'long');
 
 	return (
 		<div className={styles.page}>
