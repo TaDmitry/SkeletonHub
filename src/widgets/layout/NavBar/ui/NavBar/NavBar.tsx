@@ -4,6 +4,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import clsx from 'clsx';
 
+import { usePathname } from '@/shared/config/i18n/navigation';
 import {
 	MOBILE_BREAKPOINT,
 	SMALL_MOBILE_BREAKPOINT,
@@ -19,6 +20,7 @@ import styles from './NavBar.module.scss';
 
 export const NavBarWidget: React.FC = () => {
 	const t = useTranslations('layout.navbar.NavBar');
+	const pathname = usePathname();
 
 	const isPanelOpen = useNavBarStore((s) => s.isPanelOpen);
 	const togglePanel = useNavBarStore((s) => s.toggle);
@@ -52,6 +54,7 @@ export const NavBarWidget: React.FC = () => {
 	}, [windowWidth]);
 
 	const isDesktopLanguagePanelOpen = isLanguagePanelOpen && languagePanelContext === 'desktop';
+	const isBlogPage = pathname === '/blog' || pathname.startsWith('/blog/');
 
 	useEffect(() => {
 		if (!hasMeasuredWidth) return;
@@ -98,6 +101,8 @@ export const NavBarWidget: React.FC = () => {
 								<Button
 									text={t('links.blog')}
 									href='/blog'
+									className={clsx(isBlogPage && styles.navLinkActive)}
+									aria-current={isBlogPage ? 'page' : undefined}
 								/>
 							</li>
 						</ul>

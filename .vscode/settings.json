@@ -1,0 +1,9 @@
+{
+	"eslint.useFlatConfig": true,
+	"eslint.workingDirectories": [
+		{
+			"directory": ".",
+			"changeProcessCWD": true
+		}
+	]
+}

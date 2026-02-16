@@ -1,6 +1,7 @@
 import { Inter } from 'next/font/google';
 import { headers } from 'next/headers';
 import { getTranslations } from 'next-intl/server';
+import clsx from 'clsx';
 
 import { routing } from '@config/i18n/routing';
 import { Text, Title } from '@ui/index';
@@ -14,9 +15,8 @@ type Locale = (typeof routing.locales)[number];
 
 async function getLocale(): Promise<Locale> {
 	const headersList = await headers();
-	const pathname = headersList.get('x-pathname') ?? '';
-
-	const locale = routing.locales.find((l) => pathname.startsWith(`/${l}`));
+	const rawLocale = headersList.get('x-locale');
+	const locale = rawLocale ? routing.locales.find((value) => value === rawLocale) : undefined;
 
 	return locale ?? routing.defaultLocale;
 }
@@ -32,7 +32,7 @@ export default async function GlobalNotFound() {
 	return (
 		<html
 			lang={locale}
-			className={(inter.className, styles.html)}
+			className={clsx(inter.className, styles.html)}
 		>
 			<body className={styles.container}>
 				<div className={styles.content}>

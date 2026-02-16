@@ -42,6 +42,12 @@
 	}
 }
 
+.iconButtonActive span {
+	border-radius: var(--radius-sm);
+	color: var(--color-white);
+	background-color: rgb(from var(--color-white) r g b / 10%);
+}
+
 .brandIcon {
 	font-size: 24px;
 	color: var(--color-white);

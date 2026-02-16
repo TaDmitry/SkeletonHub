@@ -8,42 +8,31 @@ import prettierConfig from 'eslint-config-prettier';
 
 import tsParser from '@typescript-eslint/parser';
 
-// плагины
 import tsPlugin from '@typescript-eslint/eslint-plugin';
-import reactPlugin from 'eslint-plugin-react';
-import pluginReactHooks from 'eslint-plugin-react-hooks';
+import importPlugin from 'eslint-plugin-import';
+import pluginPrettier from 'eslint-plugin-prettier';
 import pluginSimpleImportSort from 'eslint-plugin-simple-import-sort';
 import sonarjs from 'eslint-plugin-sonarjs';
-import pluginA11y from 'eslint-plugin-jsx-a11y';
-import pluginPrettier from 'eslint-plugin-prettier';
-import pluginUnicorn from 'eslint-plugin-unicorn';
-import pluginImport from 'eslint-plugin-import';
+import unicornPlugin from 'eslint-plugin-unicorn';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 export default defineConfig([
-	//* Next.js preset (включает @next/eslint-plugin-next + react + react-hooks)
 	...nextVitals,
 	...nextTs,
 
-	//* Отключает конфликтующие с Prettier правила из других конфигов
-	prettierConfig,
-
-	//* Игноры
 	globalIgnores([
 		'.next/**',
 		'out/**',
 		'build/**',
 		'next-env.d.ts',
-
 		'node_modules',
 		'dist',
 		'public',
 		'.cache',
 		'eslint.config.mjs',
 		'postcss.config.js',
-
 		'stylelint.config.mjs',
 		'prettier.config.*',
 		'commitlint.config.*',
@@ -52,16 +41,15 @@ export default defineConfig([
 		'scripts/**',
 	]),
 
-	//* Основной блок
 	{
 		files: ['**/*.{js,ts,jsx,tsx}'],
 		plugins: {
 			'@typescript-eslint': tsPlugin,
+			'import': importPlugin,
+			'prettier': pluginPrettier,
 			'simple-import-sort': pluginSimpleImportSort,
 			sonarjs,
-			'prettier': pluginPrettier,
-			'unicorn': pluginUnicorn,
-			'import': pluginImport,
+			'unicorn': unicornPlugin,
 		},
 		languageOptions: {
 			parser: tsParser,
@@ -80,7 +68,6 @@ export default defineConfig([
 			'import/resolver': { node: { extensions: ['.js', '.jsx', '.ts', '.tsx'] } },
 		},
 		rules: {
-			//* Импорты
 			'simple-import-sort/imports': [
 				'error',
 				{
@@ -96,22 +83,18 @@ export default defineConfig([
 			'import/order': 'off',
 			'import/newline-after-import': ['error', { count: 1 }],
 
-			//* Отступы / padding
 			'padding-line-between-statements': [
 				'error',
 				{ blankLine: 'always', prev: '*', next: 'return' },
 				{ blankLine: 'always', prev: 'block-like', next: 'export' },
 			],
 
-			//* React Hooks
 			'react-hooks/rules-of-hooks': 'error',
 			'react-hooks/exhaustive-deps': 'warn',
 
-			//* TypeScript
 			'@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
 			'@typescript-eslint/no-explicit-any': 'error',
 
-			//* Общие
 			'prettier/prettier': 'error',
 			'no-var': 'error',
 			'prefer-const': 'error',
@@ -119,17 +102,14 @@ export default defineConfig([
 			'consistent-return': 'error',
 			'no-console': ['error', { allow: ['warn', 'error'] }],
 
-			//* React rules
 			'react/react-in-jsx-scope': 'off',
 			'react/prop-types': 'off',
 
-			//* A11y
 			'jsx-a11y/anchor-is-valid': 'warn',
 			'jsx-a11y/alt-text': 'warn',
 			'jsx-a11y/click-events-have-key-events': 'warn',
 			'jsx-a11y/no-static-element-interactions': 'warn',
 
-			//* Unicorn
 			'unicorn/prefer-includes': 'error',
 			'unicorn/prefer-string-starts-ends-with': 'error',
 			'unicorn/prefer-optional-catch-binding': 'error',
@@ -140,7 +120,6 @@ export default defineConfig([
 			'unicorn/prefer-single-call': 'warn',
 			'unicorn/no-unnecessary-slice-end': 'warn',
 
-			//* SonarJS
 			'sonarjs/no-identical-conditions': 'error',
 			'sonarjs/no-extra-arguments': 'error',
 			'sonarjs/non-existent-operator': 'error',
@@ -153,7 +132,6 @@ export default defineConfig([
 			'sonarjs/prefer-single-boolean-return': 'warn',
 			'sonarjs/prefer-immediate-return': 'warn',
 
-			//* Прочее
 			'no-shadow': 'off',
 			'@typescript-eslint/no-shadow': 'error',
 			'no-magic-numbers': [
@@ -171,4 +149,6 @@ export default defineConfig([
 			'object-shorthand': ['error', 'always'],
 		},
 	},
+
+	prettierConfig,
 ]);

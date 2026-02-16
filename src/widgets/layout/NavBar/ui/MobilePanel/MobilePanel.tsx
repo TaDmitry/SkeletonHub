@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import clsx from 'clsx';
 
+import { usePathname } from '@/shared/config/i18n/navigation';
 import { SMALL_MOBILE_BREAKPOINT } from '@/shared/constants/breakpoints';
 import { Button, Icon } from '@ui/index';
 
@@ -22,6 +23,7 @@ export const MobilePanel: React.FC<MobilePanelProps> = ({
 	id = 'mobile-panel',
 }) => {
 	const t = useTranslations('layout.navbar.MobilePanel');
+	const pathname = usePathname();
 
 	const panelRef = useRef<HTMLElement | null>(null);
 
@@ -33,6 +35,7 @@ export const MobilePanel: React.FC<MobilePanelProps> = ({
 	const languagePanelContext = useLanguagePanelStore((s) => s.context);
 
 	const isMobileLanguagePanelOpen = isLanguagePanelOpen && languagePanelContext === 'mobile';
+	const isBlogPage = pathname === '/blog' || pathname.startsWith('/blog/');
 
 	useEffect(() => {
 		if (!isOpen || !panelRef.current) {
@@ -127,9 +130,10 @@ export const MobilePanel: React.FC<MobilePanelProps> = ({
 					/>
 					<Button
 						icon={<Icon icon='Book' />}
-						className={styles.iconButton}
+						className={clsx(styles.iconButton, isBlogPage && styles.iconButtonActive)}
 						aria-label={t('buttons.blog')}
 						href='/blog'
+						aria-current={isBlogPage ? 'page' : undefined}
 					/>
 				</div>
 			)}

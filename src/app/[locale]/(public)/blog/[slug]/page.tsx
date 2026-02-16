@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { getLocale } from 'next-intl/server';
 
 import { getBlogPostBySlug } from '@/entities/blog';
 import { formatDate } from '@/shared/lib/date';
@@ -14,6 +15,7 @@ export default async function BlogPostPage({ params }: Props) {
 	const { slug } = await params;
 
 	const post = getBlogPostBySlug(slug);
+	const locale = await getLocale();
 
 	if (!post) {
 		return (
@@ -33,7 +35,7 @@ export default async function BlogPostPage({ params }: Props) {
 		);
 	}
 
-	const formatted = formatDate(post.date, 'long');
+	const formatted = formatDate(post.date, 'long', locale);
 
 	return (
 		<div className={styles.page}>
