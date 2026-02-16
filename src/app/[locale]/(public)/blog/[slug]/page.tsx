@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import { getLocale } from 'next-intl/server';
 
 import { getBlogPostBySlug } from '@/entities/blog';
@@ -18,21 +18,7 @@ export default async function BlogPostPage({ params }: Props) {
 	const locale = await getLocale();
 
 	if (!post) {
-		return (
-			<div className={styles.page}>
-				<Link
-					href='/blog'
-					className={styles.back}
-				>
-					← К новостям
-				</Link>
-
-				<div className={styles.notFound}>
-					<h1 className={styles.notFoundTitle}>Новость не найдена</h1>
-					<p className={styles.notFoundText}>Проверь ссылку или вернись к списку новостей.</p>
-				</div>
-			</div>
-		);
+		notFound();
 	}
 
 	const formatted = formatDate(post.date, 'long', locale);

@@ -67,10 +67,6 @@
 	}
 }
 
-.brandLinkActive span {
-	color: var(--color-accent-classic);
-}
-
 .navList {
 	display: flex;
 	align-items: center;
@@ -103,8 +99,6 @@
 
 .navLinkActive span {
 	color: var(--color-accent-classic);
-	text-decoration: underline;
-	text-underline-offset: 6px;
 }
 
 .right {

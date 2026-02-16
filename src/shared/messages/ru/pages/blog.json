@@ -1,5 +1,10 @@
 {
 	"BlogPage": {
 		"title": "Последние новости SkeletonHub"
+	},
+	"BlogPostNotFound": {
+		"title": "Новость не найдена",
+		"description": "Проверьте ссылку или вернитесь к списку новостей.",
+		"button": "К новостям"
 	}
 }

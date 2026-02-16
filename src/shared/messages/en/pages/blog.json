@@ -1,5 +1,10 @@
 {
 	"BlogPage": {
 		"title": "Latest SkeletonHub News"
+	},
+	"BlogPostNotFound": {
+		"title": "News article not found",
+		"description": "This article does not exist or the link is outdated.",
+		"button": "Back to news"
 	}
 }
