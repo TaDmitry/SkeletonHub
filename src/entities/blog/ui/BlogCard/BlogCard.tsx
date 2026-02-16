@@ -1,7 +1,4 @@
-'use client';
-
 import Link from 'next/link';
-import { useLocale } from 'next-intl';
 import clsx from 'clsx';
 
 import { formatDate } from '@/shared/lib/date';
@@ -15,10 +12,10 @@ type Props = {
 	post: BlogPost;
 	href: string;
 	className?: string;
+	locale?: string;
 };
 
-export const BlogCard = ({ post, href, className }: Props) => {
-	const locale = useLocale();
+export const BlogCard = ({ post, href, className, locale }: Props) => {
 	const formatted = formatDate(post.date, 'long', locale);
 
 	return (

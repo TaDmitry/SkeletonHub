@@ -149,6 +149,94 @@ export default defineConfig([
 			'object-shorthand': ['error', 'always'],
 		},
 	},
+	{
+		files: ['src/widgets/**/*.{js,ts,jsx,tsx}'],
+		rules: {
+			'no-restricted-imports': [
+				'error',
+				{
+					patterns: [
+						{
+							group: ['@/app', '@/app/**'],
+							message: 'Layer rule: widgets cannot import app.',
+						},
+					],
+				},
+			],
+		},
+	},
+	{
+		files: ['src/features/**/*.{js,ts,jsx,tsx}'],
+		rules: {
+			'no-restricted-imports': [
+				'error',
+				{
+					patterns: [
+						{
+							group: ['@/app', '@/app/**'],
+							message: 'Layer rule: features cannot import app.',
+						},
+						{
+							group: ['@/widgets', '@/widgets/**', '@widgets', '@widgets/**'],
+							message: 'Layer rule: features cannot import widgets.',
+						},
+					],
+				},
+			],
+		},
+	},
+	{
+		files: ['src/entities/**/*.{js,ts,jsx,tsx}'],
+		rules: {
+			'no-restricted-imports': [
+				'error',
+				{
+					patterns: [
+						{
+							group: ['@/app', '@/app/**'],
+							message: 'Layer rule: entities cannot import app.',
+						},
+						{
+							group: ['@/widgets', '@/widgets/**', '@widgets', '@widgets/**'],
+							message: 'Layer rule: entities cannot import widgets.',
+						},
+						{
+							group: ['@/features', '@/features/**', '@features', '@features/**'],
+							message: 'Layer rule: entities cannot import features.',
+						},
+					],
+				},
+			],
+		},
+	},
+	{
+		files: ['src/shared/**/*.{js,ts,jsx,tsx}'],
+		rules: {
+			'no-restricted-imports': [
+				'error',
+				{
+					patterns: [
+						{
+							group: ['@/app', '@/app/**'],
+							message: 'Layer rule: shared cannot import app.',
+						},
+						{
+							group: ['@/widgets', '@/widgets/**', '@widgets', '@widgets/**'],
+							message: 'Layer rule: shared cannot import widgets.',
+						},
+						{
+							group: ['@/features', '@/features/**', '@features', '@features/**'],
+							message: 'Layer rule: shared cannot import features.',
+						},
+						{
+							group: ['@/entities', '@/entities/**', '@entities', '@entities/**'],
+							message: 'Layer rule: shared cannot import entities.',
+						},
+					],
+				},
+			],
+		},
+	},
 
 	prettierConfig,
 ]);

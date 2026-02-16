@@ -1,9 +1,14 @@
 import { toTimestamp } from '@/shared/lib/date';
 
-import { BLOG_POSTS } from './blogData';
+import {
+	getAllBlogPostSlugs,
+	getBlogPostBySlugForLocale,
+	getBlogPostsForLocale,
+} from './repository';
 
-export function getAllBlogPosts() {
-	const withIndex = BLOG_POSTS.map((post, index) => ({ post, index }));
+export function getAllBlogPosts(locale?: string) {
+	const localizedPosts = getBlogPostsForLocale(locale);
+	const withIndex = localizedPosts.map((post, index) => ({ post, index }));
 
 	withIndex.sort((a, b) => {
 		const left = toTimestamp(a.post.date);
@@ -17,6 +22,11 @@ export function getAllBlogPosts() {
 	return withIndex.map((x) => x.post);
 }
 
-export function getBlogPostBySlug(slug: string) {
-	return BLOG_POSTS.find((p) => p.slug === slug) ?? null;
+export function getBlogPostBySlug(slug: string, locale?: string) {
+	return getBlogPostBySlugForLocale(slug, locale);
 }
+
+export { getAllBlogPostSlugs };
+
+export { resolveBlogLocale } from './repository';
+export type { BlogLocale } from './types';
