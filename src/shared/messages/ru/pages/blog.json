@@ -1,5 +1,17 @@
 {
 	"BlogPage": {
-		"title": "Последние новости SkeletonHub"
+		"title": "Последние новости SkeletonHub",
+		"description": "Новости, релизы и технические обновления SkeletonHub."
+	},
+	"BlogPreviewGrid": {
+		"ariaLabel": "Новости"
+	},
+	"BlogPostPage": {
+		"backButton": "К новостям"
+	},
+	"BlogPostNotFound": {
+		"title": "Новость не найдена",
+		"description": "Проверьте ссылку или вернитесь к списку новостей.",
+		"button": "К новостям"
 	}
 }

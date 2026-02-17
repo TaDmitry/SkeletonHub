@@ -38,7 +38,11 @@
 		"src",
 		".next/types/**/*.ts",
 		"next.config.ts",
-		".next/dev/types/**/*.ts"
+		".next/dev/types/**/*.ts",
+		"commitlint.config.cjs",
+		"eslint.config.mjs",
+		"postcss.config.js",
+		"stylelint.config.mjs"
 	],
 	"exclude": ["node_modules", ".next"]
 }

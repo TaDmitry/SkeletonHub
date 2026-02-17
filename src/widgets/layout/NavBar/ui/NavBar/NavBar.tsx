@@ -4,6 +4,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import clsx from 'clsx';
 
+import { usePathname } from '@/shared/config/i18n/navigation';
 import {
 	MOBILE_BREAKPOINT,
 	SMALL_MOBILE_BREAKPOINT,
@@ -19,6 +20,7 @@ import styles from './NavBar.module.scss';
 
 export const NavBarWidget: React.FC = () => {
 	const t = useTranslations('layout.navbar.NavBar');
+	const pathname = usePathname();
 
 	const isPanelOpen = useNavBarStore((s) => s.isPanelOpen);
 	const togglePanel = useNavBarStore((s) => s.toggle);
@@ -26,15 +28,14 @@ export const NavBarWidget: React.FC = () => {
 
 	const toggleLanguagePanel = useLanguagePanelStore((s) => s.toggle);
 	const closeLanguagePanel = useLanguagePanelStore((s) => s.close);
+	const isLanguagePanelOpen = useLanguagePanelStore((s) => s.isOpen);
+	const languagePanelContext = useLanguagePanelStore((s) => s.context);
 
-	const [isClient, setIsClient] = useState(false);
 	const [windowWidth, setWindowWidth] = useState<number>(SSR_FALLBACK_WIDTH);
 
 	const mobileMenuTriggerRef = useRef<HTMLButtonElement | null>(null);
 
 	useEffect(() => {
-		setIsClient(true);
-
 		const updateWindowWidth = () => setWindowWidth(window.innerWidth);
 
 		updateWindowWidth();
@@ -43,22 +44,20 @@ export const NavBarWidget: React.FC = () => {
 		return () => window.removeEventListener('resize', updateWindowWidth);
 	}, []);
 
-	const { isDesktop, showNavLinks } = useMemo(() => {
-		if (!isClient) {
-			return {
-				isDesktop: false,
-				showNavLinks: false,
-			};
-		}
+	const hasMeasuredWidth = windowWidth !== SSR_FALLBACK_WIDTH;
 
+	const { isDesktop, showNavLinks } = useMemo(() => {
 		return {
 			isDesktop: windowWidth > MOBILE_BREAKPOINT,
 			showNavLinks: windowWidth > SMALL_MOBILE_BREAKPOINT,
 		};
-	}, [isClient, windowWidth]);
+	}, [windowWidth]);
+
+	const isDesktopLanguagePanelOpen = isLanguagePanelOpen && languagePanelContext === 'desktop';
+	const isBlogPage = pathname === '/blog' || pathname.startsWith('/blog/');
 
 	useEffect(() => {
-		if (!isClient) return;
+		if (!hasMeasuredWidth) return;
 
 		//* На десктопе мобильная панель не нужна.
 		if (isDesktop && isPanelOpen) {
@@ -67,7 +66,7 @@ export const NavBarWidget: React.FC = () => {
 
 		//* При смене ширины/режима прячем языковую панель.
 		closeLanguagePanel();
-	}, [isClient, isDesktop, isPanelOpen, closePanel, closeLanguagePanel]);
+	}, [hasMeasuredWidth, isDesktop, isPanelOpen, closePanel, closeLanguagePanel]);
 
 	return (
 		<nav
@@ -102,6 +101,8 @@ export const NavBarWidget: React.FC = () => {
 								<Button
 									text={t('links.blog')}
 									href='/blog'
+									className={clsx(isBlogPage && styles.navLinkActive)}
+									aria-current={isBlogPage ? 'page' : undefined}
 								/>
 							</li>
 						</ul>
@@ -116,8 +117,13 @@ export const NavBarWidget: React.FC = () => {
 								icon={<Icon icon='Language' />}
 								onClick={() => toggleLanguagePanel('desktop')}
 								className={styles.iconButton}
+								aria-expanded={isDesktopLanguagePanelOpen}
+								aria-controls='desktop-language-panel'
 							/>
-							<LanguagePanel variant='desktop' />
+							<LanguagePanel
+								variant='desktop'
+								id='desktop-language-panel'
+							/>
 							<Button
 								href='https://github.com/TaDmitry'
 								aria-label={t('buttons.github')}
@@ -126,7 +132,7 @@ export const NavBarWidget: React.FC = () => {
 							/>
 						</>
 					) : (
-						isClient && (
+						hasMeasuredWidth && (
 							<Button
 								icon={<Icon icon='ChevronBackOutline' />}
 								className={clsx(styles.menuButton, isPanelOpen && styles.menuButtonOpen)}
@@ -141,7 +147,7 @@ export const NavBarWidget: React.FC = () => {
 				</div>
 			</section>
 
-			{isClient && (
+			{hasMeasuredWidth && (
 				<MobilePanel
 					triggerRef={mobileMenuTriggerRef}
 					windowWidth={windowWidth}

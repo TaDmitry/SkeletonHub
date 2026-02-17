@@ -3,7 +3,7 @@ import blog from './pages/blog.json';
 import globalNotFound from './pages/globalNotFound.json';
 import home from './pages/home.json';
 
-export default {
+const messages = {
 	layout: {
 		navbar,
 	},
@@ -13,3 +13,5 @@ export default {
 		home,
 	},
 };
+
+export default messages;

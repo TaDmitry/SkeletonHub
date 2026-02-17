@@ -5,11 +5,25 @@
 }
 
 .back {
+	gap: 8px;
 	margin-bottom: 56px;
 
-	> span {
-		font-size: 16px;
-		margin-right: 4px;
+	span {
+		margin: 0;
+		font-size: 14px;
+		font-weight: 400;
+		transition:
+			transform 0.3s ease,
+			color 0.3s ease;
+	}
+
+	&:hover,
+	&:focus-visible {
+		transform: scale(1.05);
+
+		span {
+			color: var(--color-accent-classic);
+		}
 	}
 }
 
@@ -21,14 +35,15 @@
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
+
 	margin-bottom: 24px;
-	border-bottom: 1px solid var(--border-color);
 	padding-bottom: 16px;
+	border-bottom: 1px solid var(--border-color);
 }
 
 .date p {
 	font-size: 12px;
-	color: var(--color-text);
+	font-weight: 400;
 }
 
 .title {
@@ -42,13 +57,13 @@
 }
 
 .paragraph {
-	line-height: 1.65;
 	font-size: 16px;
-	color: var(--color-text-blog);
 	font-weight: 400;
+	line-height: 1.65;
+	color: var(--color-text-blog);
 }
 
-@media (width <=551) {
+@media (width <=551px) {
 	.title {
 		font-size: 22px;
 	}

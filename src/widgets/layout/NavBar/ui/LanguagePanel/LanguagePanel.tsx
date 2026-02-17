@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import clsx from 'clsx';
@@ -23,13 +25,24 @@ const LANGUAGES = [
 	{ code: 'ru', label: 'Русский' },
 ] as const;
 
+const schedule = (cb: () => void) => {
+	if (typeof queueMicrotask === 'function') {
+		queueMicrotask(cb);
+
+		return;
+	}
+
+	setTimeout(cb, 0);
+};
+
 export const LanguagePanel: React.FC<LanguagePanelProps> = ({ variant, id = 'language-panel' }) => {
 	const t = useTranslations('layout.navbar.LanguagePanel');
 	const router = useRouter();
 	const pathname = usePathname();
 
 	const panelRef = useRef<HTMLDivElement | null>(null);
-	const timeoutRef = useRef<number | null>(null);
+	const closeTimerRef = useRef<number | null>(null);
+	const rafRef = useRef<number | null>(null);
 
 	const isOpen = useLanguagePanelStore((s) => s.isOpen);
 	const context = useLanguagePanelStore((s) => s.context);
@@ -37,48 +50,57 @@ export const LanguagePanel: React.FC<LanguagePanelProps> = ({ variant, id = 'lan
 
 	const isActive = useMemo(() => isOpen && context === variant, [isOpen, context, variant]);
 
-	const [shouldRender, setShouldRender] = useState<boolean>(isActive);
+	//* Монтируем панель, когда активна, и держим смонтированной во время закрывающей анимации
+	const [isMounted, setIsMounted] = useState<boolean>(isActive);
 	const [isVisible, setIsVisible] = useState<boolean>(false);
 
 	useEffect(() => {
-		if (timeoutRef.current) {
-			clearTimeout(timeoutRef.current);
-			timeoutRef.current = null;
-		}
-
-		if (isActive) {
-			setShouldRender(true);
-
-			//* Даем React смонтировать элемент, затем включаем анимацию
-			requestAnimationFrame(() => setIsVisible(true));
-
-			return () => {};
-		}
-
-		//* Закрытие: выключаем видимость и ждём окончания transition
-		setIsVisible(false);
-
-		timeoutRef.current = window.setTimeout(() => {
-			setShouldRender(false);
-			timeoutRef.current = null;
-		}, TRANSITION_MS);
-
-		return () => {
-			if (timeoutRef.current) {
-				clearTimeout(timeoutRef.current);
-				timeoutRef.current = null;
+		const clearPendingAnimations = () => {
+			if (closeTimerRef.current) {
+				clearTimeout(closeTimerRef.current);
+				closeTimerRef.current = null;
+			}
+			if (rafRef.current) {
+				cancelAnimationFrame(rafRef.current);
+				rafRef.current = null;
 			}
 		};
+
+		//* очистки
+		clearPendingAnimations();
+
+		if (isActive) {
+			//* Монтируем асинхронно, чтобы не словить setState-in-effect
+			schedule(() => setIsMounted(true));
+
+			//* Даем React отрендерить элемент, затем включаем анимацию
+			rafRef.current = requestAnimationFrame(() => {
+				schedule(() => setIsVisible(true));
+			});
+
+			return clearPendingAnimations;
+		}
+
+		//* Закрытие: убираем видимость (асинхронно)
+		schedule(() => setIsVisible(false));
+
+		//* После transition размонтируем
+		closeTimerRef.current = window.setTimeout(() => {
+			setIsMounted(false);
+			closeTimerRef.current = null;
+		}, TRANSITION_MS);
+
+		return clearPendingAnimations;
 	}, [isActive]);
 
 	useEffect(() => {
-		if (!shouldRender || !panelRef.current) {
+		if (!isMounted || !panelRef.current) {
 			return () => {};
 		}
 
 		const panelEl = panelRef.current;
 
-		//* Родитель-контейнер: кнопка + панель (нужно, чтобы клики по кнопке не считались "outside")
+		//* Родитель-контейнер: кнопка + панель (чтобы клики по кнопке не считались "outside")
 		const containerEl = panelEl.parentElement;
 
 		const previouslyFocused = document.activeElement as HTMLElement | null;
@@ -91,7 +113,10 @@ export const LanguagePanel: React.FC<LanguagePanelProps> = ({ variant, id = 'lan
 				(el) => !el.hasAttribute('disabled')
 			);
 
-		getFocusable()[0]?.focus();
+		//* Фокус после монтирования
+		const focusRaf = requestAnimationFrame(() => {
+			getFocusable()[0]?.focus();
+		});
 
 		const handleKeyDown = (e: KeyboardEvent) => {
 			if (e.key === 'Escape') {
@@ -133,19 +158,21 @@ export const LanguagePanel: React.FC<LanguagePanelProps> = ({ variant, id = 'lan
 		document.addEventListener('mousedown', handleClickOutside);
 
 		return () => {
+			cancelAnimationFrame(focusRaf);
 			document.removeEventListener('keydown', handleKeyDown);
 			document.removeEventListener('mousedown', handleClickOutside);
 
 			previouslyFocused?.focus?.();
 		};
-	}, [shouldRender, closePanel]);
+	}, [isMounted, closePanel]);
 
 	const handleLanguageChange = (languageCode: (typeof LANGUAGES)[number]['code']) => {
-		router.push({ pathname }, { locale: languageCode });
+		const targetPath = `${pathname}${window.location.search}${window.location.hash}`;
+		router.push(targetPath, { locale: languageCode });
 		closePanel();
 	};
 
-	if (!shouldRender) return null;
+	if (!isMounted) return null;
 
 	return (
 		<div
@@ -156,6 +183,7 @@ export const LanguagePanel: React.FC<LanguagePanelProps> = ({ variant, id = 'lan
 				variant === 'desktop' ? styles.panelDesktop : styles.panelMobile,
 				isVisible && styles.panelOpen
 			)}
+			style={{ '--language-panel-transition-ms': `${TRANSITION_MS}ms` } as React.CSSProperties}
 			role='menu'
 			aria-hidden={!isActive}
 			aria-label={t('aria.panel')}
@@ -166,6 +194,7 @@ export const LanguagePanel: React.FC<LanguagePanelProps> = ({ variant, id = 'lan
 					text={lang.label}
 					onClick={() => handleLanguageChange(lang.code)}
 					className={styles.languageButton}
+					role='menuitem'
 					aria-label={lang.label}
 				/>
 			))}

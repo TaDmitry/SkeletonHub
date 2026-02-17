@@ -3,23 +3,10 @@ export default {
 	extends: [
 		'stylelint-config-standard-scss',
 		'stylelint-config-css-modules',
-
 		'stylelint-config-clean-order',
 	],
 
 	customSyntax: 'postcss-scss',
-
-	ignoreFiles: [
-		'**/.next/**',
-		'**/out/**',
-		'**/dist/**',
-		'**/node_modules/**',
-		'**/*.js',
-		'**/*.jsx',
-		'**/*.ts',
-		'**/*.tsx',
-		'**/*.d.ts',
-	],
 
 	rules: {
 		'selector-class-pattern': [
@@ -39,8 +26,6 @@ export default {
 		'scss/at-mixin-argumentless-call-parentheses': 'never',
 		'scss/comment-no-loud': null,
 
-		'order/properties-order': null,
-
 		'declaration-block-no-duplicate-properties': [
 			true,
 			{
@@ -49,9 +34,5 @@ export default {
 		],
 
 		'custom-property-pattern': null,
-
-		'no-descending-specificity': null,
-
-		'selector-max-id': null,
 	},
 };

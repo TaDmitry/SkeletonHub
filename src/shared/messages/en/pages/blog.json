@@ -1,5 +1,17 @@
 {
 	"BlogPage": {
-		"title": "Latest SkeletonHub News"
+		"title": "Latest SkeletonHub News",
+		"description": "News, releases, and technical updates from SkeletonHub."
+	},
+	"BlogPreviewGrid": {
+		"ariaLabel": "News"
+	},
+	"BlogPostPage": {
+		"backButton": "Back to news"
+	},
+	"BlogPostNotFound": {
+		"title": "News article not found",
+		"description": "This article does not exist or the link is outdated.",
+		"button": "Back to news"
 	}
 }

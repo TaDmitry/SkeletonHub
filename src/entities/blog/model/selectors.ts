@@ -1,19 +1,32 @@
-import { BLOG_POSTS } from './blogData';
+import { toTimestamp } from '@/shared/lib/date';
 
-const SORT_DESC = -1;
+import {
+	getAllBlogPostSlugs,
+	getBlogPostBySlugForLocale,
+	getBlogPostsForLocale,
+} from './repository';
 
-export function getAllBlogPosts() {
-	const withIndex = BLOG_POSTS.map((post, index) => ({ post, index }));
+export function getAllBlogPosts(locale?: string) {
+	const localizedPosts = getBlogPostsForLocale(locale);
+	const withIndex = localizedPosts.map((post, index) => ({ post, index }));
 
 	withIndex.sort((a, b) => {
-		if (a.post.date === b.post.date) return a.index - b.index;
+		const left = toTimestamp(a.post.date);
+		const right = toTimestamp(b.post.date);
 
-		return a.post.date < b.post.date ? 1 : SORT_DESC;
+		if (left === right) return a.index - b.index;
+
+		return right - left;
 	});
 
 	return withIndex.map((x) => x.post);
 }
 
-export function getBlogPostBySlug(slug: string) {
-	return BLOG_POSTS.find((p) => p.slug === slug) ?? null;
+export function getBlogPostBySlug(slug: string, locale?: string) {
+	return getBlogPostBySlugForLocale(slug, locale);
 }
+
+export { getAllBlogPostSlugs };
+
+export { resolveBlogLocale } from './repository';
+export type { BlogLocale } from './types';

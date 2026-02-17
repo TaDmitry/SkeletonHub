@@ -1,0 +1,12 @@
+{
+	"eslint.useFlatConfig": true,
+	"eslint.workingDirectories": [
+		{
+			"directory": ".",
+			"changeProcessCWD": true
+		}
+	],
+	"stylelint.validate": ["css", "scss"],
+	"css.validate": false,
+	"scss.validate": false
+}

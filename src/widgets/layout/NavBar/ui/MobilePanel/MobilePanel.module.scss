@@ -1,18 +1,18 @@
 @use '@styles/mixins' as *;
 
 .panel {
-	margin-top: 4px;
-
 	display: flex;
+	gap: 8px;
 	align-items: center;
 	justify-content: flex-end;
-	gap: 8px;
+
+	margin-top: 4px;
 }
 
 .group {
 	display: flex;
-	align-items: center;
 	gap: 8px;
+	align-items: center;
 }
 
 .groupTop {
@@ -22,8 +22,8 @@
 
 .groupBottom {
 	display: flex;
-	align-items: center;
 	gap: 8px;
+	align-items: center;
 }
 
 .iconButton {
@@ -42,6 +42,12 @@
 	}
 }
 
+.iconButtonActive span {
+	border-radius: var(--radius-sm);
+	color: var(--color-white);
+	background-color: rgb(from var(--color-white) r g b / 10%);
+}
+
 .brandIcon {
 	font-size: 24px;
 	color: var(--color-white);
@@ -49,7 +55,6 @@
 
 .languageControl {
 	position: relative;
-
 	display: flex;
 	align-items: center;
 }

@@ -1,8 +1,7 @@
-'use client';
-
 import Link from 'next/link';
 import clsx from 'clsx';
 
+import { formatDate } from '@/shared/lib/date';
 import { Text, Title } from '@ui/index';
 
 import type { BlogPost } from '../../model/types';
@@ -13,14 +12,11 @@ type Props = {
 	post: BlogPost;
 	href: string;
 	className?: string;
+	locale?: string;
 };
 
-export const BlogCard = ({ post, href, className }: Props) => {
-	const formatted = new Intl.DateTimeFormat('ru-RU', {
-		year: 'numeric',
-		month: 'short',
-		day: '2-digit',
-	}).format(new Date(post.date));
+export const BlogCard = ({ post, href, className, locale }: Props) => {
+	const formatted = formatDate(post.date, 'long', locale);
 
 	return (
 		<Link
