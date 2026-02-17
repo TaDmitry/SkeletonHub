@@ -3,7 +3,7 @@
   - 'prettier --write'
 
 '*.{scss,css}':
-  - 'stylelint --fix'
+  - 'npx --no-install stylelint --config stylelint.config.mjs --allow-empty-input --fix'
   - 'prettier --write'
 
 '*.{md,json,mdx}':

@@ -1,27 +1,27 @@
 @use '@styles/mixins' as *;
 
 .navbar {
+	isolation: isolate;
 	position: sticky;
 	z-index: 999;
 	top: 0;
 
 	display: flex;
-	align-items: stretch;
 	flex-direction: column;
+	align-items: stretch;
 
 	width: 100%;
 	padding: 12px 80px;
 
 	background: transparent;
-	isolation: isolate;
 
 	&::before {
-		content: '';
-		position: absolute;
-		inset: 0;
-
-		z-index: -1;
 		pointer-events: none;
+		content: '';
+
+		position: absolute;
+		z-index: -1;
+		inset: 0;
 
 		border-bottom: 1px solid var(--border-color-fon);
 
@@ -49,7 +49,6 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-
 	border-right: 2px solid var(--border-color-fon);
 }
 
@@ -69,8 +68,8 @@
 
 .navList {
 	display: flex;
-	align-items: center;
 	gap: 24px;
+	align-items: center;
 	margin-left: 16px;
 
 	a:hover span,
@@ -104,7 +103,6 @@
 .right {
 	display: flex;
 	align-items: center;
-
 	padding-left: 4px;
 	border-left: 2px solid var(--border-color-fon);
 }
@@ -127,8 +125,8 @@
 }
 
 .menuButton svg {
-	transition: transform 250ms ease;
 	transform: rotate(-90deg);
+	transition: transform 250ms ease;
 }
 
 .menuButtonOpen svg {

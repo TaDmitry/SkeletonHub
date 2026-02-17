@@ -12,9 +12,9 @@
 		"lint": "eslint .",
 		"lint:fix": "eslint --fix .",
 		"lint:strict": "eslint --fix --max-warnings=0 .",
-		"format:all": "prettier --write . && npm run lint:fix",
-		"stylelint": "stylelint \"src/**/*.{scss,css}\"",
-		"stylelint:fix": "stylelint \"src/**/*.{scss,css}\" --fix",
+		"format:all": "prettier --write . && npm run lint:fix && npm run stylelint:fix",
+		"stylelint": "npx --no-install stylelint --config stylelint.config.mjs --allow-empty-input --formatter verbose \"src/**/*.{scss,css}\"",
+		"stylelint:fix": "npm run stylelint -- --fix",
 		"ci:lint": "npm run prettier:check && npm run lint && npm run stylelint"
 	},
 	"dependencies": {

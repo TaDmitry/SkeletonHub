@@ -1,17 +1,17 @@
 .page {
 	display: grid;
 	place-items: center;
-	min-height: calc(100dvh - 64px);
 
 	max-width: var(--container-width);
+	min-height: calc(100dvh - 64px);
 	margin: 0 auto;
 	padding: 32px 16px;
 }
 
 .card {
 	display: grid;
-	justify-items: center;
 	gap: 16px;
+	justify-items: center;
 
 	width: min(100%, 720px);
 	margin: 0 auto;

@@ -3,15 +3,19 @@
 .desktopControls {
 	position: relative;
 	display: flex;
-	align-items: center;
 	gap: 8px;
+	align-items: center;
 }
 
 .panel {
 	@include glass-card;
 
+	pointer-events: none;
+
 	position: absolute;
 	z-index: 1001;
+	transform-origin: top right;
+	transform: translateY(-10px);
 
 	display: flex;
 	flex-direction: column;
@@ -20,10 +24,6 @@
 	border-radius: var(--radius-sm);
 
 	opacity: 0;
-	transform: translateY(-10px);
-	transform-origin: top right;
-
-	pointer-events: none;
 
 	transition:
 		opacity var(--language-panel-transition-ms, 350ms) ease,
@@ -39,9 +39,9 @@
 }
 
 .panelOpen {
-	opacity: 1;
-	transform: translateY(0);
 	pointer-events: auto;
+	transform: translateY(0);
+	opacity: 1;
 }
 
 .languageButton {
@@ -49,10 +49,12 @@
 
 	span {
 		display: flex;
+
 		width: 100%;
 		padding: 8px 12px;
 
 		font-size: 15px;
+
 		transition: color var(--language-panel-transition-ms, 350ms) ease;
 
 		&:hover {

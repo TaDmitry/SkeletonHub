@@ -4,9 +4,9 @@
 
 	&:focus-visible article {
 		transform: scale(1.05);
+		background-color: rgb(from var(--color-white) r g b / 5%);
 		outline: 2px solid var(--color-accent-classic);
 		outline-offset: 3px;
-		background-color: rgb(from var(--color-white) r g b / 5%);
 	}
 }
 
@@ -14,10 +14,11 @@
 	display: flex;
 	flex-direction: column;
 
-	padding: 16px;
 	height: 100%;
-	border-radius: var(--radius-sm);
+	padding: 16px;
 	border: 1px solid var(--border-color-fon);
+	border-radius: var(--radius-sm);
+
 	background-color: rgb(from var(--color-white) r g b / 2%);
 	backdrop-filter: blur(10px);
 
@@ -34,9 +35,9 @@
 
 	&:focus-visible {
 		transform: scale(1.05);
+		background-color: rgb(from var(--color-white) r g b / 5%);
 		outline: 2px solid var(--color-accent-classic);
 		outline-offset: 3px;
-		background-color: rgb(from var(--color-white) r g b / 5%);
 	}
 }
 
@@ -55,15 +56,17 @@
 
 .date {
 	font-size: 12px;
-	opacity: 0.75;
-	color: var(--color-white);
 	font-weight: 500;
+	color: var(--color-white);
+	opacity: 0.75;
 }
 
 .excerpt {
 	margin: 0;
+
 	font-size: 14px;
 	line-height: 1.45;
-	opacity: 0.85;
 	color: var(--color-white);
+
+	opacity: 0.85;
 }

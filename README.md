@@ -21,8 +21,14 @@ npm run dev
 # Lint all files
 npm run lint
 
+# Check styles
+npm run stylelint
+
+# Fix styles
+npm run stylelint:fix
+
 # Format all files (before build)
-npm run format
+npm run format:all
 
 # Build for production
 npm run build

@@ -1,22 +1,13 @@
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
 import { defineConfig, globalIgnores } from 'eslint/config';
 
 import nextVitals from 'eslint-config-next/core-web-vitals';
 import nextTs from 'eslint-config-next/typescript';
 import prettierConfig from 'eslint-config-prettier';
 
-import tsParser from '@typescript-eslint/parser';
-
-import tsPlugin from '@typescript-eslint/eslint-plugin';
-import importPlugin from 'eslint-plugin-import';
 import pluginPrettier from 'eslint-plugin-prettier';
 import pluginSimpleImportSort from 'eslint-plugin-simple-import-sort';
 import sonarjs from 'eslint-plugin-sonarjs';
 import unicornPlugin from 'eslint-plugin-unicorn';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
 export default defineConfig([
 	...nextVitals,
@@ -44,34 +35,21 @@ export default defineConfig([
 	{
 		files: ['**/*.{js,ts,jsx,tsx}'],
 		plugins: {
-			'@typescript-eslint': tsPlugin,
-			'import': importPlugin,
 			'prettier': pluginPrettier,
 			'simple-import-sort': pluginSimpleImportSort,
 			sonarjs,
 			'unicorn': unicornPlugin,
 		},
 		languageOptions: {
-			parser: tsParser,
-			parserOptions: {
-				project: './tsconfig.json',
-				tsconfigRootDir: __dirname,
-				ecmaVersion: 2024,
-				sourceType: 'module',
-				ecmaFeatures: { jsx: true },
-			},
 			ecmaVersion: 2024,
 			sourceType: 'module',
-		},
-		settings: {
-			'react': { version: 'detect' },
-			'import/resolver': { node: { extensions: ['.js', '.jsx', '.ts', '.tsx'] } },
 		},
 		rules: {
 			'simple-import-sort/imports': [
 				'error',
 				{
 					groups: [
+						['^\\u0000'],
 						['^react$', '^react-dom$', '^next', '^@?\\w'],
 						['^@/', '^@.+/'],
 						['^[./]'],
@@ -89,24 +67,14 @@ export default defineConfig([
 				{ blankLine: 'always', prev: 'block-like', next: 'export' },
 			],
 
-			'react-hooks/rules-of-hooks': 'error',
-			'react-hooks/exhaustive-deps': 'warn',
-
 			'@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
-			'@typescript-eslint/no-explicit-any': 'error',
 
 			'prettier/prettier': 'error',
-			'no-var': 'error',
-			'prefer-const': 'error',
 			'eqeqeq': ['error', 'always'],
 			'consistent-return': 'error',
 			'no-console': ['error', { allow: ['warn', 'error'] }],
 
-			'react/react-in-jsx-scope': 'off',
-			'react/prop-types': 'off',
-
 			'jsx-a11y/anchor-is-valid': 'warn',
-			'jsx-a11y/alt-text': 'warn',
 			'jsx-a11y/click-events-have-key-events': 'warn',
 			'jsx-a11y/no-static-element-interactions': 'warn',
 
