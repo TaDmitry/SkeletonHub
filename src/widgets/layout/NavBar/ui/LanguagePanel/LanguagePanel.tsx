@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl';
 import clsx from 'clsx';
 
 import { usePathname, useRouter } from '@/shared/config/i18n/navigation';
-import { Button } from '@ui/index';
+import { Button } from '@/shared/ui/index';
 
 import { useLanguagePanelStore } from '../../model';
 

@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next';
 
+// import { getAllBlogPosts } from '@/entities/blog';
 import { getAllBlogPosts } from '@/entities/blog';
 import { routing } from '@/shared/config/i18n/routing';
 import { getAlternatesByLocale, localizedAbsoluteUrl } from '@/shared/config/seo';

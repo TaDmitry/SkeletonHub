@@ -1,8 +1,8 @@
 import React from 'react';
 import { useTranslations } from 'next-intl';
 
-import { Button, SpiderCanvas, Text, Title } from '@ui/index';
-import { BlogPreviewGrid } from '@widgets/blog';
+import { Button, SpiderCanvas, Text, Title } from '@/shared/ui/index';
+import { BlogPreviewGrid } from '@/widgets/blog';
 
 import styles from './page.module.scss';
 

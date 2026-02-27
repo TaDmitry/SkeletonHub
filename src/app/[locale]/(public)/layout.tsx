@@ -4,9 +4,9 @@ import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages, setRequestLocale } from 'next-intl/server';
 
 import { routing } from '@/shared/config/i18n/routing';
-import { NavBarWidget } from '@widgets/layout/NavBar';
+import { NavBarWidget } from '@/widgets/layout/NavBar';
 
-import '@styles/globals.scss';
+import '@/shared/styles/globals.scss';
 
 type Props = {
 	children: React.ReactNode;

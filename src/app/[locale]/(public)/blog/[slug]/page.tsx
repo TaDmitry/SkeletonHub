@@ -11,7 +11,7 @@ import {
 	SITE_NAME,
 } from '@/shared/config/seo';
 import { formatDate } from '@/shared/lib/date';
-import { Button, Icon, Text, Title } from '@ui/index';
+import { Button, Icon, Text, Title } from '@/shared/ui/index';
 
 import styles from './page.module.scss';
 
@@ -23,8 +23,6 @@ type RouteParams = {
 type Props = {
 	params: Promise<RouteParams>;
 };
-
-export const dynamicParams = false;
 
 export function generateStaticParams() {
 	const slugs = getAllBlogPostSlugs();

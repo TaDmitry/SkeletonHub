@@ -10,7 +10,7 @@ import {
 	SMALL_MOBILE_BREAKPOINT,
 	SSR_FALLBACK_WIDTH,
 } from '@/shared/constants/breakpoints';
-import { Button, Icon } from '@ui/index';
+import { Button, Icon } from '@/shared/ui/index';
 
 import { useLanguagePanelStore, useNavBarStore } from '../../model';
 import { LanguagePanel } from '../LanguagePanel/LanguagePanel';

@@ -2,7 +2,7 @@ import Link from 'next/link';
 import clsx from 'clsx';
 
 import { formatDate } from '@/shared/lib/date';
-import { Text, Title } from '@ui/index';
+import { Text, Title } from '@/shared/ui/index';
 
 import type { BlogPost } from '../../model/types';
 

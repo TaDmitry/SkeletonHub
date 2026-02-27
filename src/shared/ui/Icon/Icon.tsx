@@ -1,7 +1,7 @@
 import React, { forwardRef } from 'react';
 import clsx from 'clsx';
 
-import { iconMap, type IconName } from '@shared/assets/iconMap';
+import { iconMap, type IconName } from '@/shared/assets/iconMap';
 
 import styles from './Icon.module.scss';
 

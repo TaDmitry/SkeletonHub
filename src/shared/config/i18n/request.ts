@@ -9,6 +9,6 @@ export default getRequestConfig(async ({ requestLocale }) => {
 
 	return {
 		locale,
-		messages: (await import(`@messages/${locale}`)).default,
+		messages: (await import(`@/shared/messages/${locale}`)).default,
 	};
 });

@@ -20,17 +20,7 @@
 		],
 		"baseUrl": "src",
 		"paths": {
-			"@/*": ["*"],
-			"@shared/*": ["shared/*"],
-			"@components/*": ["shared/components/*"],
-			"@config/*": ["shared/config/*"],
-			"@constants/*": ["shared/constants/*"],
-			"@messages/*": ["shared/messages/*"],
-			"@styles/*": ["shared/styles/*"],
-			"@ui/*": ["shared/ui/*"],
-			"@features/*": ["features/*"],
-			"@widgets/*": ["widgets/*"],
-			"@entities/*": ["entities/*"]
+			"@/*": ["*"]
 		}
 	},
 	"include": [

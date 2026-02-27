@@ -4,7 +4,7 @@ import clsx from 'clsx';
 
 import { usePathname } from '@/shared/config/i18n/navigation';
 import { SMALL_MOBILE_BREAKPOINT } from '@/shared/constants/breakpoints';
-import { Button, Icon } from '@ui/index';
+import { Button, Icon } from '@/shared/ui/index';
 
 import { useLanguagePanelStore, useNavBarStore } from '../../model';
 import { LanguagePanel } from '../LanguagePanel/LanguagePanel';

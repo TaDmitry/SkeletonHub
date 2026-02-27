@@ -145,7 +145,7 @@ export default defineConfig([
 							message: 'Layer rule: features cannot import app.',
 						},
 						{
-							group: ['@/widgets', '@/widgets/**', '@widgets', '@widgets/**'],
+							group: ['@/widgets', '@/widgets/**'],
 							message: 'Layer rule: features cannot import widgets.',
 						},
 					],
@@ -165,11 +165,11 @@ export default defineConfig([
 							message: 'Layer rule: entities cannot import app.',
 						},
 						{
-							group: ['@/widgets', '@/widgets/**', '@widgets', '@widgets/**'],
+							group: ['@/widgets', '@/widgets/**'],
 							message: 'Layer rule: entities cannot import widgets.',
 						},
 						{
-							group: ['@/features', '@/features/**', '@features', '@features/**'],
+							group: ['@/features', '@/features/**'],
 							message: 'Layer rule: entities cannot import features.',
 						},
 					],
@@ -189,15 +189,15 @@ export default defineConfig([
 							message: 'Layer rule: shared cannot import app.',
 						},
 						{
-							group: ['@/widgets', '@/widgets/**', '@widgets', '@widgets/**'],
+							group: ['@/widgets', '@/widgets/**'],
 							message: 'Layer rule: shared cannot import widgets.',
 						},
 						{
-							group: ['@/features', '@/features/**', '@features', '@features/**'],
+							group: ['@/features', '@/features/**'],
 							message: 'Layer rule: shared cannot import features.',
 						},
 						{
-							group: ['@/entities', '@/entities/**', '@entities', '@entities/**'],
+							group: ['@/entities', '@/entities/**'],
 							message: 'Layer rule: shared cannot import entities.',
 						},
 					],

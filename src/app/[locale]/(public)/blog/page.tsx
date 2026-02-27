@@ -9,8 +9,8 @@ import {
 	localizedAbsoluteUrl,
 	SITE_NAME,
 } from '@/shared/config/seo';
-import { Title } from '@ui/index';
-import { BlogPreviewGrid } from '@widgets/blog';
+import { Title } from '@/shared/ui/index';
+import { BlogPreviewGrid } from '@/widgets/blog';
 
 import styles from './page.module.scss';
 

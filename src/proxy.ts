@@ -1,7 +1,7 @@
 import type { NextRequest } from 'next/server';
 import createMiddleware from 'next-intl/middleware';
 
-import { routing } from '@config/i18n/routing';
+import { routing } from '@/shared/config/i18n/routing';
 
 const intlMiddleware = createMiddleware(routing);
 const LOCALE_COOKIE_NAME = 'NEXT_LOCALE';

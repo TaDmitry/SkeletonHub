@@ -3,10 +3,10 @@ import { headers } from 'next/headers';
 import { getTranslations } from 'next-intl/server';
 import clsx from 'clsx';
 
-import { routing } from '@config/i18n/routing';
-import { Text, Title } from '@ui/index';
+import { routing } from '@/shared/config/i18n/routing';
+import { Text, Title } from '@/shared/ui/index';
 
-import '@styles/globals.scss';
+import '@/shared/styles/globals.scss';
 import styles from './globalNotFound.module.scss';
 
 const inter = Inter({ subsets: ['latin'] });
