@@ -150,6 +150,13 @@
 	padding: 0 16px 32px;
 }
 
+.contactSection {
+	width: 100%;
+	max-width: var(--container-width);
+	margin: 0 auto;
+	padding: 0 16px 32px;
+}
+
 .blogHeader {
 	position: relative;
 	z-index: 20;
@@ -167,6 +174,12 @@
 	color: var(--color-white);
 }
 
+@media (width <=900px) {
+	.blogHeader {
+		flex-direction: column;
+	}
+}
+
 @media (width <=768px) {
 	.heroContent {
 		align-items: flex-start;
@@ -182,10 +195,6 @@
 
 	.heroBody {
 		font-size: 16px;
-	}
-
-	.blogHeader {
-		flex-direction: column;
 	}
 }
 

@@ -18,12 +18,15 @@
 		"ci:lint": "npm run prettier:check && npm run lint && npm run stylelint"
 	},
 	"dependencies": {
+		"@hookform/resolvers": "^5.2.2",
 		"clsx": "^2.1.1",
 		"date-fns": "^4.1.0",
 		"next": "^16.1.6",
 		"next-intl": "^4.8.2",
 		"react": "^19.2.4",
 		"react-dom": "^19.2.4",
+		"react-hook-form": "^7.71.2",
+		"zod": "^4.3.6",
 		"zustand": "^5.0.11"
 	},
 	"devDependencies": {

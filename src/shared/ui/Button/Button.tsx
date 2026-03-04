@@ -12,6 +12,7 @@ interface CommonProps {
 	'iconPosition'?: IconPosition;
 	'className'?: string;
 	'disabled'?: boolean;
+	'type'?: 'button' | 'submit' | 'reset';
 	'title'?: string;
 	'id'?: string;
 	'role'?: React.AriaRole;
@@ -30,7 +31,19 @@ interface ButtonOnlyProps extends CommonProps {
 type ButtonProps = AnchorProps | ButtonOnlyProps;
 
 export const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonProps>(
-	({ text, icon, iconPosition = 'left', className, disabled = false, href, ...rest }, ref) => {
+	(
+		{
+			text,
+			icon,
+			iconPosition = 'left',
+			className,
+			disabled = false,
+			href,
+			type = 'button',
+			...rest
+		},
+		ref
+	) => {
 		const classes = clsx(
 			styles.button,
 			className,
@@ -95,7 +108,7 @@ export const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonPr
 		return (
 			<button
 				ref={ref as React.Ref<HTMLButtonElement>}
-				type='button'
+				type={type}
 				className={classes}
 				disabled={disabled}
 				{...rest}

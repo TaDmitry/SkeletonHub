@@ -1,0 +1,23 @@
+.footer {
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+
+	width: 100%;
+	margin-top: 16px;
+	padding: var(--layout-padding);
+	border-top: 1px solid var(--border-color-fon);
+
+	background-color: var(--background-color);
+}
+
+.container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.copyright {
+	font-size: 13px;
+	font-weight: 500;
+}

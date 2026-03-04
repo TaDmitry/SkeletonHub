@@ -3,6 +3,7 @@ import { useTranslations } from 'next-intl';
 
 import { Button, SpiderCanvas, Text, Title } from '@/shared/ui/index';
 import { BlogPreviewGrid } from '@/widgets/blog';
+import { ContactFormWidget } from '@/widgets/contact';
 
 import styles from './page.module.scss';
 
@@ -65,6 +66,10 @@ export default function HomePage() {
 				</header>
 
 				<BlogPreviewGrid limit={6} />
+			</section>
+
+			<section className={styles.contactSection}>
+				<ContactFormWidget />
 			</section>
 		</>
 	);

@@ -1,12 +1,14 @@
 :root {
 	/* CONTAINER */
 	--container-width: 1200px;
+	--layout-padding: 12px 80px;
 
 	/* COLORS */
 	--color-white: #fff;
 	--color-black: #000;
 	--color-text: #d1d1d1;
 	--color-text-blog: #e8e8e8;
+	--background-color: #0f0f0f;
 
 	/* ACCENT COLORS */
 	--color-accent-classic: #8a4fdb;
@@ -15,4 +17,10 @@
 	--radius-sm: 6px;
 	--border-color: #575757;
 	--border-color-fon: #ffffff1f;
+}
+
+@media (width <= 1441px) {
+	:root {
+		--layout-padding: 12px 16px;
+	}
 }

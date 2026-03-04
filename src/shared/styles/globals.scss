@@ -1,6 +1,5 @@
-@use './fonts' as *;
-@use './variables' as *;
-@use './mixins' as *;
+@use './fonts';
+@use './variables';
 
 * {
 	box-sizing: border-box;
@@ -33,12 +32,20 @@ aside {
 html,
 body {
 	width: 100%;
+	min-height: 100%;
 	font-size: 16px;
 	text-size-adjust: 100%;
 }
 
 body {
+	display: flex;
+	flex-direction: column;
+	min-height: 100dvh;
 	background-color: var(--color-black);
+}
+
+main {
+	flex: 1 0 auto;
 }
 
 input,
@@ -98,7 +105,8 @@ span,
 samp,
 li,
 ol,
-a {
+a,
+label {
 	font-family: Rubik, Arial, sans-serif;
 	font-size: 20px;
 	font-weight: 600;
@@ -112,7 +120,8 @@ a {
 	samp,
 	li,
 	ol,
-	a {
+	a,
+	label {
 		line-height: 1.2;
 	}
 }

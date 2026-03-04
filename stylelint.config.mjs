@@ -34,5 +34,7 @@ export default {
 		],
 
 		'custom-property-pattern': null,
+
+		'rule-empty-line-before': null,
 	},
 };
