@@ -1,26 +1,22 @@
 :root {
 	/* CONTAINER */
+	--container-width-nav: 1400px;
 	--container-width: 1200px;
-	--layout-padding: 12px 80px;
 
 	/* COLORS */
-	--color-white: #fff;
-	--color-black: #000;
-	--color-text: #d1d1d1;
-	--color-text-blog: #e8e8e8;
-	--background-color: #0f0f0f;
+	--color-white: rgb(255 255 255);
+	--color-black: rgb(0 0 0);
+	--color-text: rgb(209 209 209);
+	--color-text-blog: rgb(232 232 232);
+	--background-color: rgb(15 15 15);
 
 	/* ACCENT COLORS */
-	--color-accent-classic: #8a4fdb;
+	--color-accent-classic: rgb(138 79 219);
+	--color-status-success: rgb(159 255 159 / 96%);
+	--color-status-error: rgb(255 155 155 / 96%);
 
 	/* BORDER RADII */
 	--radius-sm: 6px;
-	--border-color: #575757;
-	--border-color-fon: #ffffff1f;
-}
-
-@media (width <= 1441px) {
-	:root {
-		--layout-padding: 12px 16px;
-	}
+	--border-color: rgb(87 87 87);
+	--border-color-fon: rgb(255 255 255 / 12%);
 }

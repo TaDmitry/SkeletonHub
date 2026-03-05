@@ -54,6 +54,7 @@ export const NavBarWidget: React.FC = () => {
 	}, [windowWidth]);
 
 	const isDesktopLanguagePanelOpen = isLanguagePanelOpen && languagePanelContext === 'desktop';
+	const isDocsPage = pathname === '/docs' || pathname.startsWith('/docs/');
 	const isBlogPage = pathname === '/blog' || pathname.startsWith('/blog/');
 
 	useEffect(() => {
@@ -95,7 +96,12 @@ export const NavBarWidget: React.FC = () => {
 					{showNavLinks && (
 						<ul className={styles.navList}>
 							<li className={styles.navItem}>
-								<Button text={t('links.docs')} />
+								<Button
+									text={t('links.docs')}
+									href='/docs'
+									className={clsx(isDocsPage && styles.navLinkActive)}
+									aria-current={isDocsPage ? 'page' : undefined}
+								/>
 							</li>
 							<li className={styles.navItem}>
 								<Button

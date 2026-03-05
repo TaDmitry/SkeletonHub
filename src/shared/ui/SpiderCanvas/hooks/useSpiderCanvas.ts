@@ -108,7 +108,7 @@ export function useSpiderCanvas(props: Props) {
 
 				ctx.strokeStyle = pointerLineColor
 					? hexToRgba(pointerLineColor, alpha)
-					: hexToRgba(d.color || '#000', alpha);
+					: hexToRgba(d.color || 'rgb(0 0 0)', alpha);
 
 				ctx.beginPath();
 				ctx.moveTo(roundCoord(d.x), roundCoord(d.y));

@@ -1,0 +1,33 @@
+{
+	"DocsPage": {
+		"title": "Documentation Hub",
+		"description": "A single place for documentation about all SkeletonHub products and libraries.",
+		"cards": {
+			"news": {
+				"title": "News",
+				"description": "Releases, updates, and technical announcements.",
+				"link": "Open news"
+			},
+			"team": {
+				"title": "Team",
+				"description": "People and teams building the ecosystem.",
+				"link": "Open team page"
+			},
+			"analytics": {
+				"title": "Analytics",
+				"description": "Observability, usage metrics, and reporting.",
+				"link": "Open analytics page"
+			},
+			"governance": {
+				"title": "Governance",
+				"description": "Policies, standards, and contribution rules.",
+				"link": "Open governance page"
+			},
+			"feedback": {
+				"title": "Feedback",
+				"description": "Report bugs, send ideas, and request improvements.",
+				"link": "Open feedback page"
+			}
+		}
+	}
+}

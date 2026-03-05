@@ -1,6 +1,5 @@
 import type { MetadataRoute } from 'next';
 
-// import { getAllBlogPosts } from '@/entities/blog';
 import { getAllBlogPosts } from '@/entities/blog';
 import { routing } from '@/shared/config/i18n/routing';
 import { getAlternatesByLocale, localizedAbsoluteUrl } from '@/shared/config/seo';
@@ -44,6 +43,41 @@ export default function sitemap(): MetadataRoute.Sitemap {
 			path: '/blog',
 			changeFrequency: 'daily' as const,
 			priority: 0.9,
+		},
+		{
+			path: '/docs',
+			changeFrequency: 'weekly' as const,
+			priority: 0.8,
+		},
+		{
+			path: '/team',
+			changeFrequency: 'monthly' as const,
+			priority: 0.6,
+		},
+		{
+			path: '/analytics',
+			changeFrequency: 'weekly' as const,
+			priority: 0.7,
+		},
+		{
+			path: '/governance',
+			changeFrequency: 'monthly' as const,
+			priority: 0.6,
+		},
+		{
+			path: '/contact',
+			changeFrequency: 'weekly' as const,
+			priority: 0.7,
+		},
+		{
+			path: '/support-policy',
+			changeFrequency: 'monthly' as const,
+			priority: 0.5,
+		},
+		{
+			path: '/privacy-policy',
+			changeFrequency: 'monthly' as const,
+			priority: 0.5,
 		},
 	];
 

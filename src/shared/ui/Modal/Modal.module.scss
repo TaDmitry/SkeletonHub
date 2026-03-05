@@ -24,7 +24,7 @@
 
 	width: fit-content;
 	height: fit-content;
-	border: 1px solid #0000001f;
+	border: 1px solid rgb(0 0 0 / 12%);
 	border-radius: 12px;
 
 	opacity: 0;
@@ -47,10 +47,10 @@
 }
 
 .withBackground {
-	background-color: rgb(var(--color-black), 0);
+	background-color: rgb(from var(--color-black) r g b / 0%);
 	transition: background-color 0.3s ease;
 
 	&.bgVisible {
-		background-color: rgb(var(--color-black), 0.8);
+		background-color: rgb(from var(--color-black) r g b / 80%);
 	}
 }

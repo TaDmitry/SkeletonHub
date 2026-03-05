@@ -24,7 +24,12 @@
 	margin: 0 auto;
 	padding-inline: 16px;
 
-	background-image: radial-gradient(ellipse at center, #262626, #262626 0, transparent 70%);
+	background-image: radial-gradient(
+		ellipse at center,
+		rgb(38 38 38),
+		rgb(38 38 38) 0,
+		transparent 70%
+	);
 }
 
 .heroBlock {
@@ -81,6 +86,7 @@
 
 .actions {
 	display: flex;
+	flex-wrap: wrap;
 	gap: 16px;
 	margin-top: 16px;
 }
@@ -118,7 +124,7 @@
 	border: 2px solid var(--border-color-fon);
 	border-radius: var(--radius-sm);
 
-	background-color: #121212;
+	background-color: rgb(18 18 18);
 
 	transition:
 		transform 0.3s ease,
@@ -150,18 +156,12 @@
 	padding: 0 16px 32px;
 }
 
-.contactSection {
-	width: 100%;
-	max-width: var(--container-width);
-	margin: 0 auto;
-	padding: 0 16px 32px;
-}
-
 .blogHeader {
 	position: relative;
 	z-index: 20;
 
 	display: flex;
+	flex-wrap: wrap;
 	align-items: center;
 	justify-content: center;
 
@@ -174,12 +174,6 @@
 	color: var(--color-white);
 }
 
-@media (width <=900px) {
-	.blogHeader {
-		flex-direction: column;
-	}
-}
-
 @media (width <=768px) {
 	.heroContent {
 		align-items: flex-start;
@@ -190,23 +184,11 @@
 	}
 
 	.backgroundCanvas::before {
-		box-shadow: inset 0 0 20px 10px #000;
-	}
-
-	.heroBody {
-		font-size: 16px;
+		box-shadow: inset 0 0 20px 10px rgb(0 0 0);
 	}
 }
 
 @media (width <=640px) {
-	.actions {
-		flex-direction: column;
-
-		button > span {
-			font-size: 16px;
-		}
-	}
-
 	.secondaryButton,
 	.primaryButton {
 		box-sizing: border-box;

@@ -1,5 +1,31 @@
 {
 	"Footer": {
+		"sections": {
+			"documentation": "Documentation",
+			"products": "Products",
+			"support": "Support",
+			"newsletter": {
+				"title": "Subscribe to our newsletter",
+				"description": "Stay updated on new releases and features, guides, and case studies.",
+				"inputLabel": "Email for newsletter subscription",
+				"placeholder": "you@domain.com",
+				"button": "Subscribe",
+				"validation": {
+					"success": "Thanks for subscribing"
+				}
+			}
+		},
+		"links": {
+			"documentation": "Documentation",
+			"news": "News",
+			"team": "Team",
+			"analytics": "Analytics",
+			"governance": "Governance",
+			"feedback": "Feedback",
+			"supportPolicy": "Support Policy",
+			"github": "GitHub",
+			"privacyPolicy": "Privacy Policy"
+		},
 		"copyright": "© {year} SkeletonHub. All rights reserved."
 	}
 }

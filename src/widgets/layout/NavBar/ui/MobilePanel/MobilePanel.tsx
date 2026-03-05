@@ -35,6 +35,7 @@ export const MobilePanel: React.FC<MobilePanelProps> = ({
 	const languagePanelContext = useLanguagePanelStore((s) => s.context);
 
 	const isMobileLanguagePanelOpen = isLanguagePanelOpen && languagePanelContext === 'mobile';
+	const isDocsPage = pathname === '/docs' || pathname.startsWith('/docs/');
 	const isBlogPage = pathname === '/blog' || pathname.startsWith('/blog/');
 
 	useEffect(() => {
@@ -125,8 +126,10 @@ export const MobilePanel: React.FC<MobilePanelProps> = ({
 				<div className={clsx(styles.group, styles.groupTop)}>
 					<Button
 						icon={<Icon icon='Library' />}
-						className={styles.iconButton}
+						className={clsx(styles.iconButton, isDocsPage && styles.iconButtonActive)}
 						aria-label={t('buttons.docs')}
+						href='/docs'
+						aria-current={isDocsPage ? 'page' : undefined}
 					/>
 					<Button
 						icon={<Icon icon='Book' />}

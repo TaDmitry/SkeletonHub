@@ -9,7 +9,7 @@
 	align-items: stretch;
 
 	width: 100%;
-	padding: var(--layout-padding);
+	padding: 12px 16px;
 
 	background: transparent;
 
@@ -35,7 +35,10 @@
 .container {
 	display: flex;
 	justify-content: space-between;
+
 	width: 100%;
+	max-width: var(--container-width-nav);
+	margin: auto;
 }
 
 .left {
@@ -129,12 +132,6 @@
 
 .menuButtonOpen svg {
 	transform: rotate(90deg);
-}
-
-@media (width <=1441px) {
-	.navbar {
-		padding: 12px 16px;
-	}
 }
 
 @media (width <=768px) {

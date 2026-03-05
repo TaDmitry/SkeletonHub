@@ -34,7 +34,10 @@ export default {
 		],
 
 		'custom-property-pattern': null,
-
 		'rule-empty-line-before': null,
+
+		'color-function-notation': 'modern',
+		'color-no-hex': [true, { severity: 'warning' }],
+		'color-named': 'never',
 	},
 };
