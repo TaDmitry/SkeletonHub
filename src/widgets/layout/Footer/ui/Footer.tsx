@@ -10,7 +10,7 @@ import {
 	newsletterSchema,
 	type NewsletterSchemaInput,
 	type NewsletterSchemaValues,
-} from '@/shared/lib/validation/newsletter.schema';
+} from '@/shared/lib/validation';
 import { Button, Notification, Text, Title } from '@/shared/ui/index';
 import { zodResolver } from '@hookform/resolvers/zod';
 

@@ -1,109 +1,32 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useTranslations } from 'next-intl';
 import clsx from 'clsx';
-import { useForm } from 'react-hook-form';
 
-import {
-	CONTACT_VALIDATION_MESSAGE_PREFIX,
-	contactSchema,
-	type ContactSchemaInput,
-	type ContactSchemaValues,
-} from '@/shared/lib/validation/contact.schema';
+import { CONTACT_VALIDATION_MESSAGE_PREFIX } from '@/shared/lib/validation';
 import { Button, Icon, Notification, Text, Title } from '@/shared/ui/index';
-import { zodResolver } from '@hookform/resolvers/zod';
+
+import { type ContactFormProps, useContactForm } from '../model';
 
 import styles from './ContactForm.module.scss';
-
-type ContactApiResponse = {
-	success: boolean;
-	error?: string;
-};
-
-type ContactApiPayload = ContactSchemaValues & {
-	pageUrl?: string;
-};
-
-type ContactFormProps = {
-	className?: string;
-};
-
-async function parseApiResponse(response: Response): Promise<ContactApiResponse | null> {
-	try {
-		return (await response.json()) as ContactApiResponse;
-	} catch {
-		return null;
-	}
-}
 
 export const ContactForm: React.FC<ContactFormProps> = ({ className }) => {
 	const t = useTranslations('features.contactForm.ContactForm');
 	const tGlobal = useTranslations();
-	const [toastText, setToastText] = useState<string | null>(null);
-	const [isRequestInFlight, setIsRequestInFlight] = useState(false);
-
 	const {
-		register,
+		closeToast,
+		errors,
 		handleSubmit,
-		reset,
-		formState: { errors, isSubmitting },
-	} = useForm<ContactSchemaInput, unknown, ContactSchemaValues>({
-		resolver: zodResolver(contactSchema),
-		mode: 'onTouched',
-		defaultValues: {
-			name: '',
-			email: '',
-			telegram: '',
-			message: '',
-		},
+		isFormDisabled,
+		onSubmit,
+		register,
+		toastText,
+		trackFirstInteraction,
+	} = useContactForm({
+		successToastText: t('toast.success'),
+		errorToastText: t('toast.error'),
 	});
-
-	const isFormDisabled = isSubmitting || isRequestInFlight;
-
-	const onSubmit = async (values: ContactSchemaValues) => {
-		const currentPageUrl = typeof window === 'undefined' ? null : window.location.href;
-		const payload: ContactApiPayload = currentPageUrl
-			? {
-					...values,
-					pageUrl: currentPageUrl,
-				}
-			: values;
-
-		setIsRequestInFlight(true);
-
-		try {
-			const response = await fetch('/api/contact', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(payload),
-			});
-
-			const apiResult = await parseApiResponse(response);
-
-			if (!response.ok || !apiResult?.success) {
-				console.error('[contact-form] Contact API request failed.', {
-					status: response.status,
-					apiResult,
-				});
-
-				setToastText(t('toast.error'));
-
-				return;
-			}
-
-			reset();
-			setToastText(t('toast.success'));
-		} catch (error) {
-			console.error('[contact-form] Contact form submission failed.', error);
-
-			setToastText(t('toast.error'));
-		} finally {
-			setIsRequestInFlight(false);
-		}
-	};
 
 	const resolveValidationMessage = (message?: string) => {
 		if (!message) {
@@ -155,6 +78,9 @@ export const ContactForm: React.FC<ContactFormProps> = ({ className }) => {
 				<form
 					className={styles.form}
 					onSubmit={handleSubmit(onSubmit)}
+					onFocusCapture={trackFirstInteraction}
+					onInputCapture={trackFirstInteraction}
+					suppressHydrationWarning
 					noValidate
 				>
 					<div className={styles.field}>
@@ -167,6 +93,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ className }) => {
 							<input
 								id='contact-name'
 								className={styles.input}
+								suppressHydrationWarning
 								placeholder={t('fields.name.placeholder')}
 								disabled={isFormDisabled}
 								aria-invalid={Boolean(errors.name)}
@@ -199,6 +126,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ className }) => {
 							<input
 								id='contact-telegram'
 								className={styles.input}
+								suppressHydrationWarning
 								placeholder={t('fields.telegram.placeholder')}
 								disabled={isFormDisabled}
 								aria-invalid={Boolean(errors.telegram)}
@@ -234,6 +162,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ className }) => {
 								id='contact-email'
 								type='email'
 								className={styles.input}
+								suppressHydrationWarning
 								placeholder={t('fields.email.placeholder')}
 								disabled={isFormDisabled}
 								aria-invalid={Boolean(errors.email)}
@@ -262,6 +191,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ className }) => {
 						<textarea
 							id='contact-message'
 							className={clsx(styles.textarea, errors.message && styles.invalid)}
+							suppressHydrationWarning
 							placeholder={t('fields.message.placeholder')}
 							disabled={isFormDisabled}
 							aria-invalid={Boolean(errors.message)}
@@ -293,7 +223,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ className }) => {
 			{toastText ? (
 				<Notification
 					text={toastText}
-					onClose={() => setToastText(null)}
+					onClose={closeToast}
 					duration={2500}
 				/>
 			) : null}
