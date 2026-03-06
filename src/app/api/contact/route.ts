@@ -1,7 +1,12 @@
 import { NextResponse } from 'next/server';
+import { z } from 'zod';
 
 import { sendContactTelegramMessage } from '@/shared/lib/telegram/sendContactTelegramMessage';
 import { contactSchema } from '@/shared/lib/validation/contact.schema';
+
+const contactRequestSchema = contactSchema.extend({
+	pageUrl: z.string().trim().url().optional(),
+});
 
 type ContactApiSuccess = {
 	success: true;
@@ -21,10 +26,16 @@ async function parseBody(request: Request): Promise<unknown | null> {
 	}
 }
 
+function resolvePageUrl(request: Request, pageUrl?: string) {
+	return pageUrl ?? request.headers.get('referer') ?? request.headers.get('origin') ?? 'unknown';
+}
+
 export async function POST(request: Request) {
 	const body = await parseBody(request);
 
-	if (!body) {
+	if (body === null) {
+		console.error('[api/contact] Invalid JSON payload.');
+
 		const response: ContactApiError = {
 			success: false,
 			error: 'Invalid JSON payload.',
@@ -33,21 +44,31 @@ export async function POST(request: Request) {
 		return NextResponse.json(response, { status: 400 });
 	}
 
-	const parsedPayload = contactSchema.safeParse(body);
+	const parsedPayload = contactRequestSchema.safeParse(body);
 
 	if (!parsedPayload.success) {
+		const issues = parsedPayload.error.flatten().fieldErrors;
+
+		console.warn('[api/contact] Validation failed.', issues);
+
 		const response: ContactApiError = {
 			success: false,
 			error: 'Validation failed.',
-			issues: parsedPayload.error.flatten().fieldErrors,
+			issues,
 		};
 
 		return NextResponse.json(response, { status: 400 });
 	}
 
-	const telegramResult = await sendContactTelegramMessage(parsedPayload.data);
+	const { pageUrl, ...contactData } = parsedPayload.data;
+	const telegramResult = await sendContactTelegramMessage(contactData, {
+		pageUrl: resolvePageUrl(request, pageUrl),
+		submittedAt: new Date(),
+	});
 
 	if (!telegramResult.success) {
+		console.error('[api/contact] Unable to send message.', telegramResult.error);
+
 		const response: ContactApiError = {
 			success: false,
 			error: 'Unable to send message.',

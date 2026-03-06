@@ -21,6 +21,10 @@ type ContactApiResponse = {
 	error?: string;
 };
 
+type ContactApiPayload = ContactSchemaValues & {
+	pageUrl?: string;
+};
+
 type ContactFormProps = {
 	className?: string;
 };
@@ -37,6 +41,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ className }) => {
 	const t = useTranslations('features.contactForm.ContactForm');
 	const tGlobal = useTranslations();
 	const [toastText, setToastText] = useState<string | null>(null);
+	const [isRequestInFlight, setIsRequestInFlight] = useState(false);
 
 	const {
 		register,
@@ -54,19 +59,36 @@ export const ContactForm: React.FC<ContactFormProps> = ({ className }) => {
 		},
 	});
 
+	const isFormDisabled = isSubmitting || isRequestInFlight;
+
 	const onSubmit = async (values: ContactSchemaValues) => {
+		const currentPageUrl = typeof window === 'undefined' ? null : window.location.href;
+		const payload: ContactApiPayload = currentPageUrl
+			? {
+					...values,
+					pageUrl: currentPageUrl,
+				}
+			: values;
+
+		setIsRequestInFlight(true);
+
 		try {
 			const response = await fetch('/api/contact', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
 				},
-				body: JSON.stringify(values),
+				body: JSON.stringify(payload),
 			});
 
 			const apiResult = await parseApiResponse(response);
 
 			if (!response.ok || !apiResult?.success) {
+				console.error('[contact-form] Contact API request failed.', {
+					status: response.status,
+					apiResult,
+				});
+
 				setToastText(t('toast.error'));
 
 				return;
@@ -74,8 +96,12 @@ export const ContactForm: React.FC<ContactFormProps> = ({ className }) => {
 
 			reset();
 			setToastText(t('toast.success'));
-		} catch {
+		} catch (error) {
+			console.error('[contact-form] Contact form submission failed.', error);
+
 			setToastText(t('toast.error'));
+		} finally {
+			setIsRequestInFlight(false);
 		}
 	};
 
@@ -142,7 +168,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ className }) => {
 								id='contact-name'
 								className={styles.input}
 								placeholder={t('fields.name.placeholder')}
-								disabled={isSubmitting}
+								disabled={isFormDisabled}
 								aria-invalid={Boolean(errors.name)}
 								aria-describedby={nameError ? 'contact-name-error' : undefined}
 								{...register('name')}
@@ -174,7 +200,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ className }) => {
 								id='contact-telegram'
 								className={styles.input}
 								placeholder={t('fields.telegram.placeholder')}
-								disabled={isSubmitting}
+								disabled={isFormDisabled}
 								aria-invalid={Boolean(errors.telegram)}
 								aria-describedby={telegramError ? 'contact-telegram-error' : undefined}
 								{...register('telegram')}
@@ -209,7 +235,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ className }) => {
 								type='email'
 								className={styles.input}
 								placeholder={t('fields.email.placeholder')}
-								disabled={isSubmitting}
+								disabled={isFormDisabled}
 								aria-invalid={Boolean(errors.email)}
 								aria-describedby={emailError ? 'contact-email-error' : undefined}
 								{...register('email')}
@@ -237,7 +263,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ className }) => {
 							id='contact-message'
 							className={clsx(styles.textarea, errors.message && styles.invalid)}
 							placeholder={t('fields.message.placeholder')}
-							disabled={isSubmitting}
+							disabled={isFormDisabled}
 							aria-invalid={Boolean(errors.message)}
 							aria-describedby={messageError ? 'contact-message-error' : undefined}
 							{...register('message')}
@@ -256,9 +282,9 @@ export const ContactForm: React.FC<ContactFormProps> = ({ className }) => {
 					<div className={styles.actionsRow}>
 						<Button
 							type='submit'
-							text={isSubmitting ? t('buttons.submitting') : t('buttons.submit')}
+							text={isFormDisabled ? t('buttons.submitting') : t('buttons.submit')}
 							className={styles.submitButton}
-							disabled={isSubmitting}
+							disabled={isFormDisabled}
 						/>
 					</div>
 				</form>
