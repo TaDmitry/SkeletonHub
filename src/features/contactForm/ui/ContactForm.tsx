@@ -48,16 +48,6 @@ export const ContactForm: React.FC<ContactFormProps> = ({ className }) => {
 	return (
 		<>
 			<section className={clsx(styles.contactForm, className)}>
-				<div className={styles.meta}>
-					<Title
-						tag='h3'
-						align='Left'
-						className={styles.metaDescription}
-					>
-						{t('meta.description')}
-					</Title>
-				</div>
-
 				<header className={styles.header}>
 					<Title
 						tag='h3'
@@ -225,6 +215,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ className }) => {
 					text={toastText}
 					onClose={closeToast}
 					duration={2500}
+					className={styles.toast}
 				/>
 			) : null}
 		</>

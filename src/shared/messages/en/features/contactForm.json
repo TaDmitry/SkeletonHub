@@ -1,8 +1,5 @@
 {
 	"ContactForm": {
-		"meta": {
-			"description": "Build products, share ideas, and send your request through the contact form."
-		},
 		"title": "Contact Form",
 		"description": "Send a message and it will be delivered to Telegram.",
 		"fields": {

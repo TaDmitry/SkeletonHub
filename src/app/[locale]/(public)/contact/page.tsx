@@ -1,7 +1,7 @@
 import { useTranslations } from 'next-intl';
 
+import { ContactForm } from '@/features/contactForm';
 import { Text, Title } from '@/shared/ui/index';
-import { ContactFormWidget } from '@/widgets/contact';
 
 import styles from './page.module.scss';
 
@@ -25,7 +25,7 @@ export default function ContactPage() {
 				</Text>
 			</header>
 
-			<ContactFormWidget />
+			<ContactForm />
 		</section>
 	);
 }

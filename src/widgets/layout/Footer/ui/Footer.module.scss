@@ -129,7 +129,7 @@
 
 	&:focus-visible {
 		border-color: var(--color-accent-classic);
-		box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent-classic) 20%, transparent);
+		box-shadow: var(--shadow-accent);
 	}
 
 	&[aria-invalid='true'] {
@@ -169,11 +169,6 @@
 
 .successNotification {
 	@include glass-card;
-
-	box-shadow:
-		0 10px 30px var(--color-black),
-		0 4px 8px var(--color-black),
-		inset 0 1px rgb(255 255 255 / 4%);
 
 	p {
 		color: var(--color-white);

@@ -1,15 +1,11 @@
 'use client';
 
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import clsx from 'clsx';
 
 import { usePathname } from '@/shared/config/i18n/navigation';
-import {
-	MOBILE_BREAKPOINT,
-	SMALL_MOBILE_BREAKPOINT,
-	SSR_FALLBACK_WIDTH,
-} from '@/shared/constants/breakpoints';
+import { MOBILE_BREAKPOINT } from '@/shared/constants/breakpoints';
 import { Button, Icon } from '@/shared/ui/index';
 
 import { useLanguagePanelStore, useNavBarStore } from '../../model';
@@ -31,43 +27,27 @@ export const NavBarWidget: React.FC = () => {
 	const isLanguagePanelOpen = useLanguagePanelStore((s) => s.isOpen);
 	const languagePanelContext = useLanguagePanelStore((s) => s.context);
 
-	const [windowWidth, setWindowWidth] = useState<number>(SSR_FALLBACK_WIDTH);
-
 	const mobileMenuTriggerRef = useRef<HTMLButtonElement | null>(null);
 
+	// Закрываем мобильную панель при переходе на десктоп
 	useEffect(() => {
-		const updateWindowWidth = () => setWindowWidth(window.innerWidth);
+		const mq = window.matchMedia(`(min-width: ${MOBILE_BREAKPOINT + 1}px)`);
 
-		updateWindowWidth();
-		window.addEventListener('resize', updateWindowWidth);
-
-		return () => window.removeEventListener('resize', updateWindowWidth);
-	}, []);
-
-	const hasMeasuredWidth = windowWidth !== SSR_FALLBACK_WIDTH;
-
-	const { isDesktop, showNavLinks } = useMemo(() => {
-		return {
-			isDesktop: windowWidth > MOBILE_BREAKPOINT,
-			showNavLinks: windowWidth > SMALL_MOBILE_BREAKPOINT,
+		const handleChange = (e: MediaQueryListEvent) => {
+			if (e.matches) {
+				closePanel();
+				closeLanguagePanel();
+			}
 		};
-	}, [windowWidth]);
+
+		mq.addEventListener('change', handleChange);
+
+		return () => mq.removeEventListener('change', handleChange);
+	}, [closePanel, closeLanguagePanel]);
 
 	const isDesktopLanguagePanelOpen = isLanguagePanelOpen && languagePanelContext === 'desktop';
 	const isDocsPage = pathname === '/docs' || pathname.startsWith('/docs/');
 	const isBlogPage = pathname === '/blog' || pathname.startsWith('/blog/');
-
-	useEffect(() => {
-		if (!hasMeasuredWidth) return;
-
-		//* На десктопе мобильная панель не нужна.
-		if (isDesktop && isPanelOpen) {
-			closePanel();
-		}
-
-		//* При смене ширины/режима прячем языковую панель.
-		closeLanguagePanel();
-	}, [hasMeasuredWidth, isDesktop, isPanelOpen, closePanel, closeLanguagePanel]);
 
 	return (
 		<nav
@@ -81,85 +61,78 @@ export const NavBarWidget: React.FC = () => {
 							text={t('brand.name')}
 							href='/'
 							icon={
-								showNavLinks ? (
-									<Icon
-										icon='CodeSlash'
-										className={styles.brandIcon}
-									/>
-								) : undefined
+								<Icon
+									icon='CodeSlash'
+									className={styles.brandIcon}
+								/>
 							}
 							className={styles.brandLink}
 							title={t('links.home')}
 						/>
 					</div>
 
-					{showNavLinks && (
-						<ul className={styles.navList}>
-							<li className={styles.navItem}>
-								<Button
-									text={t('links.docs')}
-									href='/docs'
-									className={clsx(isDocsPage && styles.navLinkActive)}
-									aria-current={isDocsPage ? 'page' : undefined}
-								/>
-							</li>
-							<li className={styles.navItem}>
-								<Button
-									text={t('links.blog')}
-									href='/blog'
-									className={clsx(isBlogPage && styles.navLinkActive)}
-									aria-current={isBlogPage ? 'page' : undefined}
-								/>
-							</li>
-						</ul>
-					)}
+					<ul className={styles.navList}>
+						<li className={styles.navItem}>
+							<Button
+								text={t('links.docs')}
+								href='/docs'
+								className={clsx(isDocsPage && styles.navLinkActive)}
+								aria-current={isDocsPage ? 'page' : undefined}
+							/>
+						</li>
+						<li className={styles.navItem}>
+							<Button
+								text={t('links.blog')}
+								href='/blog'
+								className={clsx(isBlogPage && styles.navLinkActive)}
+								aria-current={isBlogPage ? 'page' : undefined}
+							/>
+						</li>
+					</ul>
 				</div>
 
 				<div className={styles.right}>
-					{isDesktop ? (
-						<>
-							<Button
-								aria-label={t('buttons.language')}
-								icon={<Icon icon='Language' />}
-								onClick={() => toggleLanguagePanel('desktop')}
-								className={styles.iconButton}
-								aria-expanded={isDesktopLanguagePanelOpen}
-								aria-controls='desktop-language-panel'
-							/>
-							<LanguagePanel
-								variant='desktop'
-								id='desktop-language-panel'
-							/>
-							<Button
-								href='https://github.com/TaDmitry'
-								aria-label={t('buttons.github')}
-								icon={<Icon icon='LogoGithub' />}
-								className={styles.iconButton}
-							/>
-						</>
-					) : (
-						hasMeasuredWidth && (
-							<Button
-								icon={<Icon icon='ChevronBackOutline' />}
-								className={clsx(styles.menuButton, isPanelOpen && styles.menuButtonOpen)}
-								onClick={togglePanel}
-								ref={mobileMenuTriggerRef}
-								aria-expanded={isPanelOpen}
-								aria-controls='mobile-panel'
-								aria-label={isPanelOpen ? t('buttons.closeMenu') : t('buttons.openMenu')}
-							/>
-						)
-					)}
+					{/* Десктопные кнопки — скрыты на мобиле через CSS */}
+					<div className={styles.desktopActions}>
+						<Button
+							aria-label={t('buttons.language')}
+							icon={<Icon icon='Language' />}
+							onClick={() => toggleLanguagePanel('desktop')}
+							className={styles.iconButton}
+							aria-expanded={isDesktopLanguagePanelOpen}
+							aria-controls='desktop-language-panel'
+						/>
+						<LanguagePanel
+							variant='desktop'
+							id='desktop-language-panel'
+						/>
+						<Button
+							href='https://github.com/TaDmitry'
+							aria-label={t('buttons.github')}
+							icon={<Icon icon='LogoGithub' />}
+							className={styles.iconButton}
+						/>
+					</div>
+
+					<div className={styles.mobileAction}>
+						<Button
+							icon={<Icon icon='ChevronBackOutline' />}
+							className={clsx(styles.menuButton, isPanelOpen && styles.menuButtonOpen)}
+							onClick={togglePanel}
+							ref={mobileMenuTriggerRef}
+							aria-expanded={isPanelOpen}
+							aria-controls='mobile-panel'
+							aria-label={isPanelOpen ? t('buttons.closeMenu') : t('buttons.openMenu')}
+						/>
+					</div>
 				</div>
 			</section>
 
-			{hasMeasuredWidth && (
-				<MobilePanel
-					triggerRef={mobileMenuTriggerRef}
-					windowWidth={windowWidth}
-					id='mobile-panel'
-				/>
-			)}
+			<MobilePanel
+				triggerRef={mobileMenuTriggerRef}
+				id='mobile-panel'
+				windowWidth={0}
+			/>
 		</nav>
 	);
 };
