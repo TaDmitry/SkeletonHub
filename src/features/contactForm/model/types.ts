@@ -10,6 +10,7 @@ export type ContactApiPayload = ContactSchemaValues & {
 	clientContext?: {
 		referrer?: string;
 		language?: string;
+		timezone?: string;
 		platform?: string;
 		platformVersion?: string;
 		deviceType?: string;
@@ -37,6 +38,11 @@ export type ContactApiPayload = ContactSchemaValues & {
 		networkLatencyMs?: number;
 		deviceMemoryGb?: number;
 		cpuCores?: number;
+		downlinkSpeed?: number;
+		deviceGpu?: string;
+		colorScheme?: 'light' | 'dark';
+		touchSupport?: boolean;
+		pageLoadTime?: number;
 	};
 };
 

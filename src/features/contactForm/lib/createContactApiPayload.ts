@@ -2,6 +2,20 @@ import type { ContactSchemaValues } from '@/shared/lib/validation';
 
 import type { ContactApiPayload } from '../model/types';
 
+type ClientMetricsInput = {
+	firstInteractionStartedAt: number | null;
+	networkLatencyMs: number | null;
+	deviceMemoryGb: number | null;
+	cpuCores: number | null;
+	downlinkSpeed: number | null;
+	deviceGpu: string | null;
+	colorScheme: 'light' | 'dark' | null;
+	touchSupport: boolean | null;
+	pageLoadTime: number | null;
+	sessionId: string | null;
+	visitorId: string | null;
+};
+
 type UserAgentDataLike = {
 	platform?: string;
 	mobile?: boolean;
@@ -200,6 +214,131 @@ function resolveCpuCores() {
 		: null;
 }
 
+function resolveDownlinkSpeed() {
+	if (typeof navigator === 'undefined') {
+		return null;
+	}
+
+	const navigationWithConnection = navigator as Navigator & {
+		connection?: {
+			downlink?: number;
+			saveData?: boolean;
+		};
+		mozConnection?: { downlink?: number };
+		webkitConnection?: { downlink?: number };
+	};
+
+	const connection =
+		navigationWithConnection.connection ??
+		navigationWithConnection.mozConnection ??
+		navigationWithConnection.webkitConnection;
+
+	if (!connection || typeof connection.downlink !== 'number') {
+		return null;
+	}
+
+	return Number.isFinite(connection.downlink) && connection.downlink >= 0
+		? connection.downlink
+		: null;
+}
+
+function resolveDeviceGpu() {
+	if (typeof window === 'undefined') {
+		return null;
+	}
+
+	try {
+		const canvas = document.createElement('canvas');
+		const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+
+		if (!gl) {
+			return null;
+		}
+
+		const debugInfo = (gl as unknown as { getExtension: (name: string) => unknown }).getExtension(
+			'WEBGL_debug_renderer_info'
+		);
+
+		if (!debugInfo) {
+			return null;
+		}
+
+		const gpu = (gl as unknown as { getParameter: (param: unknown) => unknown }).getParameter(
+			(debugInfo as unknown as { UNMASKED_RENDERER_WEBGL: number }).UNMASKED_RENDERER_WEBGL
+		);
+
+		return typeof gpu === 'string' && gpu.length > 0 ? gpu : null;
+	} catch {
+		return null;
+	}
+}
+
+function resolveColorScheme(): 'light' | 'dark' | null {
+	if (typeof window === 'undefined') {
+		return null;
+	}
+
+	const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+
+	if (!prefersDark.matches) {
+		const prefersLight = window.matchMedia('(prefers-color-scheme: light)');
+
+		return prefersLight.matches ? 'light' : null;
+	}
+
+	return 'dark';
+}
+
+function resolveTouchSupport() {
+	if (typeof navigator === 'undefined') {
+		return null;
+	}
+
+	const maxTouchPoints =
+		(navigator as Navigator & { maxTouchPoints?: number; msMaxTouchPoints?: number })
+			.maxTouchPoints ?? (navigator as Navigator & { msMaxTouchPoints?: number }).msMaxTouchPoints;
+
+	return typeof maxTouchPoints === 'number' && maxTouchPoints > 0;
+}
+
+function resolvePageLoadTime() {
+	if (typeof window === 'undefined') {
+		return null;
+	}
+
+	try {
+		const navigationEntries = performance.getEntriesByType('navigation');
+
+		if (navigationEntries.length === 0) {
+			return null;
+		}
+
+		const navigationTiming = navigationEntries[0] as PerformanceNavigationTiming;
+
+		if (!navigationTiming.loadEventEnd || navigationTiming.loadEventEnd === 0) {
+			return null;
+		}
+
+		if (!navigationTiming.fetchStart || navigationTiming.fetchStart === 0) {
+			return null;
+		}
+
+		const loadTime = navigationTiming.loadEventEnd - navigationTiming.fetchStart;
+
+		return loadTime > 0 ? Math.round(loadTime) : null;
+	} catch {
+		return null;
+	}
+}
+
+function resolveTimezone() {
+	try {
+		return Intl.DateTimeFormat().resolvedOptions().timeZone ?? null;
+	} catch {
+		return null;
+	}
+}
+
 function resolveUtmTags(pageUrl: string | null) {
 	if (!pageUrl) {
 		return null;
@@ -245,6 +384,31 @@ function resolveScreenContext() {
 	};
 }
 
+function resolveClientMetrics(input: ClientMetricsInput) {
+	const fillSpeedMs =
+		input.firstInteractionStartedAt === null
+			? undefined
+			: Math.max(0, Date.now() - input.firstInteractionStartedAt);
+
+	const metrics = {
+		...(typeof fillSpeedMs === 'number' ? { fillSpeedMs } : {}),
+		...(input.sessionId ? { sessionId: input.sessionId } : {}),
+		...(input.visitorId ? { visitorId: input.visitorId } : {}),
+		...(typeof input.networkLatencyMs === 'number'
+			? { networkLatencyMs: input.networkLatencyMs }
+			: {}),
+		...(typeof input.deviceMemoryGb === 'number' ? { deviceMemoryGb: input.deviceMemoryGb } : {}),
+		...(typeof input.cpuCores === 'number' ? { cpuCores: input.cpuCores } : {}),
+		...(typeof input.downlinkSpeed === 'number' ? { downlinkSpeed: input.downlinkSpeed } : {}),
+		...(input.deviceGpu ? { deviceGpu: input.deviceGpu } : {}),
+		...(input.colorScheme ? { colorScheme: input.colorScheme } : {}),
+		...(typeof input.touchSupport === 'boolean' ? { touchSupport: input.touchSupport } : {}),
+		...(typeof input.pageLoadTime === 'number' ? { pageLoadTime: input.pageLoadTime } : {}),
+	};
+
+	return Object.keys(metrics).length > 0 ? metrics : undefined;
+}
+
 export async function createContactApiPayload(
 	values: ContactSchemaValues,
 	firstInteractionStartedAt: number | null
@@ -262,20 +426,27 @@ export async function createContactApiPayload(
 	const visitorId = resolveVisitorId();
 	const deviceMemoryGb = resolveDeviceMemoryGb();
 	const cpuCores = resolveCpuCores();
+	const downlinkSpeed = resolveDownlinkSpeed();
+	const deviceGpu = resolveDeviceGpu();
+	const colorScheme = resolveColorScheme();
+	const touchSupport = resolveTouchSupport();
+	const pageLoadTime = resolvePageLoadTime();
+	const timezone = resolveTimezone();
 	const utmTags = resolveUtmTags(currentPageUrl);
 	const screenContext = resolveScreenContext();
-	const fillSpeedMs =
-		firstInteractionStartedAt === null
-			? undefined
-			: Math.max(0, Date.now() - firstInteractionStartedAt);
-	const metrics = {
-		...(typeof fillSpeedMs === 'number' ? { fillSpeedMs } : {}),
-		...(sessionId ? { sessionId } : {}),
-		...(visitorId ? { visitorId } : {}),
-		...(typeof networkLatencyMs === 'number' ? { networkLatencyMs } : {}),
-		...(typeof deviceMemoryGb === 'number' ? { deviceMemoryGb } : {}),
-		...(typeof cpuCores === 'number' ? { cpuCores } : {}),
-	};
+	const metrics = resolveClientMetrics({
+		firstInteractionStartedAt,
+		networkLatencyMs,
+		deviceMemoryGb,
+		cpuCores,
+		downlinkSpeed,
+		deviceGpu,
+		colorScheme,
+		touchSupport,
+		pageLoadTime,
+		sessionId,
+		visitorId,
+	});
 
 	return {
 		...values,
@@ -283,12 +454,13 @@ export async function createContactApiPayload(
 		clientContext: {
 			...(currentReferrer ? { referrer: currentReferrer } : {}),
 			...(currentLanguage ? { language: currentLanguage } : {}),
+			...(timezone ? { timezone } : {}),
 			...(platformContext ?? {}),
 			...(deviceType ? { deviceType } : {}),
 			...(connectionType ? { connectionType } : {}),
 			...(utmTags ? { utmTags } : {}),
 			...(screenContext ? { screen: screenContext } : {}),
 		},
-		...(Object.keys(metrics).length > 0 ? { metrics } : {}),
+		...(metrics ? { metrics } : {}),
 	};
 }
