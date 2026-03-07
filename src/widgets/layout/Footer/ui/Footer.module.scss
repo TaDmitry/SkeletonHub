@@ -86,91 +86,11 @@
 	font-weight: 500;
 }
 
-.newsletterForm {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 8px;
-	margin-top: 6px;
-}
-
-.newsletterLabel {
-	position: absolute !important;
-
-	overflow: hidden !important;
-
-	width: 1px !important;
-	height: 1px !important;
-	margin: -1px !important;
-	padding: 0 !important;
-	border: 0 !important;
-
-	white-space: nowrap !important;
-
-	clip-path: inset(50%) !important;
-}
-
-.newsletterInput {
-	flex: 1 1 220px;
-
-	width: 100%;
-	min-height: 42px;
-	padding: 10px 12px;
-	border: 1px solid var(--border-color-fon);
-	border-radius: var(--radius-sm);
-
-	font-size: 14px;
-	font-weight: 500;
-	color: var(--color-white);
-
-	transition:
-		transform 0.2s ease,
-		border-color 0.2s ease,
-		box-shadow 0.2s ease;
-
-	&:focus-visible {
-		border-color: var(--color-accent-classic);
-		box-shadow: var(--shadow-accent);
-	}
-
-	&[aria-invalid='true'] {
-		border-color: rgb(255 120 120 / 85%);
-		box-shadow: 0 0 0 3px rgb(255 120 120 / 18%);
-	}
-}
-
-.subscribeButton {
-	flex: 0 0 auto;
-
-	padding: 10px 14px;
-	border-radius: var(--radius-sm);
-
-	background: var(--color-white);
-
-	transition: transform 0.2s ease;
-
-	span {
-		font-size: 14px;
-		font-weight: 600;
-		color: var(--color-black);
-	}
-
-	&:hover,
-	&:focus-visible {
-		transform: scale(1.05);
-	}
-}
-
-.newsletterMessageError {
-	width: 100%;
-	font-size: 13px;
-	font-weight: 500;
-	color: var(--color-status-error);
-}
-
 .successNotification {
 	@include glass-card;
 
 	p {
+		font-size: 16px;
 		color: var(--color-white);
 	}
 }
