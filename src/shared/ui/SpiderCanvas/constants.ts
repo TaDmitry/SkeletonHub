@@ -1,4 +1,4 @@
-export const DEFAULT_DOT_COLOR = '#a4a4a4';
+export const DEFAULT_DOT_COLOR = 'rgb(164 164 164)';
 export const DEFAULT_DOT_COUNT = 15;
 export const DEFAULT_MIN_DOT_SIZE = 2;
 export const DEFAULT_MAX_DOT_SIZE = 4;

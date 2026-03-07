@@ -1,0 +1,31 @@
+{
+	"Footer": {
+		"sections": {
+			"documentation": "Документация",
+			"products": "Продукты",
+			"support": "Поддержка",
+			"newsletter": {
+				"title": "Подписка на новости",
+				"description": "Следите за новыми релизами, функциями, гайдами и кейсами.",
+				"inputLabel": "Email для подписки на рассылку",
+				"placeholder": "you@domain.com",
+				"button": "Подписаться",
+				"validation": {
+					"success": "Спасибо за подписку"
+				}
+			}
+		},
+		"links": {
+			"documentation": "Документация",
+			"news": "Новости",
+			"team": "Команда",
+			"analytics": "Аналитика",
+			"governance": "Управление",
+			"feedback": "Обратная связь",
+			"supportPolicy": "Политика поддержки",
+			"github": "GitHub",
+			"privacyPolicy": "Политика конфиденциальности"
+		},
+		"copyright": "© {year} SkeletonHub. Все права защищены."
+	}
+}

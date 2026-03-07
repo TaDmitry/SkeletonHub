@@ -1,0 +1,7 @@
+{
+	"email": {
+		"empty": "Email cannot be empty.",
+		"invalid": "Enter a valid email address.",
+		"tooLong": "Email is too long."
+	}
+}

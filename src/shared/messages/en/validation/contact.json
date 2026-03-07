@@ -1,0 +1,21 @@
+{
+	"name": {
+		"empty": "Name cannot be empty.",
+		"tooShort": "Name is too short.",
+		"tooLong": "Name is too long."
+	},
+	"email": {
+		"empty": "Email cannot be empty.",
+		"invalid": "Enter a valid email address.",
+		"tooLong": "Email is too long."
+	},
+	"telegram": {
+		"invalid": "Telegram username should contain 5-32 latin symbols, numbers or underscores.",
+		"tooLong": "Telegram username is too long."
+	},
+	"message": {
+		"empty": "Message cannot be empty.",
+		"tooShort": "Message is too short.",
+		"tooLong": "Message is too long."
+	}
+}

@@ -1,0 +1,31 @@
+{
+	"ContactForm": {
+		"title": "Форма связи",
+		"description": "Отправляйте запрос, и мы ответим быстро.",
+		"fields": {
+			"name": {
+				"placeholder": "Ваше имя"
+			},
+			"email": {
+				"label": "Email",
+				"placeholder": "you@example.com"
+			},
+			"telegram": {
+				"label": "Telegram (опционально)",
+				"placeholder": "@username"
+			},
+			"message": {
+				"label": "Сообщение",
+				"placeholder": "Расскажите о вашей задаче"
+			}
+		},
+		"buttons": {
+			"submit": "Отправить сообщение",
+			"submitting": "Отправка..."
+		},
+		"toast": {
+			"success": "Сообщение успешно отправлено.",
+			"error": "Не удалось отправить сообщение. Попробуйте еще раз."
+		}
+	}
+}

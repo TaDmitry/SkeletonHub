@@ -20,7 +20,12 @@
 	min-height: calc(100dvh - 64px);
 	padding-inline: 16px;
 
-	background-image: radial-gradient(ellipse at center, #262626, #262626 0, transparent 70%);
+	background-image: radial-gradient(
+		ellipse at center,
+		rgb(38 38 38),
+		rgb(38 38 38) 0,
+		transparent 70%
+	);
 }
 
 .title {

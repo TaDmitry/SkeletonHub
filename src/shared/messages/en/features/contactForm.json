@@ -1,0 +1,31 @@
+{
+	"ContactForm": {
+		"title": "Contact Form",
+		"description": "Send a message and it will be delivered to Telegram.",
+		"fields": {
+			"name": {
+				"placeholder": "Your name"
+			},
+			"email": {
+				"label": "Email",
+				"placeholder": "you@example.com"
+			},
+			"telegram": {
+				"label": "Telegram (optional)",
+				"placeholder": "@username"
+			},
+			"message": {
+				"label": "Message",
+				"placeholder": "Tell me about your task"
+			}
+		},
+		"buttons": {
+			"submit": "Send message",
+			"submitting": "Sending..."
+		},
+		"toast": {
+			"success": "Message has been sent.",
+			"error": "Unable to send the message. Please try again."
+		}
+	}
+}

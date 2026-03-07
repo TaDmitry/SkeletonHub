@@ -1,0 +1,27 @@
+.page {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+
+	max-width: var(--container-width);
+	margin: 0 auto;
+	padding: 32px 16px 48px;
+}
+
+.title {
+	font-size: clamp(1.65rem, 1.25rem + 1vw, 2.2rem);
+	color: var(--color-white);
+}
+
+.description {
+	max-width: 760px;
+	font-size: 18px;
+	font-weight: 500;
+	color: rgb(214 220 243 / 86%);
+}
+
+@media (width <=550px) {
+	.page {
+		padding-top: 24px;
+	}
+}

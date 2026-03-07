@@ -1,0 +1,193 @@
+@use '@/shared/styles/mixins' as *;
+
+.contactForm {
+	position: relative;
+
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+
+	width: 100%;
+	max-width: 760px;
+	margin: 0 auto;
+	padding: 32px 36px 18px;
+	border: 1px solid var(--border-color-fon);
+	border-radius: var(--radius-sm);
+
+	background-color: rgb(from var(--color-white) r g b / 2%);
+}
+
+.header {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.title {
+	font-size: clamp(1.35rem, 1.22rem + 0.45vw, 1.65rem);
+	font-weight: 700;
+	color: var(--color-white);
+}
+
+.description {
+	font-size: 18px;
+	font-weight: 500;
+}
+
+.form {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+}
+
+.field {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.label {
+	display: inline-flex;
+	gap: 4px;
+	align-items: baseline;
+
+	font-size: 16px;
+	font-weight: 600;
+	color: var(--color-white);
+}
+
+.inputShell {
+	display: flex;
+	align-items: center;
+
+	min-height: 52px;
+	padding-inline: 14px;
+	border: 1px solid var(--border-color-fon);
+	border-radius: var(--radius-sm);
+
+	background: var(--background-color);
+	backdrop-filter: blur(4px);
+
+	transition:
+		border-color 200ms ease,
+		box-shadow 200ms ease;
+
+	&:focus-within {
+		border-color: var(--color-accent-classic);
+		box-shadow: var(--shadow-accent);
+	}
+}
+
+.inputIcon {
+	flex-shrink: 0;
+	color: var(--color-text);
+}
+
+.input {
+	width: 100%;
+	padding: 12px 0 12px 10px;
+	border: 0;
+
+	font-size: 14px;
+	font-weight: 500;
+	color: var(--color-white);
+
+	background: transparent;
+
+	&:focus-visible {
+		outline: none;
+	}
+}
+
+.textarea {
+	resize: vertical;
+
+	display: flex;
+
+	width: 100%;
+	min-height: 136px;
+	padding: 12px 14px;
+	border: 1px solid var(--border-color-fon);
+	border-radius: var(--radius-sm);
+
+	font-family: Rubik, Arial, sans-serif;
+	font-size: 14px;
+	font-weight: 500;
+	color: var(--color-white);
+
+	background: var(--background-color);
+	backdrop-filter: blur(4px);
+
+	transition:
+		border-color 200ms ease,
+		box-shadow 200ms ease;
+
+	&:focus-visible {
+		border-color: var(--color-accent-classic);
+		outline: none;
+		box-shadow: var(--shadow-accent);
+	}
+}
+
+.invalid {
+	border-color: var(--color-status-error);
+}
+
+.errorText {
+	font-size: 13px;
+	font-weight: 500;
+	color: var(--color-status-error);
+}
+
+.actionsRow {
+	display: flex;
+	gap: 20px;
+	align-items: flex-end;
+	justify-content: space-between;
+}
+
+.benefits {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+
+	margin: 0;
+	padding: 0;
+
+	list-style: none;
+}
+
+.submitButton {
+	display: inline-block;
+
+	padding: 16px 32px;
+	border-radius: var(--radius-sm);
+
+	background-color: var(--color-white);
+
+	transition: transform 0.25s ease;
+
+	span {
+		display: inline-block;
+		color: var(--color-black);
+	}
+
+	&:hover {
+		transform: scale(1.05);
+	}
+
+	&:focus-visible {
+		transform: scale(1.05);
+		outline: 2px solid var(--color-accent-classic);
+		outline-offset: 3px;
+	}
+}
+
+.toast {
+	@include glass-card;
+
+	p {
+		color: var(--color-white);
+	}
+}

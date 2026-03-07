@@ -1,18 +1,25 @@
 :root {
-	/* CONTAINER */
+	/** CONTAINER */
+	--container-width-nav: 1400px;
 	--container-width: 1200px;
 
-	/* COLORS */
-	--color-white: #fff;
-	--color-black: #000;
-	--color-text: #d1d1d1;
-	--color-text-blog: #e8e8e8;
+	/** COLORS */
+	--color-white: rgb(255 255 255);
+	--color-black: rgb(0 0 0);
+	--color-text: rgb(209 209 209);
+	--color-text-blog: rgb(232 232 232);
+	--background-color: rgb(15 15 15);
 
-	/* ACCENT COLORS */
-	--color-accent-classic: #8a4fdb;
+	/** ACCENT COLORS */
+	--color-accent-classic: rgb(138 79 219);
+	--color-status-success: rgb(159 255 159);
+	--color-status-error: rgb(255 96 96);
 
-	/* BORDER RADII */
+	/** BORDER RADII */
 	--radius-sm: 6px;
-	--border-color: #575757;
-	--border-color-fon: #ffffff1f;
+	--border-color: rgb(87 87 87);
+	--border-color-fon: rgb(255 255 255 / 12%);
+
+	/** SHADOWS */
+	--shadow-accent: 0 0 0 3px color-mix(in srgb, var(--color-accent-classic) 20%, transparent);
 }

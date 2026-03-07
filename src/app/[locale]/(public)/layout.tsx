@@ -4,6 +4,7 @@ import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages, setRequestLocale } from 'next-intl/server';
 
 import { routing } from '@/shared/config/i18n/routing';
+import { FooterWidget } from '@/widgets/layout/Footer';
 import { NavBarWidget } from '@/widgets/layout/NavBar';
 
 import '@/shared/styles/globals.scss';
@@ -48,6 +49,7 @@ export default async function RootLayout({ children, params }: Props) {
 				>
 					<NavBarWidget />
 					<main>{children}</main>
+					<FooterWidget />
 				</NextIntlClientProvider>
 			</body>
 		</html>
