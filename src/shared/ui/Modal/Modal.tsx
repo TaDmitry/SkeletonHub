@@ -1,6 +1,6 @@
 'use client';
 
-import React, { ReactNode, useCallback, useEffect, useState } from 'react';
+import React, { ReactNode, useCallback, useEffect, useReducer } from 'react';
 import clsx from 'clsx';
 
 import { useModalAccessibility } from './hooks/useModalAccessibility';
@@ -18,6 +18,35 @@ export interface ModalProps {
 	onRequestClose?: (fn: () => void) => void;
 }
 
+type ModalState = {
+	isOpen: boolean;
+	isClosing: boolean;
+	bgVisible: boolean;
+};
+
+type ModalAction =
+	| { type: 'OPEN'; withBackground: boolean }
+	| { type: 'CLOSE'; withBackground: boolean };
+
+const modalReducer = (state: ModalState, action: ModalAction): ModalState => {
+	switch (action.type) {
+		case 'OPEN':
+			return {
+				isOpen: true,
+				isClosing: false,
+				bgVisible: action.withBackground,
+			};
+		case 'CLOSE':
+			return {
+				isOpen: false,
+				isClosing: true,
+				bgVisible: false,
+			};
+		default:
+			return state;
+	}
+};
+
 export const Modal: React.FC<ModalProps> = ({
 	children,
 	text,
@@ -26,27 +55,26 @@ export const Modal: React.FC<ModalProps> = ({
 	withBackground = false,
 	onRequestClose,
 }) => {
-	const [isOpen, setIsOpen] = useState(false);
-	const [isClosing, setIsClosing] = useState(false);
-	const [bgVisible, setBgVisible] = useState(false);
+	const [state, dispatch] = useReducer(modalReducer, {
+		isOpen: false,
+		isClosing: false,
+		bgVisible: false,
+	});
 
 	const closeWithAnimation = useCallback(() => {
-		setIsClosing(true);
-		setIsOpen(false);
-		if (withBackground) setBgVisible(false);
+		dispatch({ type: 'CLOSE', withBackground });
 		setTimeout(() => setIsModalOpened(false), CLOSE_ANIMATION_DURATION_MS);
 	}, [setIsModalOpened, withBackground]);
 
 	const { contentRef, handlers } = useModalAccessibility({
-		isOpen,
+		isOpen: state.isOpen,
 		onRequestClose,
 		closeWithAnimation,
 	});
 
 	useEffect(() => {
 		const openTimer = setTimeout(() => {
-			setIsOpen(true);
-			if (withBackground) setBgVisible(true);
+			dispatch({ type: 'OPEN', withBackground });
 		}, 0);
 
 		return () => {
@@ -59,7 +87,7 @@ export const Modal: React.FC<ModalProps> = ({
 			className={clsx(
 				styles.wrapper,
 				withBackground && styles.withBackground,
-				withBackground && bgVisible && styles.bgVisible
+				withBackground && state.bgVisible && styles.bgVisible
 			)}
 			{...handlers.overlay}
 		>
@@ -67,8 +95,8 @@ export const Modal: React.FC<ModalProps> = ({
 				ref={contentRef}
 				className={clsx(
 					styles.contentWrapper,
-					isOpen && styles.open,
-					isClosing && styles.closing,
+					state.isOpen && styles.open,
+					state.isClosing && styles.closing,
 					classNameContent
 				)}
 				{...handlers.content}

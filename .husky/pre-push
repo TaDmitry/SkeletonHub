@@ -6,6 +6,9 @@ npm run lint:strict
 printf "🎨 pre-push: Проверяю стили (stylelint)...\n"
 npm run stylelint
 
+printf "🩺 pre-push: Запускаю React Doctor...\n"
+npm run doctor
+
 printf "🏗  pre-push: Запускаю сборку проекта (npm run build)...\n"
 npm run build
 

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useReducer, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import clsx from 'clsx';
 
@@ -35,6 +35,32 @@ const schedule = (cb: () => void) => {
 	setTimeout(cb, 0);
 };
 
+type PanelState = 'unmounted' | 'mounting' | 'visible' | 'closing';
+
+type PanelAction =
+	| { type: 'ACTIVATE' }
+	| { type: 'SHOW' }
+	| { type: 'DEACTIVATE' }
+	| { type: 'HIDE' }
+	| { type: 'UNMOUNT' };
+
+const panelReducer = (state: PanelState, action: PanelAction): PanelState => {
+	switch (action.type) {
+		case 'ACTIVATE':
+			return state === 'unmounted' ? 'mounting' : state;
+		case 'SHOW':
+			return state === 'mounting' ? 'visible' : state;
+		case 'DEACTIVATE':
+			return state === 'visible' ? 'closing' : state;
+		case 'HIDE':
+			return 'closing';
+		case 'UNMOUNT':
+			return 'unmounted';
+		default:
+			return state;
+	}
+};
+
 export const LanguagePanel: React.FC<LanguagePanelProps> = ({ variant, id = 'language-panel' }) => {
 	const t = useTranslations('layout.navbar.LanguagePanel');
 	const router = useRouter();
@@ -50,9 +76,7 @@ export const LanguagePanel: React.FC<LanguagePanelProps> = ({ variant, id = 'lan
 
 	const isActive = useMemo(() => isOpen && context === variant, [isOpen, context, variant]);
 
-	//* Монтируем панель, когда активна, и держим смонтированной во время закрывающей анимации
-	const [isMounted, setIsMounted] = useState<boolean>(isActive);
-	const [isVisible, setIsVisible] = useState<boolean>(false);
+	const [panelState, dispatch] = useReducer(panelReducer, 'unmounted');
 
 	useEffect(() => {
 		const clearPendingAnimations = () => {
@@ -71,22 +95,22 @@ export const LanguagePanel: React.FC<LanguagePanelProps> = ({ variant, id = 'lan
 
 		if (isActive) {
 			//* Монтируем асинхронно, чтобы не словить setState-in-effect
-			schedule(() => setIsMounted(true));
+			schedule(() => dispatch({ type: 'ACTIVATE' }));
 
 			//* Даем React отрендерить элемент, затем включаем анимацию
 			rafRef.current = requestAnimationFrame(() => {
-				schedule(() => setIsVisible(true));
+				schedule(() => dispatch({ type: 'SHOW' }));
 			});
 
 			return clearPendingAnimations;
 		}
 
 		//* Закрытие: убираем видимость (асинхронно)
-		schedule(() => setIsVisible(false));
+		schedule(() => dispatch({ type: 'HIDE' }));
 
 		//* После transition размонтируем
 		closeTimerRef.current = window.setTimeout(() => {
-			setIsMounted(false);
+			dispatch({ type: 'UNMOUNT' });
 			closeTimerRef.current = null;
 		}, TRANSITION_MS);
 
@@ -94,6 +118,7 @@ export const LanguagePanel: React.FC<LanguagePanelProps> = ({ variant, id = 'lan
 	}, [isActive]);
 
 	useEffect(() => {
+		const isMounted = panelState !== 'unmounted';
 		if (!isMounted || !panelRef.current) {
 			return () => {};
 		}
@@ -164,13 +189,19 @@ export const LanguagePanel: React.FC<LanguagePanelProps> = ({ variant, id = 'lan
 
 			previouslyFocused?.focus?.();
 		};
-	}, [isMounted, closePanel]);
+	}, [panelState, closePanel]);
 
-	const handleLanguageChange = (languageCode: (typeof LANGUAGES)[number]['code']) => {
-		const targetPath = `${pathname}${window.location.search}${window.location.hash}`;
-		router.push(targetPath, { locale: languageCode });
-		closePanel();
-	};
+	const handleLanguageChange = useCallback(
+		(languageCode: (typeof LANGUAGES)[number]['code']) => {
+			const targetPath = `${pathname}${window.location.search}${window.location.hash}`;
+			router.push(targetPath, { locale: languageCode });
+			closePanel();
+		},
+		[pathname, router, closePanel]
+	);
+
+	const isMounted = panelState !== 'unmounted';
+	const isVisible = panelState === 'visible';
 
 	if (!isMounted) return null;
 
