@@ -14,7 +14,8 @@
 		"format:all": "prettier --write . && npm run lint:fix && npm run stylelint:fix",
 		"stylelint": "npx --no-install stylelint --config stylelint.config.mjs --allow-empty-input --formatter verbose \"src/**/*.{scss,css}\"",
 		"stylelint:fix": "npm run stylelint -- --fix",
-		"ci:lint": "npm run prettier:check && npm run lint && npm run stylelint"
+		"ci:lint": "npm run prettier:check && npm run lint && npm run stylelint",
+		"doctor": "npx -y react-doctor@latest"
 	},
 	"dependencies": {
 		"@hookform/resolvers": "^5.2.2",
@@ -36,6 +37,7 @@
 		"@types/node": "^24.11.0",
 		"@types/react": "^19.2.14",
 		"@types/react-dom": "^19.2.3",
+		"react-doctor": "^0.0.30",
 		"@typescript-eslint/eslint-plugin": "^8.56.1",
 		"@typescript-eslint/parser": "^8.56.1",
 		"baseline-browser-mapping": "^2.10.0",

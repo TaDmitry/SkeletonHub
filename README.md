@@ -35,6 +35,8 @@ npm run build
 
 # Start production server
 npm start
+
+npx -y react-doctor@latest
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
