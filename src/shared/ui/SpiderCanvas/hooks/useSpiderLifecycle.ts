@@ -6,9 +6,9 @@ type Params = {
 	enabled: boolean;
 
 	containerRef: React.RefObject<HTMLDivElement | null>;
-	pageHiddenRef: React.MutableRefObject<boolean>;
-	resizeObserverRef: React.MutableRefObject<ResizeObserver | null>;
-	resizeTimeoutRef: React.MutableRefObject<number | null>;
+	pageHiddenRef: React.RefObject<boolean>;
+	resizeObserverRef: React.RefObject<ResizeObserver | null>;
+	resizeTimeoutRef: React.RefObject<number | null>;
 
 	applySize: (width: number, height: number) => void;
 	startLoop: () => void;

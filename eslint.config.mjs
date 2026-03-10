@@ -4,6 +4,7 @@ import nextVitals from 'eslint-config-next/core-web-vitals';
 import nextTs from 'eslint-config-next/typescript';
 import prettierConfig from 'eslint-config-prettier';
 
+import pluginImport from 'eslint-plugin-import';
 import pluginPrettier from 'eslint-plugin-prettier';
 import pluginSimpleImportSort from 'eslint-plugin-simple-import-sort';
 import sonarjs from 'eslint-plugin-sonarjs';
@@ -18,16 +19,11 @@ export default defineConfig([
 		'out/**',
 		'build/**',
 		'next-env.d.ts',
-		'node_modules',
-		'dist',
-		'public',
-		'.cache',
-		'eslint.config.mjs',
+		'node_modules/**',
+		'dist/**',
+		'public/**',
+		'.cache/**',
 		'postcss.config.js',
-		'stylelint.config.mjs',
-		'prettier.config.*',
-		'commitlint.config.*',
-		'lint-staged.config.*',
 		'*.config.{js,cjs,mjs,ts}',
 		'scripts/**',
 	]),
@@ -36,15 +32,21 @@ export default defineConfig([
 		files: ['**/*.{js,ts,jsx,tsx}'],
 		plugins: {
 			'prettier': pluginPrettier,
+			'import': pluginImport,
 			'simple-import-sort': pluginSimpleImportSort,
 			sonarjs,
 			'unicorn': unicornPlugin,
 		},
 		languageOptions: {
-			ecmaVersion: 2024,
+			ecmaVersion: 2025,
 			sourceType: 'module',
+			parserOptions: {
+				projectService: true,
+			},
 		},
 		rules: {
+			'@typescript-eslint/no-deprecated': 'warn',
+			// --- Imports ---
 			'simple-import-sort/imports': [
 				'error',
 				{
@@ -61,23 +63,41 @@ export default defineConfig([
 			'import/order': 'off',
 			'import/newline-after-import': ['error', { count: 1 }],
 
+			// --- Code style ---
 			'padding-line-between-statements': [
 				'error',
 				{ blankLine: 'always', prev: '*', next: 'return' },
 				{ blankLine: 'always', prev: 'block-like', next: 'export' },
 			],
-
-			'@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
-
-			'prettier/prettier': 'error',
 			'eqeqeq': ['error', 'always'],
 			'consistent-return': 'error',
 			'no-console': ['error', { allow: ['warn', 'error'] }],
+			'prefer-arrow-callback': 'error',
+			'prefer-destructuring': ['error', { object: true, array: false }],
+			'object-shorthand': ['error', 'always'],
 
-			'jsx-a11y/anchor-is-valid': 'warn',
-			'jsx-a11y/click-events-have-key-events': 'warn',
-			'jsx-a11y/no-static-element-interactions': 'warn',
+			// --- TypeScript ---
+			'@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+			'no-shadow': 'off',
+			'@typescript-eslint/no-shadow': 'error',
 
+			// --- Magic numbers ---
+			'no-magic-numbers': [
+				'warn',
+				{
+					ignore: [-1, 0, 1],
+					ignoreArrayIndexes: true,
+					ignoreDefaultValues: true,
+					ignoreClassFieldInitialValues: true,
+					enforceConst: true,
+					ignoreEnums: true,
+				},
+			],
+
+			// --- Prettier ---
+			'prettier/prettier': 'error',
+
+			// --- Unicorn ---
 			'unicorn/prefer-includes': 'error',
 			'unicorn/prefer-string-starts-ends-with': 'error',
 			'unicorn/prefer-optional-catch-binding': 'error',
@@ -88,6 +108,7 @@ export default defineConfig([
 			'unicorn/prefer-single-call': 'warn',
 			'unicorn/no-unnecessary-slice-end': 'warn',
 
+			// --- SonarJS ---
 			'sonarjs/no-identical-conditions': 'error',
 			'sonarjs/no-extra-arguments': 'error',
 			'sonarjs/non-existent-operator': 'error',
@@ -95,28 +116,25 @@ export default defineConfig([
 			'sonarjs/no-duplicated-branches': 'error',
 			'sonarjs/no-useless-catch': 'error',
 			'sonarjs/no-redundant-jump': 'error',
-			'sonarjs/cognitive-complexity': ['warn', 18],
+			'sonarjs/cognitive-complexity': ['warn', 15],
 			'sonarjs/no-collapsible-if': 'warn',
 			'sonarjs/prefer-single-boolean-return': 'warn',
 			'sonarjs/prefer-immediate-return': 'warn',
-
-			'no-shadow': 'off',
-			'@typescript-eslint/no-shadow': 'error',
-			'no-magic-numbers': [
-				'warn',
-				{
-					ignore: [0, 1],
-					ignoreArrayIndexes: true,
-					enforceConst: true,
-					ignoreDefaultValues: true,
-					ignoreEnums: true,
-				},
-			],
-			'prefer-arrow-callback': 'error',
-			'prefer-destructuring': ['error', { object: true, array: false }],
-			'object-shorthand': ['error', 'always'],
 		},
 	},
+
+	// --- Test files (relaxed rules) ---
+	{
+		files: ['**/*.{test,spec}.{js,ts,jsx,tsx}', '**/__tests__/**/*.{js,ts,jsx,tsx}'],
+		rules: {
+			'no-magic-numbers': 'off',
+			'@typescript-eslint/no-explicit-any': 'off',
+			'sonarjs/cognitive-complexity': 'off',
+			'no-console': 'off',
+		},
+	},
+
+	// --- FSD layer rules ---
 	{
 		files: ['src/widgets/**/*.{js,ts,jsx,tsx}'],
 		rules: {
@@ -199,6 +217,38 @@ export default defineConfig([
 						{
 							group: ['@/entities', '@/entities/**'],
 							message: 'Layer rule: shared cannot import entities.',
+						},
+					],
+				},
+			],
+		},
+	},
+	{
+		files: ['src/types/**/*.{js,ts,jsx,tsx}'],
+		rules: {
+			'no-restricted-imports': [
+				'error',
+				{
+					patterns: [
+						{
+							group: ['@/app', '@/app/**'],
+							message: 'Layer rule: types cannot import app.',
+						},
+						{
+							group: ['@/widgets', '@/widgets/**'],
+							message: 'Layer rule: types cannot import widgets.',
+						},
+						{
+							group: ['@/features', '@/features/**'],
+							message: 'Layer rule: types cannot import features.',
+						},
+						{
+							group: ['@/entities', '@/entities/**'],
+							message: 'Layer rule: types cannot import entities.',
+						},
+						{
+							group: ['@/shared', '@/shared/**'],
+							message: 'Layer rule: types cannot import shared.',
 						},
 					],
 				},
