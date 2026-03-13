@@ -11,9 +11,6 @@ import {
 	resolveHeaderValue,
 	resolveLanguage,
 	resolveOperatingSystem,
-	resolvePageUrl,
-	resolveReferrer,
-	resolveUtmTags,
 } from './resolvers';
 import type { ContactRequestPayload, ContactTelegramMetadata } from './schema';
 
@@ -27,7 +24,6 @@ export async function enrichContactMetadata(
 ): Promise<ContactTelegramMetadata> {
 	const requestUserAgent = userAgent(request);
 	const clientIp = resolveClientIp(request);
-	const resolvedUtmTags = resolveUtmTags(payload.clientContext?.utmTags);
 	const geoFromHeaders = {
 		countryCode: resolveHeaderValue(request, ['x-vercel-ip-country', 'cf-ipcountry']),
 		timezone: resolveHeaderValue(request, ['x-vercel-ip-timezone', 'cf-timezone']),
@@ -63,11 +59,6 @@ export async function enrichContactMetadata(
 			connectionType: normalizeOptionalString(payload.clientContext?.connectionType),
 			language: resolveLanguage(payload.clientContext?.language, request),
 			screen: formatScreenInfo(payload.clientContext?.screen),
-		},
-		context: {
-			pageUrl: resolvePageUrl(request, payload.pageUrl),
-			referrer: resolveReferrer(request, payload.clientContext?.referrer),
-			...(resolvedUtmTags ? { utmTags: resolvedUtmTags } : {}),
 		},
 		business: {
 			submittedAt: new Date(),

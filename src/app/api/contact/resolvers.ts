@@ -53,20 +53,6 @@ export function resolveClientIp(request: Request) {
 	return resolveHeaderValue(request, ['x-real-ip', 'cf-connecting-ip']);
 }
 
-//* Разрешение URL страницы
-export function resolvePageUrl(request: Request, pageUrl?: string) {
-	return (
-		normalizeOptionalString(pageUrl) ??
-		resolveHeaderValue(request, ['referer', 'origin']) ??
-		'unknown'
-	);
-}
-
-//* Разрешение реферера
-export function resolveReferrer(request: Request, referrer?: string) {
-	return normalizeOptionalString(referrer) ?? resolveHeaderValue(request, ['referer']);
-}
-
 //* Разрешение языка
 export function resolveLanguage(language: string | undefined, request: Request) {
 	const normalizedLanguage = normalizeOptionalString(language);

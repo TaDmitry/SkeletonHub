@@ -212,6 +212,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ className }) => {
 
 			{toastText ? (
 				<Notification
+					key={toastText}
 					text={toastText}
 					onClose={closeToast}
 					duration={2500}

@@ -223,38 +223,6 @@ export default defineConfig([
 			],
 		},
 	},
-	{
-		files: ['src/types/**/*.{js,ts,jsx,tsx}'],
-		rules: {
-			'no-restricted-imports': [
-				'error',
-				{
-					patterns: [
-						{
-							group: ['@/app', '@/app/**'],
-							message: 'Layer rule: types cannot import app.',
-						},
-						{
-							group: ['@/widgets', '@/widgets/**'],
-							message: 'Layer rule: types cannot import widgets.',
-						},
-						{
-							group: ['@/features', '@/features/**'],
-							message: 'Layer rule: types cannot import features.',
-						},
-						{
-							group: ['@/entities', '@/entities/**'],
-							message: 'Layer rule: types cannot import entities.',
-						},
-						{
-							group: ['@/shared', '@/shared/**'],
-							message: 'Layer rule: types cannot import shared.',
-						},
-					],
-				},
-			],
-		},
-	},
 
 	prettierConfig,
 ]);

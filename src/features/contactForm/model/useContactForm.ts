@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import {
@@ -45,40 +45,43 @@ export function useContactForm({ successToastText, errorToastText }: UseContactF
 		}
 	};
 
-	const closeToast = () => {
+	const closeToast = useCallback(() => {
 		setToastText(null);
-	};
+	}, []);
 
-	const onSubmit = async (values: ContactSchemaValues) => {
-		const payload = await createContactApiPayload(values, firstInteractionStartedAtRef.current);
+	const onSubmit = useCallback(
+		async (values: ContactSchemaValues) => {
+			const payload = await createContactApiPayload(values, firstInteractionStartedAtRef.current);
 
-		setIsRequestInFlight(true);
+			setIsRequestInFlight(true);
 
-		try {
-			const submitResult = await sendContactForm(payload);
+			try {
+				const submitResult = await sendContactForm(payload);
 
-			if (!submitResult.success) {
-				if (submitResult.error) {
-					console.error('[contact-form] Contact form submission failed.', submitResult.error);
-				} else {
-					console.error('[contact-form] Contact API request failed.', {
-						status: submitResult.status,
-						apiResult: submitResult.apiResult,
-					});
+				if (!submitResult.success) {
+					if (submitResult.error) {
+						console.error('[contact-form] Contact form submission failed.', submitResult.error);
+					} else {
+						console.error('[contact-form] Contact API request failed.', {
+							status: submitResult.status,
+							apiResult: submitResult.apiResult,
+						});
+					}
+
+					setToastText(errorToastText);
+
+					return;
 				}
 
-				setToastText(errorToastText);
-
-				return;
+				reset();
+				firstInteractionStartedAtRef.current = null;
+				setToastText(successToastText);
+			} finally {
+				setIsRequestInFlight(false);
 			}
-
-			reset();
-			firstInteractionStartedAtRef.current = null;
-			setToastText(successToastText);
-		} finally {
-			setIsRequestInFlight(false);
-		}
-	};
+		},
+		[successToastText, errorToastText, reset]
+	);
 
 	return {
 		register,
