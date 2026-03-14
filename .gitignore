@@ -44,4 +44,4 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-*.md
+SkeletonHub_Architecture_Review.md

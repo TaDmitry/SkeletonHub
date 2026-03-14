@@ -4,8 +4,8 @@ import { useId } from 'react';
 import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
 
+import { useFormErrorResolver } from '@/shared/lib/forms';
 import {
-	NEWSLETTER_VALIDATION_MESSAGE_PREFIX,
 	newsletterSchema,
 	type NewsletterSchemaInput,
 	type NewsletterSchemaValues,
@@ -22,7 +22,7 @@ interface NewsletterFormProps {
 
 export const NewsletterForm = ({ onSuccess, onError }: NewsletterFormProps) => {
 	const t = useTranslations('layout.footer.Footer');
-	const tGlobal = useTranslations();
+	const resolveValidationMessage = useFormErrorResolver();
 	const fieldId = useId();
 	const messageId = `${fieldId}-message`;
 
@@ -38,18 +38,6 @@ export const NewsletterForm = ({ onSuccess, onError }: NewsletterFormProps) => {
 			email: '',
 		},
 	});
-
-	const resolveValidationMessage = (message?: string) => {
-		if (!message) {
-			return null;
-		}
-
-		if (message.startsWith(NEWSLETTER_VALIDATION_MESSAGE_PREFIX)) {
-			return tGlobal(message);
-		}
-
-		return message;
-	};
 
 	const emailError = resolveValidationMessage(errors.email?.message);
 	const hasEmailError = Boolean(emailError);

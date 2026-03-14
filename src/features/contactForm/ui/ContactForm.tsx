@@ -4,7 +4,7 @@ import React from 'react';
 import { useTranslations } from 'next-intl';
 import clsx from 'clsx';
 
-import { CONTACT_VALIDATION_MESSAGE_PREFIX } from '@/shared/lib/validation';
+import { useFormErrorResolver } from '@/shared/lib/forms';
 import { Button, Icon, Notification, Text, Title } from '@/shared/ui/index';
 
 import { type ContactFormProps, useContactForm } from '../model';
@@ -13,7 +13,7 @@ import styles from './ContactForm.module.scss';
 
 export const ContactForm: React.FC<ContactFormProps> = ({ className }) => {
 	const t = useTranslations('features.contactForm.ContactForm');
-	const tGlobal = useTranslations();
+	const resolveValidationMessage = useFormErrorResolver();
 	const {
 		closeToast,
 		errors,
@@ -27,18 +27,6 @@ export const ContactForm: React.FC<ContactFormProps> = ({ className }) => {
 		successToastText: t('toast.success'),
 		errorToastText: t('toast.error'),
 	});
-
-	const resolveValidationMessage = (message?: string) => {
-		if (!message) {
-			return null;
-		}
-
-		if (message.startsWith(CONTACT_VALIDATION_MESSAGE_PREFIX)) {
-			return tGlobal(message);
-		}
-
-		return message;
-	};
 
 	const nameError = resolveValidationMessage(errors.name?.message);
 	const emailError = resolveValidationMessage(errors.email?.message);

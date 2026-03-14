@@ -1,11 +1,13 @@
 import { z } from 'zod';
 
-const NAME_MIN_LENGTH = 2;
-const NAME_MAX_LENGTH = 80;
-const EMAIL_MAX_LENGTH = 160;
-const TELEGRAM_MAX_LENGTH = 32;
-const MESSAGE_MIN_LENGTH = 6;
-const MESSAGE_MAX_LENGTH = 2000;
+import { CONTACT_FORM_VALIDATION_CONFIG } from './contactValidationConfig';
+
+const {
+	name: { min: NAME_MIN_LENGTH, max: NAME_MAX_LENGTH },
+	email: { max: EMAIL_MAX_LENGTH },
+	telegram: { max: TELEGRAM_MAX_LENGTH },
+	message: { min: MESSAGE_MIN_LENGTH, max: MESSAGE_MAX_LENGTH },
+} = CONTACT_FORM_VALIDATION_CONFIG;
 const TELEGRAM_USERNAME_PATTERN = /^@?[A-Za-z0-9_]{5,32}$/;
 const EMAIL_SCHEMA = z.email();
 
