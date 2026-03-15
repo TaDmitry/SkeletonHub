@@ -339,37 +339,6 @@ function resolveTimezone() {
 	}
 }
 
-function resolveUtmTags(pageUrl: string | null) {
-	if (!pageUrl) {
-		return null;
-	}
-
-	try {
-		const search = new URL(pageUrl).searchParams;
-		const source = search.get('utm_source');
-		const medium = search.get('utm_medium');
-		const campaign = search.get('utm_campaign');
-		const term = search.get('utm_term');
-		const content = search.get('utm_content');
-		const id = search.get('utm_id');
-
-		if (!source && !medium && !campaign && !term && !content && !id) {
-			return null;
-		}
-
-		return {
-			...(source ? { source } : {}),
-			...(medium ? { medium } : {}),
-			...(campaign ? { campaign } : {}),
-			...(term ? { term } : {}),
-			...(content ? { content } : {}),
-			...(id ? { id } : {}),
-		};
-	} catch {
-		return null;
-	}
-}
-
 function resolveScreenContext() {
 	if (typeof window === 'undefined') {
 		return null;
@@ -413,8 +382,6 @@ export async function createContactApiPayload(
 	values: ContactSchemaValues,
 	firstInteractionStartedAt: number | null
 ): Promise<ContactApiPayload> {
-	const currentPageUrl = typeof window === 'undefined' ? null : window.location.href;
-	const currentReferrer = typeof document === 'undefined' ? null : document.referrer;
 	const currentLanguage = typeof navigator === 'undefined' ? null : navigator.language;
 	const userAgentData = resolveUserAgentData();
 	const platformContext = await resolveClientPlatformContext(userAgentData);
@@ -432,7 +399,6 @@ export async function createContactApiPayload(
 	const touchSupport = resolveTouchSupport();
 	const pageLoadTime = resolvePageLoadTime();
 	const timezone = resolveTimezone();
-	const utmTags = resolveUtmTags(currentPageUrl);
 	const screenContext = resolveScreenContext();
 	const metrics = resolveClientMetrics({
 		firstInteractionStartedAt,
@@ -450,15 +416,12 @@ export async function createContactApiPayload(
 
 	return {
 		...values,
-		...(currentPageUrl ? { pageUrl: currentPageUrl } : {}),
 		clientContext: {
-			...(currentReferrer ? { referrer: currentReferrer } : {}),
 			...(currentLanguage ? { language: currentLanguage } : {}),
 			...(timezone ? { timezone } : {}),
 			...(platformContext ?? {}),
 			...(deviceType ? { deviceType } : {}),
 			...(connectionType ? { connectionType } : {}),
-			...(utmTags ? { utmTags } : {}),
 			...(screenContext ? { screen: screenContext } : {}),
 		},
 		...(metrics ? { metrics } : {}),

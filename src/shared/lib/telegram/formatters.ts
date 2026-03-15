@@ -71,7 +71,7 @@ export function formatColorScheme(colorScheme?: 'light' | 'dark') {
 		return FALLBACK_FIELD_VALUE;
 	}
 
-	return colorScheme === 'dark' ? '🌙 Dark' : '☀️ Light';
+	return colorScheme === 'dark' ? 'Dark' : 'Light';
 }
 
 export function formatPageLoadTime(pageLoadTime?: number) {

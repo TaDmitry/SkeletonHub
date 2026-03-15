@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useReducer } from 'react';
 import clsx from 'clsx';
 
 import styles from './Notification.module.scss';
@@ -15,45 +15,73 @@ interface NotificationProps {
 	className?: string;
 }
 
+type NotificationState = 'mounting' | 'open' | 'closing' | 'closed';
+
+type NotificationAction =
+	| { type: 'MOUNT' }
+	| { type: 'OPEN' }
+	| { type: 'START_CLOSE' }
+	| { type: 'FINISH_CLOSE' };
+
+const notificationReducer = (
+	state: NotificationState,
+	action: NotificationAction
+): NotificationState => {
+	switch (action.type) {
+		case 'MOUNT':
+			return 'mounting';
+		case 'OPEN':
+			return state === 'mounting' ? 'open' : state;
+		case 'START_CLOSE':
+			return state === 'open' ? 'closing' : state;
+		case 'FINISH_CLOSE':
+			return 'closed';
+		default:
+			return state;
+	}
+};
+
 export const Notification = ({
 	text,
 	onClose,
 	duration = AUTO_CLOSE_DELAY_MS,
 	className,
 }: NotificationProps) => {
-	const [isOpen, setIsOpen] = useState(false);
-	const [isClosing, setIsClosing] = useState(false);
+	const [state, dispatch] = useReducer(notificationReducer, 'mounting');
 
 	useEffect(() => {
 		const animationFrameId = window.requestAnimationFrame(() => {
-			setIsOpen(true);
+			dispatch({ type: 'OPEN' });
 		});
 
 		return () => window.cancelAnimationFrame(animationFrameId);
 	}, []);
 
 	useEffect(() => {
-		if (!isOpen) {
+		if (state !== 'open') {
 			return () => {};
 		}
 
-		const closeAnimTimer = setTimeout(() => setIsClosing(true), duration);
+		const closeAnimTimer = setTimeout(() => dispatch({ type: 'START_CLOSE' }), duration);
 
-		const closeTimer = setTimeout(() => onClose(), duration + CLOSE_ANIMATION_DURATION_MS);
+		const closeTimer = setTimeout(() => {
+			dispatch({ type: 'FINISH_CLOSE' });
+			onClose();
+		}, duration + CLOSE_ANIMATION_DURATION_MS);
 
 		return () => {
 			clearTimeout(closeAnimTimer);
 			clearTimeout(closeTimer);
 		};
-	}, [duration, isOpen, onClose]);
+	}, [duration, state, onClose]);
 
 	return (
 		<div
 			className={clsx(
 				styles.notification,
 				className,
-				isOpen && styles.open,
-				isClosing && styles.closing
+				(state === 'open' || state === 'closing') && styles.open,
+				state === 'closing' && styles.closing
 			)}
 			role='status'
 			aria-live='polite'

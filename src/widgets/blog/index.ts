@@ -1,1 +1,1 @@
-export { BlogPreviewGrid } from './ui/BlogGrid/BlogPreviewGrid';
+export { BlogPreviewGrid } from './ui/BlogPreviewGrid';

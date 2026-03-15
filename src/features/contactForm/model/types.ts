@@ -6,23 +6,13 @@ export type ContactApiResponse = {
 };
 
 export type ContactApiPayload = ContactSchemaValues & {
-	pageUrl?: string;
 	clientContext?: {
-		referrer?: string;
 		language?: string;
 		timezone?: string;
 		platform?: string;
 		platformVersion?: string;
 		deviceType?: string;
 		connectionType?: string;
-		utmTags?: {
-			source?: string;
-			medium?: string;
-			campaign?: string;
-			term?: string;
-			content?: string;
-			id?: string;
-		};
 		screen?: {
 			width: number;
 			height: number;

@@ -130,8 +130,10 @@ export default async function BlogPostPage({ params }: Props) {
 		<div className={styles.page}>
 			<script
 				type='application/ld+json'
-				dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-			/>
+				suppressHydrationWarning
+			>
+				{JSON.stringify(structuredData)}
+			</script>
 			<Button
 				href='/blog'
 				className={styles.back}
@@ -161,9 +163,9 @@ export default async function BlogPostPage({ params }: Props) {
 				</div>
 
 				<div className={styles.content}>
-					{post.content.map((p, idx) => (
+					{post.content.map((p) => (
 						<Text
-							key={`${post.slug}-${idx}`}
+							key={p}
 							className={styles.paragraph}
 						>
 							{p}

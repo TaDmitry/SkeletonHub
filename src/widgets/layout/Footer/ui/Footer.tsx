@@ -1,60 +1,37 @@
 ﻿'use client';
 
-import { useId, useState } from 'react';
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { useForm } from 'react-hook-form';
 
 import { Link } from '@/shared/config/i18n/navigation';
-import {
-	NEWSLETTER_VALIDATION_MESSAGE_PREFIX,
-	newsletterSchema,
-	type NewsletterSchemaInput,
-	type NewsletterSchemaValues,
-} from '@/shared/lib/validation';
-import { Button, Notification, Text, Title } from '@/shared/ui/index';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { Notification, Text, Title } from '@/shared/ui/index';
+
+import { NewsletterForm } from './NewsletterForm';
 
 import styles from './Footer.module.scss';
 
+interface Toast {
+	type: 'success' | 'error';
+	message: string;
+}
+
 export const FooterWidget = () => {
 	const t = useTranslations('layout.footer.Footer');
-	const tGlobal = useTranslations();
 	const currentYear = new Date().getFullYear();
-	const fieldId = useId();
-	const messageId = `${fieldId}-message`;
-	const [successToast, setSuccessToast] = useState<string | null>(null);
+	const [toast, setToast] = useState<Toast | null>(null);
 
-	const {
-		register,
-		handleSubmit,
-		reset,
-		formState: { errors, isSubmitting },
-	} = useForm<NewsletterSchemaInput, unknown, NewsletterSchemaValues>({
-		resolver: zodResolver(newsletterSchema),
-		mode: 'onTouched',
-		defaultValues: {
-			email: '',
-		},
-	});
-
-	const resolveValidationMessage = (message?: string) => {
-		if (!message) {
-			return null;
-		}
-
-		if (message.startsWith(NEWSLETTER_VALIDATION_MESSAGE_PREFIX)) {
-			return tGlobal(message);
-		}
-
-		return message;
+	const handleNewsletterSuccess = () => {
+		setToast({
+			type: 'success',
+			message: t('sections.newsletter.validation.success'),
+		});
 	};
 
-	const emailError = resolveValidationMessage(errors.email?.message);
-	const hasEmailError = Boolean(emailError);
-
-	const onSubmit = (_values: NewsletterSchemaValues) => {
-		setSuccessToast(t('sections.newsletter.validation.success'));
-		reset();
+	const handleNewsletterError = (error: string) => {
+		setToast({
+			type: 'error',
+			message: error,
+		});
 	};
 
 	return (
@@ -187,50 +164,10 @@ export const FooterWidget = () => {
 						>
 							{t('sections.newsletter.description')}
 						</Text>
-						<form
-							className={styles.newsletterForm}
-							noValidate
-							onSubmit={handleSubmit(onSubmit)}
-						>
-							<label
-								htmlFor={fieldId}
-								className={styles.newsletterLabel}
-							>
-								{t('sections.newsletter.inputLabel')}
-							</label>
-							<input
-								id={fieldId}
-								type='email'
-								className={styles.newsletterInput}
-								placeholder={t('sections.newsletter.placeholder')}
-								disabled={isSubmitting}
-								autoComplete='email'
-								inputMode='email'
-								aria-invalid={hasEmailError}
-								aria-describedby={emailError ? messageId : undefined}
-								{...register('email', {
-									onChange: () => {
-										if (successToast) setSuccessToast(null);
-									},
-								})}
-							/>
-							<Button
-								type='submit'
-								text={t('sections.newsletter.button')}
-								className={styles.subscribeButton}
-								disabled={isSubmitting}
-							/>
-							{emailError && (
-								<span
-									id={messageId}
-									className={styles.newsletterMessageError}
-									role='alert'
-									aria-live='assertive'
-								>
-									{emailError}
-								</span>
-							)}
-						</form>
+						<NewsletterForm
+							onSuccess={handleNewsletterSuccess}
+							onError={handleNewsletterError}
+						/>
 					</section>
 				</div>
 
@@ -243,10 +180,10 @@ export const FooterWidget = () => {
 				</Text>
 			</div>
 
-			{successToast ? (
+			{toast ? (
 				<Notification
-					text={successToast}
-					onClose={() => setSuccessToast(null)}
+					text={toast.message}
+					onClose={() => setToast(null)}
 					duration={2200}
 					className={styles.successNotification}
 				/>

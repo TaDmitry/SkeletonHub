@@ -91,13 +91,6 @@ function getCellCoord(d: Dot, cell: number): CellCoord {
 	};
 }
 
-/**
- * Обходит 3x3 соседние клетки. Колбэк всегда должен возвращать boolean:
- * - true  -> остановить обход
- * - false -> продолжать
- *
- * Это фиксит consistent-return (колбэк больше не возвращает то boolean, то undefined).
- */
 function forEachNeighborKey(base: CellCoord, onKey: (key: string) => boolean) {
 	for (let ox = -1; ox <= 1; ox++) {
 		for (let oy = -1; oy <= 1; oy++) {

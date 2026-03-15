@@ -11,7 +11,13 @@
 				"placeholder": "you@domain.com",
 				"button": "Subscribe",
 				"validation": {
-					"success": "Thanks for subscribing"
+					"success": "Thanks for subscribing",
+					"error": {
+						"409": "This email is already subscribed",
+						"400": "Please check the email address you entered",
+						"500": "Server error. Please try again later",
+						"default": "Something went wrong. Please try again"
+					}
 				}
 			}
 		},

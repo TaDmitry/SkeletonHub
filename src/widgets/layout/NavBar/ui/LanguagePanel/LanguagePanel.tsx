@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useReducer, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import clsx from 'clsx';
 
@@ -18,6 +18,7 @@ type Variant = 'desktop' | 'mobile';
 interface LanguagePanelProps {
 	variant: Variant;
 	id?: string;
+	triggerRef?: React.RefObject<HTMLButtonElement | null>;
 }
 
 const LANGUAGES = [
@@ -35,7 +36,37 @@ const schedule = (cb: () => void) => {
 	setTimeout(cb, 0);
 };
 
-export const LanguagePanel: React.FC<LanguagePanelProps> = ({ variant, id = 'language-panel' }) => {
+type PanelState = 'unmounted' | 'mounting' | 'visible' | 'closing';
+
+type PanelAction =
+	| { type: 'ACTIVATE' }
+	| { type: 'SHOW' }
+	| { type: 'DEACTIVATE' }
+	| { type: 'HIDE' }
+	| { type: 'UNMOUNT' };
+
+const panelReducer = (state: PanelState, action: PanelAction): PanelState => {
+	switch (action.type) {
+		case 'ACTIVATE':
+			return state === 'unmounted' ? 'mounting' : state;
+		case 'SHOW':
+			return state === 'mounting' ? 'visible' : state;
+		case 'DEACTIVATE':
+			return state === 'visible' ? 'closing' : state;
+		case 'HIDE':
+			return 'closing';
+		case 'UNMOUNT':
+			return 'unmounted';
+		default:
+			return state;
+	}
+};
+
+export const LanguagePanel: React.FC<LanguagePanelProps> = ({
+	variant,
+	id = 'language-panel',
+	triggerRef,
+}) => {
 	const t = useTranslations('layout.navbar.LanguagePanel');
 	const router = useRouter();
 	const pathname = usePathname();
@@ -43,6 +74,7 @@ export const LanguagePanel: React.FC<LanguagePanelProps> = ({ variant, id = 'lan
 	const panelRef = useRef<HTMLDivElement | null>(null);
 	const closeTimerRef = useRef<number | null>(null);
 	const rafRef = useRef<number | null>(null);
+	const previouslyFocusedRef = useRef<HTMLElement | null>(null);
 
 	const isOpen = useLanguagePanelStore((s) => s.isOpen);
 	const context = useLanguagePanelStore((s) => s.context);
@@ -50,9 +82,26 @@ export const LanguagePanel: React.FC<LanguagePanelProps> = ({ variant, id = 'lan
 
 	const isActive = useMemo(() => isOpen && context === variant, [isOpen, context, variant]);
 
-	//* Монтируем панель, когда активна, и держим смонтированной во время закрывающей анимации
-	const [isMounted, setIsMounted] = useState<boolean>(isActive);
-	const [isVisible, setIsVisible] = useState<boolean>(false);
+	const [panelState, dispatch] = useReducer(panelReducer, 'unmounted');
+
+	const restoreFocus = useCallback(() => {
+		const panelEl = panelRef.current;
+		const activeElement = document.activeElement as HTMLElement | null;
+
+		if (!panelEl || !activeElement || !panelEl.contains(activeElement)) {
+			return;
+		}
+
+		const triggerEl = triggerRef?.current ?? null;
+
+		if (triggerEl && !triggerEl.hasAttribute('disabled')) {
+			triggerEl.focus();
+
+			return;
+		}
+
+		previouslyFocusedRef.current?.focus?.();
+	}, [triggerRef]);
 
 	useEffect(() => {
 		const clearPendingAnimations = () => {
@@ -71,22 +120,22 @@ export const LanguagePanel: React.FC<LanguagePanelProps> = ({ variant, id = 'lan
 
 		if (isActive) {
 			//* Монтируем асинхронно, чтобы не словить setState-in-effect
-			schedule(() => setIsMounted(true));
+			schedule(() => dispatch({ type: 'ACTIVATE' }));
 
 			//* Даем React отрендерить элемент, затем включаем анимацию
 			rafRef.current = requestAnimationFrame(() => {
-				schedule(() => setIsVisible(true));
+				schedule(() => dispatch({ type: 'SHOW' }));
 			});
 
 			return clearPendingAnimations;
 		}
 
 		//* Закрытие: убираем видимость (асинхронно)
-		schedule(() => setIsVisible(false));
+		schedule(() => dispatch({ type: 'HIDE' }));
 
 		//* После transition размонтируем
 		closeTimerRef.current = window.setTimeout(() => {
-			setIsMounted(false);
+			dispatch({ type: 'UNMOUNT' });
 			closeTimerRef.current = null;
 		}, TRANSITION_MS);
 
@@ -94,6 +143,7 @@ export const LanguagePanel: React.FC<LanguagePanelProps> = ({ variant, id = 'lan
 	}, [isActive]);
 
 	useEffect(() => {
+		const isMounted = panelState !== 'unmounted';
 		if (!isMounted || !panelRef.current) {
 			return () => {};
 		}
@@ -103,7 +153,7 @@ export const LanguagePanel: React.FC<LanguagePanelProps> = ({ variant, id = 'lan
 		//* Родитель-контейнер: кнопка + панель (чтобы клики по кнопке не считались "outside")
 		const containerEl = panelEl.parentElement;
 
-		const previouslyFocused = document.activeElement as HTMLElement | null;
+		previouslyFocusedRef.current = document.activeElement as HTMLElement | null;
 
 		const focusableSelector =
 			'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
@@ -121,6 +171,7 @@ export const LanguagePanel: React.FC<LanguagePanelProps> = ({ variant, id = 'lan
 		const handleKeyDown = (e: KeyboardEvent) => {
 			if (e.key === 'Escape') {
 				e.preventDefault();
+				restoreFocus();
 				closePanel();
 
 				return;
@@ -151,6 +202,7 @@ export const LanguagePanel: React.FC<LanguagePanelProps> = ({ variant, id = 'lan
 			if (panelEl.contains(target)) return;
 			if (containerEl?.contains(target)) return;
 
+			restoreFocus();
 			closePanel();
 		};
 
@@ -162,15 +214,40 @@ export const LanguagePanel: React.FC<LanguagePanelProps> = ({ variant, id = 'lan
 			document.removeEventListener('keydown', handleKeyDown);
 			document.removeEventListener('mousedown', handleClickOutside);
 
-			previouslyFocused?.focus?.();
+			restoreFocus();
 		};
-	}, [isMounted, closePanel]);
+	}, [panelState, closePanel, restoreFocus]);
 
-	const handleLanguageChange = (languageCode: (typeof LANGUAGES)[number]['code']) => {
-		const targetPath = `${pathname}${window.location.search}${window.location.hash}`;
-		router.push(targetPath, { locale: languageCode });
-		closePanel();
-	};
+	useEffect(() => {
+		const panelEl = panelRef.current;
+
+		if (!panelEl) {
+			return () => {};
+		}
+
+		panelEl.inert = !isActive;
+
+		if (!isActive) {
+			restoreFocus();
+		}
+
+		return () => {
+			panelEl.inert = false;
+		};
+	}, [isActive, restoreFocus]);
+
+	const handleLanguageChange = useCallback(
+		(languageCode: (typeof LANGUAGES)[number]['code']) => {
+			const targetPath = `${pathname}${window.location.search}${window.location.hash}`;
+			restoreFocus();
+			router.push(targetPath, { locale: languageCode });
+			closePanel();
+		},
+		[pathname, router, closePanel, restoreFocus]
+	);
+
+	const isMounted = panelState !== 'unmounted';
+	const isVisible = panelState === 'visible';
 
 	if (!isMounted) return null;
 
@@ -185,7 +262,6 @@ export const LanguagePanel: React.FC<LanguagePanelProps> = ({ variant, id = 'lan
 			)}
 			style={{ '--language-panel-transition-ms': `${TRANSITION_MS}ms` } as React.CSSProperties}
 			role='menu'
-			aria-hidden={!isActive}
 			aria-label={t('aria.panel')}
 		>
 			{LANGUAGES.map((lang) => (

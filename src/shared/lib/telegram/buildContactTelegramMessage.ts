@@ -36,8 +36,6 @@ function resolveContactInfo({ email, telegram }: Pick<ContactSchemaValues, 'emai
 
 export function resolveRequestMetadata(metadata: SendContactMetadata): ResolvedSendContactMetadata {
 	const submittedAt = metadata.business?.submittedAt ?? metadata.submittedAt ?? new Date();
-	const pageUrl = metadata.context?.pageUrl ?? metadata.pageUrl;
-	const utmTags = metadata.context?.utmTags;
 
 	return {
 		geo: {
@@ -58,18 +56,6 @@ export function resolveRequestMetadata(metadata: SendContactMetadata): ResolvedS
 			connectionType: normalizeMetadataValue(metadata.device?.connectionType),
 			language: normalizeMetadataValue(metadata.device?.language),
 			screen: normalizeMetadataValue(metadata.device?.screen),
-		},
-		context: {
-			pageUrl: normalizeMetadataValue(pageUrl),
-			referrer: normalizeMetadataValue(metadata.context?.referrer),
-			utmTags: {
-				source: normalizeMetadataValue(utmTags?.source),
-				medium: normalizeMetadataValue(utmTags?.medium),
-				campaign: normalizeMetadataValue(utmTags?.campaign),
-				term: normalizeMetadataValue(utmTags?.term),
-				content: normalizeMetadataValue(utmTags?.content),
-				id: normalizeMetadataValue(utmTags?.id),
-			},
 		},
 		business: {
 			submittedAt,
@@ -92,7 +78,7 @@ export function buildContactTelegramMessage(
 	{ name, message, ...rest }: ContactSchemaValues,
 	metadata: ResolvedSendContactMetadata
 ) {
-	const { geo, device, context, business } = metadata;
+	const { geo, device, business } = metadata;
 	const lines = [
 		'📩 New contact request from website',
 		'',
@@ -121,16 +107,6 @@ export function buildContactTelegramMessage(
 		`GPU: ${normalizeMetadataValue(business.deviceGpu)}`,
 		`Color scheme: ${formatColorScheme(business.colorScheme)}`,
 		`Touch support: ${formatTouchSupport(business.touchSupport)}`,
-		'',
-		'🔎 Context',
-		`Page: ${context.pageUrl}`,
-		`Referrer: ${context.referrer}`,
-		`UTM source: ${context.utmTags.source}`,
-		`UTM medium: ${context.utmTags.medium}`,
-		`UTM campaign: ${context.utmTags.campaign}`,
-		`UTM term: ${context.utmTags.term}`,
-		`UTM content: ${context.utmTags.content}`,
-		`UTM id: ${context.utmTags.id}`,
 		'',
 		'📈 Business metrics',
 		`Submitted at: ${formatSubmissionDate(business.submittedAt)}`,

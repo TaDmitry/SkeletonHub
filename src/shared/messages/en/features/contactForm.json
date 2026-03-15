@@ -24,8 +24,8 @@
 			"submitting": "Sending..."
 		},
 		"toast": {
-			"success": "Message has been sent.",
-			"error": "Unable to send the message. Please try again."
+			"success": "Message has been sent",
+			"error": "Unable to send the message. Please try again"
 		}
 	}
 }

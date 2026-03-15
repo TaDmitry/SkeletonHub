@@ -1,62 +1,32 @@
-import { NextResponse } from 'next/server';
-import { z } from 'zod';
+import { checkRateLimit } from '../_lib/rateLimit';
+import { parseContactRequest } from './request';
+import { createSendMessageErrorResponse, createSuccessResponse } from './responses';
+import { submitContactRequest } from './service';
 
-import { sendContactTelegramMessage } from '@/shared/lib/telegram';
-
-import { enrichContactMetadata } from './metadata';
-import { parseBody, toContactTelegramPayload } from './resolvers';
-import type { ContactApiError, ContactApiSuccess, ContactRequestFieldErrors } from './schema';
-import { contactRequestSchema } from './schema';
+const CONTACT_RATE_LIMIT = {
+	bucket: 'api/contact',
+	limit: 5,
+	windowMs: 600_000,
+} as const;
 
 export async function POST(request: Request) {
-	const body = await parseBody(request);
+	const rateLimitResult = checkRateLimit(request, CONTACT_RATE_LIMIT);
 
-	if (body === null) {
-		console.error('[api/contact] Invalid JSON payload.');
-
-		const response: ContactApiError = {
-			success: false,
-			error: 'Invalid JSON payload.',
-		};
-
-		return NextResponse.json(response, { status: 400 });
+	if (!rateLimitResult.success) {
+		return rateLimitResult.response;
 	}
 
-	const parsedPayload = contactRequestSchema.safeParse(body);
+	const parsedRequest = await parseContactRequest(request);
 
-	if (!parsedPayload.success) {
-		const { fieldErrors } = z.flattenError(parsedPayload.error);
-		const issues: ContactRequestFieldErrors = fieldErrors;
-
-		console.warn('[api/contact] Validation failed.', issues);
-
-		const response: ContactApiError = {
-			success: false,
-			error: 'Validation failed.',
-			issues,
-		};
-
-		return NextResponse.json(response, { status: 400 });
+	if (!parsedRequest.success) {
+		return parsedRequest.response;
 	}
 
-	const contactData = toContactTelegramPayload(parsedPayload.data);
-	const enrichedMetadata = await enrichContactMetadata(request, parsedPayload.data);
-	const telegramResult = await sendContactTelegramMessage(contactData, enrichedMetadata);
+	const submitResult = await submitContactRequest(request, parsedRequest.data);
 
-	if (!telegramResult.success) {
-		console.error('[api/contact] Unable to send message.', telegramResult.error);
-
-		const response: ContactApiError = {
-			success: false,
-			error: 'Unable to send message.',
-		};
-
-		return NextResponse.json(response, { status: 500 });
+	if (!submitResult.success) {
+		return createSendMessageErrorResponse();
 	}
 
-	const response: ContactApiSuccess = {
-		success: true,
-	};
-
-	return NextResponse.json(response, { status: 200 });
+	return createSuccessResponse();
 }

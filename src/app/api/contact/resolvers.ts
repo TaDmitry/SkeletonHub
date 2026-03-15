@@ -6,7 +6,6 @@ import type {
 	ContactUtmTags,
 } from './schema';
 
-//* Вспомогательные утилиты
 export function normalizeOptionalString(value?: string | null) {
 	const trimmedValue = value?.trim();
 
@@ -28,7 +27,6 @@ export function resolveHeaderValue(request: Request, headerNames: string[]) {
 	return resolvedHeaderValue;
 }
 
-//* Синтаксический анализ тела
 export async function parseBody(request: Request): Promise<unknown | null> {
 	try {
 		return await request.json();
@@ -37,7 +35,6 @@ export async function parseBody(request: Request): Promise<unknown | null> {
 	}
 }
 
-//* Разрешение IP клиента
 export function resolveClientIp(request: Request) {
 	const forwardedForValue = resolveHeaderValue(request, ['x-forwarded-for']);
 
@@ -53,35 +50,24 @@ export function resolveClientIp(request: Request) {
 	return resolveHeaderValue(request, ['x-real-ip', 'cf-connecting-ip']);
 }
 
-//* Разрешение URL страницы
-export function resolvePageUrl(request: Request, pageUrl?: string) {
-	return (
-		normalizeOptionalString(pageUrl) ??
-		resolveHeaderValue(request, ['referer', 'origin']) ??
-		'unknown'
-	);
-}
-
-//* Разрешение реферера
-export function resolveReferrer(request: Request, referrer?: string) {
-	return normalizeOptionalString(referrer) ?? resolveHeaderValue(request, ['referer']);
-}
-
-//* Разрешение языка
 export function resolveLanguage(language: string | undefined, request: Request) {
 	const normalizedLanguage = normalizeOptionalString(language);
 
 	if (normalizedLanguage) {
-		return normalizedLanguage;
+		const [primaryLanguage] = normalizedLanguage.split(/[-_]/);
+
+		return normalizeOptionalString(primaryLanguage)?.toLowerCase();
 	}
 
 	const acceptLanguage = request.headers.get('accept-language');
 	const primaryAcceptedLanguage = acceptLanguage?.split(',')[0];
 
-	return normalizeOptionalString(primaryAcceptedLanguage);
+	const normalizedAcceptedLanguage = normalizeOptionalString(primaryAcceptedLanguage);
+	const [primaryAcceptedLanguageCode] = normalizedAcceptedLanguage?.split(/[-_]/) ?? [];
+
+	return normalizeOptionalString(primaryAcceptedLanguageCode)?.toLowerCase();
 }
 
-//* Разрешение операционной системы
 const WINDOWS_11_PLATFORM_VERSION_MAJOR = 13;
 
 export function resolveOperatingSystem(
@@ -107,12 +93,10 @@ export function resolveOperatingSystem(
 	return osNameOnly ?? platform;
 }
 
-//* Разрешение для типа устройства
 export function resolveDeviceType(deviceType?: string, serverDeviceType?: string) {
 	return normalizeOptionalString(deviceType) ?? normalizeOptionalString(serverDeviceType);
 }
 
-//* Утилиты для форматирования
 export function formatUserAgentPart(name?: string, version?: string) {
 	const normalizedName = normalizeOptionalString(name);
 	const normalizedVersion = normalizeOptionalString(version);
@@ -130,7 +114,6 @@ export function formatScreenInfo(screen?: ContactClientScreen) {
 		: undefined;
 }
 
-//* Разрешение UTM-тегов
 export function resolveUtmTags(utmTags?: ContactUtmTags) {
 	const source = normalizeOptionalString(utmTags?.source);
 	const medium = normalizeOptionalString(utmTags?.medium);
@@ -151,7 +134,6 @@ export function resolveUtmTags(utmTags?: ContactUtmTags) {
 		: null;
 }
 
-//* Преобразование полезной нагрузки
 export function toContactTelegramPayload(payload: ContactRequestPayload): ContactTelegramPayload {
 	return {
 		name: payload.name,

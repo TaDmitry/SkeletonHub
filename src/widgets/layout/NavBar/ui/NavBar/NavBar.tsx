@@ -28,6 +28,7 @@ export const NavBarWidget: React.FC = () => {
 	const languagePanelContext = useLanguagePanelStore((s) => s.context);
 
 	const mobileMenuTriggerRef = useRef<HTMLButtonElement | null>(null);
+	const desktopLanguageTriggerRef = useRef<HTMLButtonElement | null>(null);
 
 	// Закрываем мобильную панель при переходе на десктоп
 	useEffect(() => {
@@ -99,12 +100,14 @@ export const NavBarWidget: React.FC = () => {
 							icon={<Icon icon='Language' />}
 							onClick={() => toggleLanguagePanel('desktop')}
 							className={styles.iconButton}
+							ref={desktopLanguageTriggerRef}
 							aria-expanded={isDesktopLanguagePanelOpen}
 							aria-controls='desktop-language-panel'
 						/>
 						<LanguagePanel
 							variant='desktop'
 							id='desktop-language-panel'
+							triggerRef={desktopLanguageTriggerRef}
 						/>
 						<Button
 							href='https://github.com/TaDmitry'

@@ -26,6 +26,7 @@ export const MobilePanel: React.FC<MobilePanelProps> = ({
 	const pathname = usePathname();
 
 	const panelRef = useRef<HTMLElement | null>(null);
+	const languageTriggerRef = useRef<HTMLButtonElement | null>(null);
 
 	const isOpen = useNavBarStore((s) => s.isPanelOpen);
 	const closePanel = useNavBarStore((s) => s.close);
@@ -154,6 +155,7 @@ export const MobilePanel: React.FC<MobilePanelProps> = ({
 						icon={<Icon icon='Language' />}
 						className={styles.iconButton}
 						onClick={() => toggleLanguagePanel('mobile')}
+						ref={languageTriggerRef}
 						aria-label={t('buttons.language')}
 						aria-expanded={isMobileLanguagePanelOpen}
 						aria-controls='mobile-language-panel'
@@ -161,6 +163,7 @@ export const MobilePanel: React.FC<MobilePanelProps> = ({
 					<LanguagePanel
 						variant='mobile'
 						id='mobile-language-panel'
+						triggerRef={languageTriggerRef}
 					/>
 				</div>
 

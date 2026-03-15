@@ -4,7 +4,7 @@ import React from 'react';
 import { useTranslations } from 'next-intl';
 import clsx from 'clsx';
 
-import { CONTACT_VALIDATION_MESSAGE_PREFIX } from '@/shared/lib/validation';
+import { useFormErrorResolver } from '@/shared/lib/forms';
 import { Button, Icon, Notification, Text, Title } from '@/shared/ui/index';
 
 import { type ContactFormProps, useContactForm } from '../model';
@@ -13,7 +13,7 @@ import styles from './ContactForm.module.scss';
 
 export const ContactForm: React.FC<ContactFormProps> = ({ className }) => {
 	const t = useTranslations('features.contactForm.ContactForm');
-	const tGlobal = useTranslations();
+	const resolveValidationMessage = useFormErrorResolver();
 	const {
 		closeToast,
 		errors,
@@ -21,24 +21,12 @@ export const ContactForm: React.FC<ContactFormProps> = ({ className }) => {
 		isFormDisabled,
 		onSubmit,
 		register,
-		toastText,
+		toast,
 		trackFirstInteraction,
 	} = useContactForm({
 		successToastText: t('toast.success'),
 		errorToastText: t('toast.error'),
 	});
-
-	const resolveValidationMessage = (message?: string) => {
-		if (!message) {
-			return null;
-		}
-
-		if (message.startsWith(CONTACT_VALIDATION_MESSAGE_PREFIX)) {
-			return tGlobal(message);
-		}
-
-		return message;
-	};
 
 	const nameError = resolveValidationMessage(errors.name?.message);
 	const emailError = resolveValidationMessage(errors.email?.message);
@@ -85,6 +73,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ className }) => {
 								className={styles.input}
 								suppressHydrationWarning
 								placeholder={t('fields.name.placeholder')}
+								autoComplete='name'
 								disabled={isFormDisabled}
 								aria-invalid={Boolean(errors.name)}
 								aria-describedby={nameError ? 'contact-name-error' : undefined}
@@ -118,6 +107,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ className }) => {
 								className={styles.input}
 								suppressHydrationWarning
 								placeholder={t('fields.telegram.placeholder')}
+								autoComplete='username'
 								disabled={isFormDisabled}
 								aria-invalid={Boolean(errors.telegram)}
 								aria-describedby={telegramError ? 'contact-telegram-error' : undefined}
@@ -154,6 +144,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ className }) => {
 								className={styles.input}
 								suppressHydrationWarning
 								placeholder={t('fields.email.placeholder')}
+								autoComplete='email'
 								disabled={isFormDisabled}
 								aria-invalid={Boolean(errors.email)}
 								aria-describedby={emailError ? 'contact-email-error' : undefined}
@@ -210,9 +201,10 @@ export const ContactForm: React.FC<ContactFormProps> = ({ className }) => {
 				</form>
 			</section>
 
-			{toastText ? (
+			{toast ? (
 				<Notification
-					text={toastText}
+					key={toast.id}
+					text={toast.text}
 					onClose={closeToast}
 					duration={2500}
 					className={styles.toast}

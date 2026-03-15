@@ -10,7 +10,7 @@ type Params = {
 
 	containerRef: React.RefObject<HTMLDivElement | null>;
 
-	pointerRef: React.MutableRefObject<Pointer | null>;
+	pointerRef: React.RefObject<Pointer | null>;
 
 	clearFg: () => void;
 	drawLinesToPointer: () => void;

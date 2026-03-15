@@ -35,12 +35,6 @@ export type SendContactUtmTagsMetadata = {
 	id?: string;
 };
 
-export type SendContactContextMetadata = {
-	pageUrl?: string;
-	referrer?: string;
-	utmTags?: SendContactUtmTagsMetadata;
-};
-
 export type SendContactBusinessMetadata = {
 	submittedAt?: Date;
 	fillSpeedMs?: number;
@@ -57,22 +51,15 @@ export type SendContactBusinessMetadata = {
 };
 
 export type SendContactMetadata = {
-	pageUrl?: string;
 	submittedAt?: Date;
 	geo?: SendContactGeoMetadata;
 	device?: SendContactDeviceMetadata;
-	context?: SendContactContextMetadata;
 	business?: SendContactBusinessMetadata;
 };
 
 export type ResolvedSendContactMetadata = {
 	geo: Required<SendContactGeoMetadata>;
 	device: Required<SendContactDeviceMetadata>;
-	context: {
-		pageUrl: string;
-		referrer: string;
-		utmTags: Required<SendContactUtmTagsMetadata>;
-	};
 	business: {
 		submittedAt: Date;
 		fillSpeedMs?: number;

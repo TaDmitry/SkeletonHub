@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import {
@@ -18,10 +18,16 @@ type UseContactFormParams = {
 	errorToastText: string;
 };
 
+type ContactFormToast = {
+	id: number;
+	text: string;
+};
+
 export function useContactForm({ successToastText, errorToastText }: UseContactFormParams) {
-	const [toastText, setToastText] = useState<string | null>(null);
+	const [toast, setToast] = useState<ContactFormToast | null>(null);
 	const [isRequestInFlight, setIsRequestInFlight] = useState(false);
 	const firstInteractionStartedAtRef = useRef<number | null>(null);
+	const toastIdRef = useRef(0);
 	const {
 		register,
 		handleSubmit,
@@ -45,40 +51,52 @@ export function useContactForm({ successToastText, errorToastText }: UseContactF
 		}
 	};
 
-	const closeToast = () => {
-		setToastText(null);
-	};
+	const showToast = useCallback((text: string) => {
+		toastIdRef.current += 1;
+		setToast({
+			id: toastIdRef.current,
+			text,
+		});
+	}, []);
 
-	const onSubmit = async (values: ContactSchemaValues) => {
-		const payload = await createContactApiPayload(values, firstInteractionStartedAtRef.current);
+	const closeToast = useCallback(() => {
+		setToast(null);
+	}, []);
 
-		setIsRequestInFlight(true);
+	const onSubmit = useCallback(
+		async (values: ContactSchemaValues) => {
+			const payload = await createContactApiPayload(values, firstInteractionStartedAtRef.current);
 
-		try {
-			const submitResult = await sendContactForm(payload);
+			setIsRequestInFlight(true);
 
-			if (!submitResult.success) {
-				if (submitResult.error) {
-					console.error('[contact-form] Contact form submission failed.', submitResult.error);
-				} else {
-					console.error('[contact-form] Contact API request failed.', {
-						status: submitResult.status,
-						apiResult: submitResult.apiResult,
-					});
+			try {
+				const submitResult = await sendContactForm(payload);
+
+				if (!submitResult.success) {
+					if (submitResult.error) {
+						console.error('[contact-form] Contact form submission failed.', submitResult.error);
+					} else {
+						console.error('[contact-form] Contact API request failed.', {
+							status: submitResult.status,
+							apiResult: submitResult.apiResult,
+							error: submitResult.apiResult?.error,
+						});
+					}
+
+					showToast(errorToastText);
+
+					return;
 				}
 
-				setToastText(errorToastText);
-
-				return;
+				reset();
+				firstInteractionStartedAtRef.current = null;
+				showToast(successToastText);
+			} finally {
+				setIsRequestInFlight(false);
 			}
-
-			reset();
-			firstInteractionStartedAtRef.current = null;
-			setToastText(successToastText);
-		} finally {
-			setIsRequestInFlight(false);
-		}
-	};
+		},
+		[successToastText, errorToastText, reset, showToast]
+	);
 
 	return {
 		register,
@@ -86,7 +104,7 @@ export function useContactForm({ successToastText, errorToastText }: UseContactF
 		errors,
 		isFormDisabled,
 		trackFirstInteraction,
-		toastText,
+		toast,
 		closeToast,
 		onSubmit,
 	};

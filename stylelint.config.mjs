@@ -25,6 +25,8 @@ export default {
 
 		'scss/at-mixin-argumentless-call-parentheses': 'never',
 		'scss/comment-no-loud': null,
+		'scss/no-global-function-names': true,
+		'import-notation': 'string',
 
 		'declaration-block-no-duplicate-properties': [
 			true,
