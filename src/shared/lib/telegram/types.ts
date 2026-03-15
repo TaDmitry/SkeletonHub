@@ -51,7 +51,6 @@ export type SendContactBusinessMetadata = {
 };
 
 export type SendContactMetadata = {
-	pageUrl?: string;
 	submittedAt?: Date;
 	geo?: SendContactGeoMetadata;
 	device?: SendContactDeviceMetadata;

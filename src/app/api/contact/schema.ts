@@ -42,7 +42,6 @@ export const utmTagsSchema = z.object({
 });
 
 export const contactRequestSchema = contactSchema.extend({
-	pageUrl: z.string().trim().pipe(z.url()).optional(),
 	clientContext: z
 		.object({
 			referrer: z.string().trim().max(MAX_CONTEXT_LENGTH).optional(),

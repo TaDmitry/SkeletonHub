@@ -21,7 +21,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ className }) => {
 		isFormDisabled,
 		onSubmit,
 		register,
-		toastText,
+		toast,
 		trackFirstInteraction,
 	} = useContactForm({
 		successToastText: t('toast.success'),
@@ -73,6 +73,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ className }) => {
 								className={styles.input}
 								suppressHydrationWarning
 								placeholder={t('fields.name.placeholder')}
+								autoComplete='name'
 								disabled={isFormDisabled}
 								aria-invalid={Boolean(errors.name)}
 								aria-describedby={nameError ? 'contact-name-error' : undefined}
@@ -106,6 +107,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ className }) => {
 								className={styles.input}
 								suppressHydrationWarning
 								placeholder={t('fields.telegram.placeholder')}
+								autoComplete='username'
 								disabled={isFormDisabled}
 								aria-invalid={Boolean(errors.telegram)}
 								aria-describedby={telegramError ? 'contact-telegram-error' : undefined}
@@ -142,6 +144,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ className }) => {
 								className={styles.input}
 								suppressHydrationWarning
 								placeholder={t('fields.email.placeholder')}
+								autoComplete='email'
 								disabled={isFormDisabled}
 								aria-invalid={Boolean(errors.email)}
 								aria-describedby={emailError ? 'contact-email-error' : undefined}
@@ -198,10 +201,10 @@ export const ContactForm: React.FC<ContactFormProps> = ({ className }) => {
 				</form>
 			</section>
 
-			{toastText ? (
+			{toast ? (
 				<Notification
-					key={toastText}
-					text={toastText}
+					key={toast.id}
+					text={toast.text}
 					onClose={closeToast}
 					duration={2500}
 					className={styles.toast}

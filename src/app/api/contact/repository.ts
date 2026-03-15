@@ -15,7 +15,6 @@ function buildContactSubmissionRecord(
 		email: payload.email,
 		telegram: payload.telegram ?? null,
 		message: payload.message,
-		page_url: payload.pageUrl ?? null,
 
 		ip_address: geo?.ip ?? null,
 		asn: geo?.asn ?? null,

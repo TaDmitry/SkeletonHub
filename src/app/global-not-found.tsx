@@ -9,7 +9,10 @@ import { Text, Title } from '@/shared/ui/index';
 import '@/shared/styles/globals.scss';
 import styles from './globalNotFound.module.scss';
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({
+	subsets: ['latin'],
+	preload: false,
+});
 
 type Locale = (typeof routing.locales)[number];
 

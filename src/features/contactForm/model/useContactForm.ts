@@ -18,10 +18,16 @@ type UseContactFormParams = {
 	errorToastText: string;
 };
 
+type ContactFormToast = {
+	id: number;
+	text: string;
+};
+
 export function useContactForm({ successToastText, errorToastText }: UseContactFormParams) {
-	const [toastText, setToastText] = useState<string | null>(null);
+	const [toast, setToast] = useState<ContactFormToast | null>(null);
 	const [isRequestInFlight, setIsRequestInFlight] = useState(false);
 	const firstInteractionStartedAtRef = useRef<number | null>(null);
+	const toastIdRef = useRef(0);
 	const {
 		register,
 		handleSubmit,
@@ -45,8 +51,16 @@ export function useContactForm({ successToastText, errorToastText }: UseContactF
 		}
 	};
 
+	const showToast = useCallback((text: string) => {
+		toastIdRef.current += 1;
+		setToast({
+			id: toastIdRef.current,
+			text,
+		});
+	}, []);
+
 	const closeToast = useCallback(() => {
-		setToastText(null);
+		setToast(null);
 	}, []);
 
 	const onSubmit = useCallback(
@@ -69,19 +83,19 @@ export function useContactForm({ successToastText, errorToastText }: UseContactF
 						});
 					}
 
-					setToastText(errorToastText);
+					showToast(errorToastText);
 
 					return;
 				}
 
 				reset();
 				firstInteractionStartedAtRef.current = null;
-				setToastText(successToastText);
+				showToast(successToastText);
 			} finally {
 				setIsRequestInFlight(false);
 			}
 		},
-		[successToastText, errorToastText, reset]
+		[successToastText, errorToastText, reset, showToast]
 	);
 
 	return {
@@ -90,7 +104,7 @@ export function useContactForm({ successToastText, errorToastText }: UseContactF
 		errors,
 		isFormDisabled,
 		trackFirstInteraction,
-		toastText,
+		toast,
 		closeToast,
 		onSubmit,
 	};

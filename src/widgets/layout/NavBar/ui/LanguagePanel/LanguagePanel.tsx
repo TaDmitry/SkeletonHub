@@ -18,6 +18,7 @@ type Variant = 'desktop' | 'mobile';
 interface LanguagePanelProps {
 	variant: Variant;
 	id?: string;
+	triggerRef?: React.RefObject<HTMLButtonElement | null>;
 }
 
 const LANGUAGES = [
@@ -61,7 +62,11 @@ const panelReducer = (state: PanelState, action: PanelAction): PanelState => {
 	}
 };
 
-export const LanguagePanel: React.FC<LanguagePanelProps> = ({ variant, id = 'language-panel' }) => {
+export const LanguagePanel: React.FC<LanguagePanelProps> = ({
+	variant,
+	id = 'language-panel',
+	triggerRef,
+}) => {
 	const t = useTranslations('layout.navbar.LanguagePanel');
 	const router = useRouter();
 	const pathname = usePathname();
@@ -69,6 +74,7 @@ export const LanguagePanel: React.FC<LanguagePanelProps> = ({ variant, id = 'lan
 	const panelRef = useRef<HTMLDivElement | null>(null);
 	const closeTimerRef = useRef<number | null>(null);
 	const rafRef = useRef<number | null>(null);
+	const previouslyFocusedRef = useRef<HTMLElement | null>(null);
 
 	const isOpen = useLanguagePanelStore((s) => s.isOpen);
 	const context = useLanguagePanelStore((s) => s.context);
@@ -77,6 +83,25 @@ export const LanguagePanel: React.FC<LanguagePanelProps> = ({ variant, id = 'lan
 	const isActive = useMemo(() => isOpen && context === variant, [isOpen, context, variant]);
 
 	const [panelState, dispatch] = useReducer(panelReducer, 'unmounted');
+
+	const restoreFocus = useCallback(() => {
+		const panelEl = panelRef.current;
+		const activeElement = document.activeElement as HTMLElement | null;
+
+		if (!panelEl || !activeElement || !panelEl.contains(activeElement)) {
+			return;
+		}
+
+		const triggerEl = triggerRef?.current ?? null;
+
+		if (triggerEl && !triggerEl.hasAttribute('disabled')) {
+			triggerEl.focus();
+
+			return;
+		}
+
+		previouslyFocusedRef.current?.focus?.();
+	}, [triggerRef]);
 
 	useEffect(() => {
 		const clearPendingAnimations = () => {
@@ -128,7 +153,7 @@ export const LanguagePanel: React.FC<LanguagePanelProps> = ({ variant, id = 'lan
 		//* Родитель-контейнер: кнопка + панель (чтобы клики по кнопке не считались "outside")
 		const containerEl = panelEl.parentElement;
 
-		const previouslyFocused = document.activeElement as HTMLElement | null;
+		previouslyFocusedRef.current = document.activeElement as HTMLElement | null;
 
 		const focusableSelector =
 			'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
@@ -146,6 +171,7 @@ export const LanguagePanel: React.FC<LanguagePanelProps> = ({ variant, id = 'lan
 		const handleKeyDown = (e: KeyboardEvent) => {
 			if (e.key === 'Escape') {
 				e.preventDefault();
+				restoreFocus();
 				closePanel();
 
 				return;
@@ -176,6 +202,7 @@ export const LanguagePanel: React.FC<LanguagePanelProps> = ({ variant, id = 'lan
 			if (panelEl.contains(target)) return;
 			if (containerEl?.contains(target)) return;
 
+			restoreFocus();
 			closePanel();
 		};
 
@@ -187,17 +214,36 @@ export const LanguagePanel: React.FC<LanguagePanelProps> = ({ variant, id = 'lan
 			document.removeEventListener('keydown', handleKeyDown);
 			document.removeEventListener('mousedown', handleClickOutside);
 
-			previouslyFocused?.focus?.();
+			restoreFocus();
 		};
-	}, [panelState, closePanel]);
+	}, [panelState, closePanel, restoreFocus]);
+
+	useEffect(() => {
+		const panelEl = panelRef.current;
+
+		if (!panelEl) {
+			return () => {};
+		}
+
+		panelEl.inert = !isActive;
+
+		if (!isActive) {
+			restoreFocus();
+		}
+
+		return () => {
+			panelEl.inert = false;
+		};
+	}, [isActive, restoreFocus]);
 
 	const handleLanguageChange = useCallback(
 		(languageCode: (typeof LANGUAGES)[number]['code']) => {
 			const targetPath = `${pathname}${window.location.search}${window.location.hash}`;
+			restoreFocus();
 			router.push(targetPath, { locale: languageCode });
 			closePanel();
 		},
-		[pathname, router, closePanel]
+		[pathname, router, closePanel, restoreFocus]
 	);
 
 	const isMounted = panelState !== 'unmounted';
@@ -216,7 +262,6 @@ export const LanguagePanel: React.FC<LanguagePanelProps> = ({ variant, id = 'lan
 			)}
 			style={{ '--language-panel-transition-ms': `${TRANSITION_MS}ms` } as React.CSSProperties}
 			role='menu'
-			aria-hidden={!isActive}
 			aria-label={t('aria.panel')}
 		>
 			{LANGUAGES.map((lang) => (
