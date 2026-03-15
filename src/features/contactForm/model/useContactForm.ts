@@ -65,6 +65,7 @@ export function useContactForm({ successToastText, errorToastText }: UseContactF
 						console.error('[contact-form] Contact API request failed.', {
 							status: submitResult.status,
 							apiResult: submitResult.apiResult,
+							error: submitResult.apiResult?.error,
 						});
 					}
 

@@ -1,17 +1,40 @@
-import { supabase } from '@/shared/lib/supabase/supabase';
+import { checkRateLimit } from '../_lib/rateLimit';
+import { saveSubscriberEmail } from './repository';
+import { parseSubscribeRequest } from './request';
+import {
+	createAlreadySubscribedResponse,
+	createSubscriptionFailedResponse,
+	createSuccessResponse,
+} from './responses';
 
-export async function POST(req: Request) {
-	const { email } = await req.json();
+const SUBSCRIBE_RATE_LIMIT = {
+	bucket: 'api/subscribe',
+	limit: 10,
+	windowMs: 600_000,
+} as const;
 
-	const { error } = await supabase.from('subscribers').insert({ email });
+export async function POST(request: Request) {
+	const rateLimitResult = checkRateLimit(request, SUBSCRIBE_RATE_LIMIT);
 
-	if (error) {
-		if (error.code === '23505') {
-			return Response.json({ error: 'Email already subscribed' }, { status: 409 });
-		}
-
-		return Response.json({ error: error.message }, { status: 400 });
+	if (!rateLimitResult.success) {
+		return rateLimitResult.response;
 	}
 
-	return Response.json({ success: true });
+	const parsedRequest = await parseSubscribeRequest(request);
+
+	if (!parsedRequest.success) {
+		return parsedRequest.response;
+	}
+
+	const saveResult = await saveSubscriberEmail(parsedRequest.data.email);
+
+	if (!saveResult.success) {
+		if (saveResult.reason === 'already-subscribed') {
+			return createAlreadySubscribedResponse();
+		}
+
+		return createSubscriptionFailedResponse();
+	}
+
+	return createSuccessResponse();
 }
